@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e83e8c;
+            --primary-hover: #d2337a;
+            --text-color: #030202;
+            --text-light: #555;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #eee;
+            --success-color: #00a854;
+            --processing-color: #fa8c16;
+            --cancelled-color: #f5222d;
+            --shipped-color: #1890ff;
+            --error-color: #ff4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.5rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: var(--primary-color);
+        }
+
+        .menu-left a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .menu-left a:hover::after {
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .icon:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        /* Profile Content */
+        .profile-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 5%;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #ff6b9d);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .profile-info h2 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-size: 1.8rem;
+        }
+
+        .profile-info p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .profile-details {
+            margin-top: 2rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .detail-label {
+            flex: 1;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .detail-value {
+            flex: 2;
+            color: var(--text-color);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 62, 140, 0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(232, 62, 140, 0.05);
+            box-shadow: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .edit-icon {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .edit-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Editable Fields */
+        .editable-field {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .editable-field input {
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .editable-field input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .save-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .save-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .cancel-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .cancel-btn:hover {
+            background: #e9ecef;
+        }
+
+        /* Password Form */
+        .password-form {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: rgba(232, 62, 140, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(232, 62, 140, 0.2);
+        }
+
+        .password-form input {
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .password-form input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+        }
+
+        .change-password-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .change-password-btn:hover {
+            text-decoration: underline;
+            color: var(--primary-hover);
+        }
+
+        /* Order History */
+        .order-history {
+            margin-top: 3rem;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .shop-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .shop-link:hover {
+            text-decoration: underline;
+        }
+
+        .order-item {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .order-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .order-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: rgba(0, 168, 84, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-processing {
+            background: rgba(250, 140, 22, 0.1);
+            color: var(--processing-color);
+        }
+
+        .status-cancelled {
+            background: rgba(245, 34, 45, 0.1);
+            color: var(--cancelled-color);
+        }
+
+        .status-shipped {
+            background: rgba(24, 144, 255, 0.1);
+            color: var(--shipped-color);
+        }
+
+        .order-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .order-products {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .order-product {
+            display: flex;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .order-product:last-child {
+            margin-bottom: 0;
+        }
+
+        .order-product-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            background: var(--bg-color);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .order-product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-product-info {
+            flex: 1;
+        }
+
+        .order-product-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: var(--text-color);
+        }
+
+        .order-product-variant {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-product-price {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .order-summary {
+            flex: 1;
+            min-width: 200px;
+            text-align: right;
+        }
+
+        .order-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .view-details {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: rgba(232, 62, 140, 0.05);
+        }
+
+        .view-details:hover {
+            background: rgba(232, 62, 140, 0.1);
+            text-decoration: none;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s;
+        }
+
+        .toast.error {
+            background-color: var(--error-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(10px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .menu-left {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin: 0 auto 1rem;
+            }
+
+            .detail-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .order-details {
+                flex-direction: column;
+            }
+
+            .order-summary {
+                text-align: left;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="collections1.html">
+                            <i class="fas fa-search icon"></i>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Wishlist">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Cart">
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Logout">
+                        <a href="#" id="logout-btn">
+                            <i class="fas fa-sign-out-alt icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Content -->
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="user-avatar">
+                    <!-- Initials will be added by JavaScript -->
+                </div>
+                <div class="profile-info">
+                    <h2 id="user-name">Loading... <i class="fas fa-pencil-alt edit-icon" onclick="editField('name')"></i></h2>
+                    <p id="user-email">user@example.com</p>
+                </div>
+            </div>
+            
+            <div class="profile-details">
+                <h3 class="section-title">Personal Information</h3>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Full Name</div>
+                    <div class="detail-value">
+                        <div class="editable-field">
+                            <span id="profile-full-name">Loading...</span>
+                            <i class="fas fa-pencil-alt edit-icon" onclick="editField('full-name')"></i>
+                        </div>
+                        <div id="full-name-edit" class="hidden">
+                            <input type="text" id="full-name-input" placeholder="Enter your full name">
+                            <div class="form-actions">
+                                <button class="save-btn" onclick="saveField('full-name')">Save</button>
+                                <button class="cancel-btn" onclick="cancelEdit('full-name')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value">
+                        <div class="editable-field">
+                            <span id="profile-email">Loading...</span>
+                            <i class="fas fa-pencil-alt edit-icon" onclick="editField('email')"></i>
+                        </div>
+                        <div id="email-edit" class="hidden">
+                            <input type="email" id="email-input" placeholder="Enter your email">
+                            <div class="form-actions">
+                                <button class="save-btn" onclick="saveField('email')">Save</button>
+                                <button class="cancel-btn" onclick="cancelEdit('email')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Phone</div>
+                    <div class="detail-value">
+                        <div class="editable-field">
+                            <span id="profile-phone">Loading...</span>
+                            <i class="fas fa-pencil-alt edit-icon" onclick="editField('phone')"></i>
+                        </div>
+                        <div id="phone-edit" class="hidden">
+                            <input type="tel" id="phone-input" placeholder="Enter your phone number">
+                            <div class="form-actions">
+                                <button class="save-btn" onclick="saveField('phone')">Save</button>
+                                <button class="cancel-btn" onclick="cancelEdit('phone')">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-row">
+                    <div class="detail-label">Password</div>
+                    <div class="detail-value">
+                        ••••••••
+                        <button class="change-password-btn" onclick="togglePasswordForm()">Change Password</button>
+                        <div id="password-form" class="password-form hidden">
+                            <input type="password" id="current-password" placeholder="Current Password" required>
+                            <input type="password" id="new-password" placeholder="New Password" required>
+                            <input type="password" id="confirm-password" placeholder="Confirm New Password" required>
+                            <div class="form-actions">
+                                <button class="save-btn" onclick="changePassword()">Update Password</button>
+                                <button class="cancel-btn" onclick="togglePasswordForm()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="index.html" class="btn btn-outline">Continue Shopping</a>
+                    <a href="address.html" class="btn">Proceed to Checkout</a>
+                </div>
+                
+                <div class="order-history">
+                    <h3 class="section-title">Order History</h3>
+                    <div id="order-list">
+                        <a href="order-details.html">
+                            <i class="order-history"></i>
+                        <!-- Orders will be loaded here dynamically -->
+                            <p class="no-orders">Loading your orders...</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user data from localStorage
+        function loadUserData() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isAuthenticated') === 'true';
+            
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load user data
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (!user || !user.email) {
+                // If no user data, redirect to login
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update the profile page with user data
+            document.getElementById('user-name').textContent = user.fullName || user.username || 'User';
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('profile-full-name').textContent = user.fullName || 'Not specified';
+            document.getElementById('profile-email').textContent = user.email;
+            document.getElementById('profile-phone').textContent = user.phone || 'Not specified';
+            
+            // Set avatar initials
+            updateAvatarInitials(user);
+            
+            // Load and display orders
+            displayOrders();
+            
+            // Update cart and wishlist counts
+            updateCartAndWishlistCounts();
+        }
+        
+        function updateAvatarInitials(user) {
+            const name = user.fullName || user.username || 'User';
+            const initials = name.split(' ')
+                .filter(name => name.length > 0)
+                .map(name => name[0])
+                .join('')
+                .toUpperCase();
+            document.getElementById('user-avatar').textContent = initials.substring(0, 2);
+        }
+
+        // Display orders from localStorage
+        function displayOrders() {
+            const orderList = document.getElementById('order-list');
+            const orders = JSON.parse(localStorage.getItem('userOrders') || '[]');
+            
+            if (orders.length === 0) {
+                orderList.innerHTML = `
+                    <p class="no-orders">
+                        You have no orders yet. 
+                        <a href="collections.html" class="shop-link">Start shopping</a>
+                    </p>
+                `;
+                return;
+            }
+            
+            orderList.innerHTML = orders.map(order => createOrderHtml(order)).join('');
+        }
+
+        function createOrderHtml(order) {
+            const formattedDate = new Date(order.date).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            const itemsHtml = order.items.map(item => `
+                <div class="order-product">
+                    <div class="order-product-img">
+                        <img src="${item.image || 'https://via.placeholder.com/70'}" 
+                             alt="${item.name}" 
+                             onerror="this.src='https://via.placeholder.com/70'">
+                    </div>
+                    <div class="order-product-info">
+                        <div class="order-product-name">${item.name}</div>
+                        ${item.variant ? `<div class="order-product-variant">${item.variant}</div>` : ''}
+                        <div class="order-product-price">
+                            $${item.price.toFixed(2)} × ${item.quantity}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            return `
+                <div class="order-item" data-order-id="${order.id}">
+                    <div class="order-header">
+                        <div class="order-id">Order #${order.id}</div>
+                        <div class="order-date">${formattedDate}</div>
+                        <div class="order-status status-${order.status.toLowerCase()}">
+                            ${order.status}
+                        </div>
+                    </div>
+                    <div class="order-details">
+                        <div class="order-products">
+                            ${itemsHtml}
+                        </div>
+                        <div class="order-summary">
+                            <div class="order-total">$${order.total.toFixed(2)}</div>
+                            <a href="order-details.html?orderId=${order.id}" class="view-details">
+                                View Details <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Edit field functions
+        function editField(field) {
+            // Hide the display and show the edit form
+            document.querySelector(`#${field}-edit`).classList.remove('hidden');
+            document.querySelector(`#profile-${field}`).parentElement.classList.add('hidden');
+            
+            // Set the current value in the input
+            const currentValue = document.querySelector(`#profile-${field}`).textContent;
+            document.querySelector(`#${field}-input`).value = currentValue;
+            
+            // Focus on the input field
+            document.querySelector(`#${field}-input`).focus();
+        }
+
+        function cancelEdit(field) {
+            // Hide the edit form and show the display
+            document.querySelector(`#${field}-edit`).classList.add('hidden');
+            document.querySelector(`#profile-${field}`).parentElement.classList.remove('hidden');
+        }
+
+        function saveField(field) {
+            const newValue = document.querySelector(`#${field}-input`).value.trim();
+            
+            if (!newValue) {
+                showToast('Please enter a value', true);
+                return;
+            }
+            
+            // Validate email format if it's the email field
+            if (field === 'email' && !validateEmail(newValue)) {
+                showToast('Please enter a valid email address', true);
+                return;
+            }
+            
+            // Update the display
+            document.querySelector(`#profile-${field}`).textContent = newValue;
+            
+            // Update in localStorage
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user) {
+                if (field === 'full-name') {
+                    user.fullName = newValue;
+                    // Also update the name in the header
+                    document.getElementById('user-name').textContent = newValue;
+                    // Update avatar initials
+                    updateAvatarInitials(user);
+                } else if (field === 'email') {
+                    user.email = newValue;
+                    // Also update the email in the header
+                    document.getElementById('user-email').textContent = newValue;
+                } else if (field === 'phone') {
+                    user.phone = newValue;
+                }
+                
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            }
+            
+            // Hide the edit form and show the display
+            cancelEdit(field);
+            
+            // Show success message
+            showToast(`${field.replace('-', ' ')} updated successfully!`);
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Password functions
+        function togglePasswordForm() {
+            const form = document.getElementById('password-form');
+            form.classList.toggle('hidden');
+            
+            // Clear the form when showing
+            if (!form.classList.contains('hidden')) {
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+                document.getElementById('current-password').focus();
+            }
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Basic validation
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Please fill in all password fields', true);
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match', true);
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showToast('Password must be at least 6 characters', true);
+                return;
+            }
+            
+            // In a real app, you would verify the current password with the server
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user) {
+                // Normally you would verify currentPassword against the stored hash
+                // For demo, we'll just check if it's not empty
+                if (!currentPassword) {
+                    showToast('Current password is incorrect', true);
+                    return;
+                }
+                
+                user.password = newPassword; // In real app, you would hash this
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Hide the form
+                togglePasswordForm();
+                
+                // Show success message
+                showToast('Password updated successfully!');
+            }
+        }
+
+        // Logout function
+        document.getElementById('logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        });
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            // Remove existing toasts
+            const existingToasts = document.querySelectorAll('.toast');
+            existingToasts.forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        function updateCartAndWishlistCounts() {
+            try {
+                const cartCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
+                const wishlistCount = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+                
+                document.getElementById('cart-badge').textContent = cartCount;
+                document.getElementById('wishlist-badge').textContent = wishlistCount;
+            } catch (e) {
+                console.error('Error updating cart/wishlist counts:', e);
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+        });
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    </script>
+</body>
+</html>

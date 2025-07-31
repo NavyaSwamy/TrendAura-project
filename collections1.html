@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Shop Fashion</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        .search-container {
+            position: relative;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .search-icon:hover {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .search-form {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 320px;
+            z-index: 100;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .search-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fafafa;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        select:focus {
+            border-color: #e83e8c;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #e83e8c;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #d2337a;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 1.2rem;
+        }
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .product-info .price {
+            color: #e83e8c;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .wishlist-btn, .cart-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .wishlist-btn {
+            background: none;
+            color: #555;
+        }
+        .wishlist-btn.active {
+            color: #e83e8c;
+        }
+        .cart-btn {
+            background: #e83e8c;
+            color: white;
+        }
+        .cart-btn:hover {
+            background: #d2337a;
+        }
+        
+        /* Delete Button */
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ff4757;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background: #ff4757;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ed573;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.error {
+            background: #ff4757;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 0;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .empty-state p {
+            color: #666;
+        }
+        
+        /* Admin Modal Styles */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .admin-form-group {
+            margin-bottom: 1rem;
+        }
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .admin-form-group input,
+        .admin-form-group select,
+        .admin-form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .admin-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .admin-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .admin-btn-cancel {
+            background: #f1f1f1;
+            color: #333;
+        }
+        .admin-btn-cancel:hover {
+            background: #e1e1e1;
+        }
+        .admin-btn-submit {
+            background: #e83e8c;
+            color: white;
+        }
+        .admin-btn-submit:hover {
+            background: #d2337a;
+        }
+        .admin-btn-delete {
+            background: #ff4757;
+            color: white;
+        }
+        .admin-btn-delete:hover {
+            background: #e84118;
+        }
+        .admin-login-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e83e8c;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .admin-login-btn i {
+            font-size: 1.5rem;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="#" class="active">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="search-container">
+                    <div class="icon-group" id="searchTrigger">
+                        <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                        <div class="icon-text">Search</div>
+                    </div>
+                    <div class="search-form" id="searchForm">
+                        <form id="collectionSearchForm">
+                            <div class="form-group">
+                                <label for="stateSelect">Select State</label>
+                                <select id="stateSelect" name="state" required>
+                                    <option value="">-- Select State --</option>
+                                    <option value="andhra_pradesh">Andhra Pradesh</option>
+                                    <option value="assam">Assam</option>
+                                    <option value="bihar">Bihar</option>
+                                    <option value="gujarat">Gujarat</option>
+                                    <option value="karnataka">Karnataka</option>
+                                    <option value="kerala">Kerala</option>
+                                    <option value="maharashtra">Maharashtra</option>
+                                    <option value="odisha">Odisha</option>
+                                    <option value="punjab">Punjab</option>
+                                    <option value="rajasthan">Rajasthan</option>
+                                    <option value="tamil_nadu">Tamil Nadu</option>
+                                    <option value="west_bengal">West Bengal</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                                    <option value="chhattisgarh">Chhattisgarh</option>
+                                    <option value="goa">Goa</option>
+                                    <option value="haryana">Haryana</option>
+                                    <option value="himachal_pradesh">Himachal Pradesh</option>
+                                    <option value="jharkhand">Jharkhand</option>
+                                    <option value="madhya_pradesh">Madhya Pradesh</option>
+                                    <option value="manipur">Manipur</option>
+                                    <option value="meghalaya">Meghalaya</option>
+                                    <option value="mizoram">Mizoram</option>
+                                    <option value="nagaland">Nagaland</option>
+                                    <option value="sikkim">Sikkim</option>
+                                    <option value="tripura">Tripura</option>
+                                    <option value="uttar_pradesh">Uttar Pradesh</option>
+                                    <option value="uttarakhand">Uttarakhand</option>
+                                    <option value="andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+                                    <option value="chandigarh">Chandigarh</option>
+                                    <option value="dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                    <option value="delhi">Delhi</option>
+                                    <option value="jammu_and_kashmir">Jammu and Kashmir</option>
+                                    <option value="ladakh">Ladakh</option>
+                                    <option value="lakshadweep">Lakshadweep</option>
+                                    <option value="puducherry">Puducherry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fashionSelect">Select Fashion</label>
+                                <select id="fashionSelect" name="type" required>
+                                    <option value="">-- Select Fashion --</option>
+                                    <option value="saree">Saree</option>
+                                    <option value="salwar_kameez">Salwar Kameez</option>
+                                    <option value="lehenga">Lehenga</option>
+                                    <option value="dhoti">Dhoti</option>
+                                    <option value="kurta">Kurta</option>
+                                    <option value="sherwani">Sherwani</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="search-btn">Search Collection</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="product-grid">
+        <!-- Products will be loaded here -->
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notification-message"></span>
+    </div>
+    <div class="admin-login-btn" id="adminLoginBtn">
+        <i class="fas fa-user-shield"></i>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="admin-modal" id="adminLoginModal">
+        <div class="admin-modal-content">
+            <h2>Admin Login</h2>
+            <form id="adminLoginForm">
+                <div class="admin-form-group">
+                    <label for="adminPassword">Password</label>
+                    <input type="password" id="adminPassword" required>
+                </div>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-cancel" id="cancelAdminLogin">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-submit">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="admin-modal" id="addProductModal">
+        <div class="admin-modal-content">
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <div class="admin-form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productPrice">Price (₹)</label>
+                    <input type="number" id="productPrice" min="1" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productImage">Image URL</label>
+                    <input type="url" id="productImage" required>
+                    <img id="imagePreview" class="preview-image" alt="Image Preview">
+                </div>
+                <div class="admin-form-group">
+                    <label for="productState">State</label>
+                    <select id="productState" required>
+                        <option value="">-- Select State --</option>
+                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                        <option value="assam">Assam</option>
+                        <option value="bihar">Bihar</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="odisha">Odisha</option>
+                        <option value="punjab">Punjab</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="tamil_nadu">Tamil Nadu</option>
+                        <option value="west_bengal">West Bengal</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                        <option value="chhattisgarh">Chhattisgarh</option>
+                        <option value="goa">Goa</option>
+                        <option value="haryana">Haryana</option>
+                        <option value="himachal_pradesh">Himachal Pradesh</option>
+                        <option value="jharkhand">Jharkhand</option>
+                        <option value="madhya_pradesh">Madhya Pradesh</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tripura">Tripura</option>
+                        <option value="uttar_pradesh">Uttar Pradesh</option>
+                        <option value="uttarakhand">Uttarakhand</option>
+                        <option value="andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+                        <option value="chandigarh">Chandigarh</option>
+                        <option value="dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="jammu_and_kashmir">Jammu and Kashmir</option>
+                        <option value="ladakh">Ladakh</option>
+                        <option value="lakshadweep">Lakshadweep</option>
+                        <option value="puducherry">Puducherry</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productType">Fashion Type</label>
+                    <select id="productType" required>
+                        <option value="">-- Select Fashion --</option>
+                        <option value="saree">Saree</option>
+                        <option value="salwar_kameez">Salwar Kameez</option>
+                        <option value="lehenga">Lehenga</option>
+                        <option value="dhoti">Dhoti</option>
+                        <option value="kurta">Kurta</option>
+                        <option value="sherwani">Sherwani</option>
+                    </select>
+                </div>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-cancel" id="cancelAddProduct">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-submit">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="admin-modal" id="deleteProductModal">
+        <div class="admin-modal-content">
+            <h2>Confirm Deletion</h2>
+            <p id="deleteConfirmationText">Are you sure you want to delete this product?</p>
+            <div class="admin-form-actions">
+                <button type="button" class="admin-btn admin-btn-cancel" id="cancelDeleteProduct">Cancel</button>
+                <button type="button" class="admin-btn admin-btn-delete" id="confirmDeleteProduct">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize products from localStorage or use default if not exists
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            // Andhra Pradesh - Sarees
+            { id: 1, name: "Uppada Silk Saree", price: 4599, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTWHlpXBq07fH8TtK_GNFVFeSp1OnM5P_4zCWl_lqWBG5vuoA8Lh3QBtvi7imZIL2ZkTcibgWQx7ClkX1CdovDmE_2ywZOKwXIs8LYalH4P", type: "saree", state: "andhra_pradesh" },
+            { id: 2, name: "Mangalagiri Cotton Saree", price: 3500, image: "https://thenmozhidesigns.com/cdn/shop/files/3S2A3673.jpg?v=1729245268&width=4000", type: "saree", state: "andhra_pradesh" },
+            { id: 3, name: "Venkatagiri Saree", price: 3299, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSoaNyGNxMhEzadynMgYx9vgICIor77YEcad3w8PI3TkvhQSTJkwI20ROMKeVDKp29GzMT0t7DIen-uZjTuwjkkQzG5NWv3ovg0490jDt4c", type: "saree", state: "andhra_pradesh" },
+            { id: 4, name: "Gadwal Silk Saree", price: 3899, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQD73Po1sqMPCE6ZT8WGyFu4yuawNqcI8juHRlAwHatdsORL8y3BTfqH3Zq4srKA5gAOS10Of0t_1ZWi-Qy0nwr33JAi8MtbdEGcziXzDuMuOhaBx-w6NNT", type: "saree", state: "andhra_pradesh" },
+            { id: 5, name: "Kalamkari Printed Saree", price: 2799, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTZBf8wcrGpBSGeIHp5NHRHSHg2tO7OxC_nzXXWXMg0K3vs2aKcwe3V9fYx-0XmXwHtJNb8y6i4F8wJ5icjj-KYubPIZGldgKkznij4Cjzm", type: "saree", state: "andhra_pradesh" },
+            
+            // Assam - Sarees
+            { id: 6, name: "Muga Silk Saree", price: 5899, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSfvY-IVoUJ5j14Vy0_vVpp5Kp0xcxr_z3xIIc9V4cg1ByJ80uygxvPQm9-iOpvuZAGaqjEn6Dl7GuQyhOGKapkDm28gqRyfjoncFgXAhY", type: "saree", state: "assam" },
+            { id: 7, name: "Pat Silk Saree", price: 4799, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSlvR_uCeDw-EK8woG7fPemSjTrQZKXCcmqCpnS58sCV8mUVyCsa_QCxrNViA9imQzZUBamztZYvIUEPWax9lmwv1ne4xIHZJ2uS0yA9PrQ5O3vbU-c1OUy_A", type: "saree", state: "assam" },
+            { id: 8, name: "Mekhela Chador Set", price: 5299, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQGA3qBfly8PFc91rsE2TD9PJc8uotyvBsFyOyM9Q6uxObr98fgoNzCRA7bhAPM_fWBJ52y8q_WWlHb5llIM-8yQi34c5xH30Evz5Ezd2ZUVfwlngti74jmsQ", type: "saree", state: "assam" },
+            { id: 9, name: "Eri Silk Saree", price: 4299, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRPZsn9VMCodmGsx5HwBR4bpQ0vdtcZYY_1wtBCv1hCVxoLsB87kPFRu8Rn-PBEWePZKddqVJr25IGAxErrR7JIVCE7DVxWUzHFwPFXni8", type: "saree", state: "assam" },
+            { id: 10, name: "Assam Tribal Saree", price: 3499, image: "https://korobidesign.com/cdn/shop/files/001-8_89592bb3-2f97-42f1-a84a-be087638c072.jpg?v=1708364314", type: "saree", state: "assam" },
+            
+            // Gujarat - Sarees
+            { id: 11, name: "Patola Silk Saree", price: 8999, image: "https://ik.imagekit.io/bhsa3gea8yj/products/tr:w-1200/2023/Aug/PATOLA-PRINT-PURE-PATOLA-SILK-SAREE-WITH-BLOUSE-In-Green-Colour-SR01352486-A.jpg", type: "saree", state: "gujarat" },
+            { id: 12, name: "Bandhani Saree", price: 2799, image: "https://i.pinimg.com/736x/fd/31/4c/fd314ca31a0ec68181ba9e18e2a9ea1d.jpg", type: "saree", state: "gujarat" },
+            { id: 13, name: "Gharchola Saree", price: 3499, image: "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/6/6/66a2f0bPSAEH3091_3.jpg?rnd=20200526195200&tr=w-512", type: "saree", state: "gujarat" },
+            { id: 14, name: "Kutch Embroidery Saree", price: 4599, image: "https://sunasa.in/cdn/shop/files/gujarati-kutch-work-silk-sarees-designs-with-price-yellow_1445x.jpg?v=1696431749", type: "saree", state: "gujarat" },
+            { id: 15, name: "Panetar Saree", price: 3899, image: "https://i.pinimg.com/originals/39/d9/cd/39d9cdee7cdfcd76d052ea46a1b156b2.jpg", type: "saree", state: "gujarat" },
+            
+            // Karnataka - Sarees
+            { id: 16, name: "Mysore Silk Saree", price: 4999, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQNpiymeVBHPbsSxecoI1BRLZGr9BGTXhBMt4JV6wW96pawMAex3tc5uI_QkIl7VTQNb5oVcklVhLSnbrF2D7CmkOnHLNyjAJcJDHabK33q", type: "saree", state: "karnataka" },
+            { id: 17, name: "Ilkal Saree", price: 2799, image: "https://static.wixstatic.com/media/faf1ba_60cde15e7714454f9a51af1c20af38cb~mv2.jpg/v1/fill/w_526,h_781,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/faf1ba_60cde15e7714454f9a51af1c20af38cb~mv2.jpg", type: "saree", state: "karnataka" },
+            { id: 18, name: "Molakalmuru Saree", price: 3299, image: "https://images.meesho.com/images/products/392701297/ijzmk_512.webp", type: "saree", state: "karnataka" },
+            { id: 19, name: "Kasuti Saree", price: 3899, image: "https://assets.ajio.com/medias/sys_master/root/hba/h80/11096287412254/-473Wx593H-460176332-red-MODEL.jpg", type: "saree", state: "karnataka" },
+            { id: 20, name: "Mysore Crepe Saree", price: 2599, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5yBAGKz0-zoStPPUgshH3-lvukwXlsOrIRw&s", type: "saree", state: "karnataka" },
+            
+            // Kerala - Sarees
+            { id: 21, name: "Kasavu Saree", price: 3299, image: "https://sargoshi.in/cdn/shop/articles/cb9543978aad259a8ff34fa56973a056_600x.jpg?v=1716279298", type: "saree", state: "kerala" },
+            { id: 22, name: "Kerala Cotton Saree", price: 1899, image: "https://sherinz.com/cdn/shop/products/IMG-20220417-WA0006_1.jpg?v=1651315352&width=1445", type: "saree", state: "kerala" },
+            { id: 23, name: "Mundum Neriyathum", price: 2799, image: "https://wp-admin.firstlook.fashion/wp-content/uploads/2024/12/Mundum-neriyathum-saree-draping3.jpg?impolicy=resize&r_width=459&r_height=300&resize=459,300&impolicy=resize&r_width=1&w=1", type: "saree", state: "kerala" },
+            { id: 24, name: "Kasavu Golden Border", price: 3599, image: "https://ilovesarees.com/cdn/shop/files/Dhathuvairi-White-Cotton-With-Golden-Zari-Border-Kerala-Kasav-Saree00001.webp?v=1722261138&width=1445", type: "saree", state: "kerala" },
+            { id: 25, name: "Kerala Kasavu Set", price: 4199, image: "https://southloom.com/cdn/shop/files/rn-image_picker_lib_temp_0b7a8f64-a164-4ed1-940c-72660fd1ef80_1946x.jpg?v=1725075540", type: "saree", state: "kerala" },
+            
+            // Maharashtra - Sarees
+            { id: 26, name: "Paithani Silk Saree", price: 8999, image: "https://sunasa.in/cdn/shop/files/handloom-paithani-silk-pink-bridal-saree-online-shopping_1445x.jpg?v=1712328088", type: "saree", state: "maharashtra" },
+            { id: 27, name: "Narayan Peth Saree", price: 3299, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAxPdb0XKZ5R0N6_3WABTaIGmqjdDbCgqBjg&s", type: "saree", state: "maharashtra" },
+            { id: 28, name: "Yeola Silk Saree", price: 4599, image: "https://soojidaara.in/cdn/shop/articles/Nauvari_Silk_Sarees_Maharashtrian.jpg?v=1722579243", type: "saree", state: "maharashtra" },
+            { id: 29, name: "Maharashtra Cotton Saree", price: 1899, image: "https://www.utsavpedia.com/wp-content/uploads/2013/06/nauvari-art-silk-saree.jpg", type: "saree", state: "maharashtra" },
+            { id: 30, name: "Paithani Bridal Saree", price: 12999, image: "https://static.wixstatic.com/media/05f89e_6a14fb1a3f054ec0b3472749a331d261~mv2.jpg/v1/fill/w_568,h_710,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/05f89e_6a14fb1a3f054ec0b3472749a331d261~mv2.jpg", type: "saree", state: "maharashtra" },
+            
+            // Odisha - Sarees
+            { id: 31, name: "Sambalpuri Silk Saree", price: 4599, image: "", type: "saree", state: "odisha" },
+            { id: 32, name: "Bomkai Saree", price: 3899, image: "", type: "saree", state: "odisha" },
+            { id: 33, name: "Berhampuri Silk Saree", price: 4299, image: "", type: "saree", state: "odisha" },
+            { id: 34, name: "Sambalpuri Cotton", price: 2199, image: "", type: "saree", state: "odisha" },
+            { id: 35, name: "Bomkai Silk Cotton", price: 2999, image: "", type: "saree", state: "odisha" },
+            
+            // Punjab - Salwar Kameez
+            { id: 36, name: "Phulkari Suit", price: 2899, image: "https://i.imgur.com/5tK8LbX.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 37, name: "Patiala Suit", price: 2199, image: "https://i.imgur.com/3nZjx9L.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 38, name: "Punjabi Cotton Suit", price: 1599, image: "https://i.imgur.com/8YfVv7G.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 39, name: "Phulkari Wedding Suit", price: 4599, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 40, name: "Patiala Printed Suit", price: 1899, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "salwar_kameez", state: "punjab" },
+            
+            // Rajasthan - Lehengas
+            { id: 41, name: "Rajasthani Lehenga", price: 5999, image: "https://asiakcommerce.com/wp-content/uploads/2024/07/Bharat-Rajastani-Bridal-Lehenga-Cholli-CODE-27000-1.webp", type: "lehenga", state: "rajasthan" },
+            { id: 42, name: "Bandhani Lehenga", price: 4599, image: "https://vasansi.in/cdn/shop/products/VJ04032104_9857f543-11a1-4272-a8c5-bbb1e3b176aa_400x.jpg?v=1745553476", type: "lehenga", state: "rajasthan" },
+            { id: 43, name: "Gota Patti Lehenga", price: 5299, image: "https://www.anitadongre.com/dw/image/v2/BGCX_PRD/on/demandware.static/-/Sites-masterCatalog_AD_India/default/dwee9541e0/images/hires/F24/Women/F24R45SMTO_BLUE_1.jpg?sw=1300&sh=1950&sm=fit&strip=false", type: "lehenga", state: "rajasthan" },
+            { id: 44, name: "Rajasthani Bridal Lehenga", price: 8999, image: "https://bhasinbrothers.com/cdn/shop/files/ContemporaryRajasthani-InspiredBridalLehenga4_764b9a47-c7ed-4383-a6ab-ec107bf2fb3b.jpg?v=1742577344&width=1080", type: "lehenga", state: "rajasthan" },
+            { id: 45, name: "Bandhani Printed Lehenga", price: 3899, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTekcLR4y2A7yvN2QNA9BpHoXDUnIHfW8rhtQ&s", type: "lehenga", state: "rajasthan" },
+            
+            // Tamil Nadu - Sarees
+            { id: 46, name: "Kanjivaram Silk Saree", price: 7999, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 47, name: "Chettinad Cotton Saree", price: 2899, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 48, name: "Madurai Cotton Saree", price: 2499, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 49, name: "Kanjivaram Bridal Saree", price: 11999, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 50, name: "Kanjivaram Traditional", price: 6599, image: "", type: "saree", state: "tamil_nadu" },
+            
+            // West Bengal - Sarees
+            { id: 51, name: "Baluchari Silk Saree", price: 5999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "saree", state: "west_bengal" },
+            { id: 52, name: "Tant Cotton Saree", price: 1899, image: "https://i.imgur.com/3nZjx9L.jpg", type: "saree", state: "west_bengal" },
+            { id: 53, name: "Baluchari Wedding Saree", price: 8999, image: "https://i.imgur.com/8YfVv7G.jpg", type: "saree", state: "west_bengal" },
+            { id: 54, name: "Tant Printed Saree", price: 1699, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "saree", state: "west_bengal" },
+            { id: 55, name: "Baluchari Traditional", price: 5299, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "saree", state: "west_bengal" },
+            
+            // Bihar - Sarees
+            { id: 56, name: "Bhagalpuri Silk Saree", price: 3899, image: "https://i.imgur.com/9Jv8x3L.jpg", type: "saree", state: "bihar" },
+            { id: 57, name: "Madhubani Printed Saree", price: 2799, image: "https://i.imgur.com/4Lp9QdT.jpg", type: "saree", state: "bihar" },
+            { id: 58, name: "Bhagalpuri Tussar Silk", price: 4299, image: "https://i.imgur.com/7Km3z9P.jpg", type: "saree", state: "bihar" },
+            { id: 59, name: "Madhubani Art Saree", price: 2999, image: "https://i.imgur.com/8Xr8J9h.jpg", type: "saree", state: "bihar" },
+            { id: 60, name: "Bhagalpuri Wedding Saree", price: 5999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "saree", state: "bihar" },
+            
+            // Dhotis
+            { id: 61, name: "Tamil Nadu Silk Dhoti", price: 2499, image: "https://i.imgur.com/Jz8xYfF.jpg", type: "dhoti", state: "tamil_nadu" },
+            { id: 62, name: "Kerala Cotton Dhoti", price: 1299, image: "https://i.imgur.com/VvQhW3n.jpg", type: "dhoti", state: "kerala" },
+            { id: 63, name: "Andhra Pradesh Dhoti", price: 1599, image: "https://i.imgur.com/9LkY7bT.jpg", type: "dhoti", state: "andhra_pradesh" },
+            { id: 64, name: "Karnataka Silk Dhoti", price: 2199, image: "https://i.imgur.com/4Xr8J9h.jpg", type: "dhoti", state: "karnataka" },
+            { id: 65, name: "Tamil Nadu Wedding Dhoti", price: 3499, image: "https://i.imgur.com/7Qm3z9P.jpg", type: "dhoti", state: "tamil_nadu" },
+            
+            // Kurtas
+            { id: 66, name: "Punjabi Pathani Kurta", price: 1499, image: "https://i.imgur.com/5tK8LbX.jpg", type: "kurta", state: "punjab" },
+            { id: 67, name: "Rajasthani Kurta", price: 1699, image: "https://i.imgur.com/3nZjx9L.jpg", type: "kurta", state: "rajasthan" },
+            { id: 68, name: "Lucknowi Chikankari Kurta", price: 1999, image: "https://i.imgur.com/8YfVv7G.jpg", type: "kurta", state: "uttar_pradesh" },
+            { id: 69, name: "Hyderabadi Kurta", price: 1799, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "kurta", state: "telangana" },
+            { id: 70, name: "Punjabi Printed Kurta", price: 1299, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "kurta", state: "punjab" },
+            
+            // Sherwanis
+            { id: 71, name: "Mughal Sherwani", price: 8999, image: "https://i.imgur.com/9Jv8x3L.jpg", type: "sherwani", state: "delhi" },
+            { id: 72, name: "Hyderabadi Sherwani", price: 7999, image: "https://i.imgur.com/4Lp9QdT.jpg", type: "sherwani", state: "telangana" },
+            { id: 73, name: "Rajasthani Sherwani", price: 7599, image: "https://i.imgur.com/7Km3z9P.jpg", type: "sherwani", state: "rajasthan" },
+            { id: 74, name: "Lucknowi Sherwani", price: 6899, image: "https://i.imgur.com/8Xr8J9h.jpg", type: "sherwani", state: "uttar_pradesh" },
+            { id: 75, name: "Mughal Wedding Sherwani", price: 11999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "sherwani", state: "delhi" }
+
+        ];
+
+        // Initialize wishlist and cart from localStorage
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // DOM Elements
+        const productGrid = document.getElementById('product-grid');
+        const wishlistBadge = document.getElementById('wishlist-badge');
+        const cartBadge = document.getElementById('cart-badge');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        const searchTrigger = document.getElementById('searchTrigger');
+        const searchForm = document.getElementById('searchForm');
+        const collectionForm = document.getElementById('collectionSearchForm');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const adminLoginModal = document.getElementById('adminLoginModal');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const cancelAdminLogin = document.getElementById('cancelAdminLogin');
+        const addProductModal = document.getElementById('addProductModal');
+        const addProductForm = document.getElementById('addProductForm');
+        const cancelAddProduct = document.getElementById('cancelAddProduct');
+        const productImageInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const deleteProductModal = document.getElementById('deleteProductModal');
+        const cancelDeleteProduct = document.getElementById('cancelDeleteProduct');
+        const confirmDeleteProduct = document.getElementById('confirmDeleteProduct');
+        const deleteConfirmationText = document.getElementById('deleteConfirmationText');
+
+        // Admin Configuration
+        const ADMIN_PASSWORD = "admin123";
+        let isAdminLoggedIn = false;
+        let productToDelete = null;
+
+        // Render Products
+        function renderProducts(productsToRender = products) {
+            productGrid.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                productGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No products found</h3>
+                        <p>Try different search criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            productsToRender.forEach(product => {
+                const isInWishlist = wishlist.includes(product.id);
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                // Add delete button only for admin
+                const deleteButton = isAdminLoggedIn ? 
+                    `<button class="delete-btn" data-id="${product.id}" title="Delete product">
+                        <i class="fas fa-trash"></i>
+                    </button>` : '';
+                
+                productCard.innerHTML = `
+                    ${deleteButton}
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p class="price">₹${product.price.toLocaleString()}</p>
+                        <div class="product-actions">
+                            <button class="wishlist-btn ${isInWishlist ? 'active' : ''}" data-id="${product.id}">
+                                <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i> Wishlist
+                            </button>
+                            <button class="cart-btn" data-id="${product.id}">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.wishlist-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    toggleWishlist(productId);
+                });
+            });
+
+            document.querySelectorAll('.cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            });
+
+            // Add event listener for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    productToDelete = parseInt(this.getAttribute('data-id'));
+                    const product = products.find(p => p.id === productToDelete);
+                    deleteConfirmationText.textContent = `Are you sure you want to delete "${product.name}"?`;
+                    deleteProductModal.style.display = 'flex';
+                });
+            });
+        }
+
+        // Toggle Wishlist
+        function toggleWishlist(productId) {
+            const index = wishlist.indexOf(productId);
+            if (index === -1) {
+                wishlist.push(productId);
+                showNotification('Added to wishlist!');
+            } else {
+                wishlist.splice(index, 1);
+                showNotification('Removed from wishlist');
+            }
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistBadge();
+            renderProducts();
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    cart.push({
+                        ...product,
+                        quantity: 1
+                    });
+                }
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartBadge();
+            showNotification('Added to cart!');
+        }
+
+        // Delete Product
+        function deleteProduct(productId) {
+            // Remove from products array
+            products = products.filter(product => product.id !== productId);
+            
+            // Remove from wishlist if present
+            wishlist = wishlist.filter(id => id !== productId);
+            
+            // Remove from cart if present
+            cart = cart.filter(item => item.id !== productId);
+            
+            // Update localStorage
+            localStorage.setItem('products', JSON.stringify(products));
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update UI
+            updateWishlistBadge();
+            updateCartBadge();
+            renderProducts();
+            
+            showNotification('Product deleted successfully!');
+        }
+
+        // Update Badges
+        function updateWishlistBadge() {
+            wishlistBadge.textContent = wishlist.length;
+        }
+
+        function updateCartBadge() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartBadge.textContent = count;
+        }
+
+        // Show Notification
+        function showNotification(message, isError = false) {
+            notificationMessage.textContent = message;
+            notification.classList.toggle('error', isError);
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Setup Search Form
+        function setupSearchForm() {
+            searchTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                searchForm.classList.toggle('active');
+            });
+
+            // Close search form when clicking outside
+            document.addEventListener('click', function() {
+                searchForm.classList.remove('active');
+            });
+
+            // Prevent form from closing when clicking inside it
+            searchForm.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Handle form submission
+            collectionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const state = document.getElementById('stateSelect').value;
+                const fashionType = document.getElementById('fashionSelect').value;
+                
+                if (!state || !fashionType) {
+                    showNotification('Please select both state and fashion type', true);
+                    return;
+                }
+                
+                // Filter products based on selection
+                const filteredProducts = products.filter(product => 
+                    product.state === state && product.type === fashionType
+                );
+                
+                // Display filtered products
+                renderProducts(filteredProducts);
+                searchForm.classList.remove('active');
+            });
+        }
+
+        // Setup Admin Panel
+        function setupAdminPanel() {
+            // Show login modal when admin button clicked
+            adminLoginBtn.addEventListener('click', function() {
+                if (isAdminLoggedIn) {
+                    addProductModal.style.display = 'flex';
+                } else {
+                    adminLoginModal.style.display = 'flex';
+                }
+            });
+
+            // Handle admin login
+            adminLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const password = document.getElementById('adminPassword').value;
+                
+                if (password === ADMIN_PASSWORD) {
+                    isAdminLoggedIn = true;
+                    adminLoginModal.style.display = 'none';
+                    showNotification('Admin login successful!');
+                    adminLoginBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                    renderProducts(); // Re-render to show delete buttons
+                } else {
+                    showNotification('Incorrect password', true);
+                }
+                
+                this.reset();
+            });
+
+            // Cancel admin login
+            cancelAdminLogin.addEventListener('click', function() {
+                adminLoginModal.style.display = 'none';
+                adminLoginForm.reset();
+            });
+
+            // Cancel add product
+            cancelAddProduct.addEventListener('click', function() {
+                addProductModal.style.display = 'none';
+                addProductForm.reset();
+                imagePreview.style.display = 'none';
+            });
+
+            // Preview image when URL is entered
+            productImageInput.addEventListener('input', function() {
+                if (this.value) {
+                    imagePreview.src = this.value;
+                    imagePreview.style.display = 'block';
+                } else {
+                    imagePreview.style.display = 'none';
+                }
+            });
+
+            // Handle adding new product
+            addProductForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Generate new ID (highest existing ID + 1)
+                const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                
+                const newProduct = {
+                    id: newId,
+                    name: document.getElementById('productName').value,
+                    price: parseInt(document.getElementById('productPrice').value),
+                    image: document.getElementById('productImage').value,
+                    state: document.getElementById('productState').value,
+                    type: document.getElementById('productType').value
+                };
+                
+                // Add to products array
+                products.push(newProduct);
+                
+                // Save to localStorage
+                localStorage.setItem('products', JSON.stringify(products));
+                
+                // Re-render products
+                renderProducts();
+                
+                // Close modal and reset form
+                addProductModal.style.display = 'none';
+                this.reset();
+                imagePreview.style.display = 'none';
+                
+                showNotification('Product added successfully!');
+            });
+
+            // Delete confirmation handlers
+            cancelDeleteProduct.addEventListener('click', function() {
+                deleteProductModal.style.display = 'none';
+                productToDelete = null;
+            });
+
+            confirmDeleteProduct.addEventListener('click', function() {
+                if (productToDelete) {
+                    deleteProduct(productToDelete);
+                    deleteProductModal.style.display = 'none';
+                    productToDelete = null;
+                }
+            });
+        }
+
+        // Initialize the page
+        function init() {
+            renderProducts();
+            updateWishlistBadge();
+            updateCartBadge();
+            setupSearchForm();
+            setupAdminPanel();
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

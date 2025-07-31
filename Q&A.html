@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Q&A - TrendAura</title>
+  <style>
+    * {
+      margin: 0;
+      padding:2px;
+      box-sizing: border-box;
+      font-family: 'Georgia', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f5f5f5;
+      padding-top: 10px;
+    }
+
+    /* Header Styles */
+    .header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 5%;
+      margin: 0 auto;
+    }
+
+    .menu-left {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .menu-left a {
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .menu-left a:hover, .menu-left a.active {
+      color: #e83e8c;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e83e8c;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-right {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 3rem;
+    }
+
+    .icon-group {
+      position: relative;
+    }
+
+    .icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #555;
+      transition: all 0.3s;
+    }
+
+    .icon:hover {
+      color: #e83e8c;
+    }
+    .tooltip {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e83e8c;
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .icon:hover .tooltip {
+      opacity: 1;
+    }
+
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e83e8c;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.6rem;
+      font-weight: bold;
+    }
+
+    /* Q&A Content */
+    .qa-container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .qa-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .qa-header h1 {
+      color: #e83e8c;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .qa-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .faq-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .faq-section h2 {
+      color: #e83e8c;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .faq-item {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-answer {
+      color: #555;
+      padding: 10px 0;
+      display: none;
+    }
+
+    .faq-question i {
+      transition: transform 0.3s;
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+
+    /* Tawk.to Chat Container */
+    .tawk-chat-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      width: 350px;
+      height: 450px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+      display: none;
+    }
+
+    /* Custom Chat Toggle Button */
+    .chat-toggle-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #e83e8c;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s;
+      border: none;
+      outline: none;
+    }
+
+    .chat-toggle-btn:hover {
+      background: #d22e7a;
+      transform: scale(1.05);
+    }
+
+    .chat-toggle-btn i {
+      font-size: 24px;
+    }
+
+    .chat-toggle-text {
+      position: absolute;
+      right: 70px;
+      background: white;
+      color: #e83e8c;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .chat-toggle-btn:hover .chat-toggle-text {
+      opacity: 1;
+    }
+
+    /* Hide default Tawk.to elements */
+    #tawk-to-status-container, .tawk-button-container {
+      display: none !important;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <nav class="navbar">
+      <div class="menu-left">
+        <a href="index.html">Home</a>
+        <a href="collections.html">All Collections</a>
+        <a href="contact.html">Contact</a>
+        <a href="Q&A.html" class="active">Q&A</a>
+        <a href="about.html">About Us</a>
+      </div>
+      <h1 class="logo">TREND AURA</h1>
+      <div class="menu-right">
+        <div class="action-icons">
+          <div class="icon-group">
+            <a href="collections1.html">
+              <i class="fas fa-search icon"></i>
+              <div class="tooltip">Search</div>
+            </a>
+          </div>
+          <div class="icon-group">
+            <a href="wishlist1.html">
+              <i class="far fa-heart icon"></i>
+              <span class="badge" id="wishlist-badge">0</span>
+              <div class="tooltip">Wishlist</div>
+            </a>
+          </div>
+          <div class="icon-group">
+            <a href="cart.html">
+              <i class="fas fa-shopping-cart icon"></i>
+              <span class="badge" id="cart-badge">0</span>
+              <div class="tooltip">Cart</div>
+            </a>
+          </div>
+          <div class="icon-group">
+            <a href="login.html">
+              <i class="fas fa-user-cog icon"></i>
+              <div class="tooltip">Login</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="qa-container">
+    <div class="qa-header">
+      <h1>Frequently Asked Questions</h1>
+      <p>Find answers to common questions about our products, shipping, returns, and more.</p>
+    </div>
+
+    <div class="faq-section">
+      <h2>Ordering & Payment</h2>
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I place an order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To place an order, simply browse our collections, select the items you want, add them to your cart, and proceed to checkout. You'll need to provide shipping information and payment details to complete your order.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          What payment methods do you accept?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and Apple Pay. All payments are processed securely.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          Is my payment information secure?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, we use industry-standard SSL encryption to protect your payment information. We don't store your credit card details on our servers.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Shipping & Delivery</h2>
+      <div class="faq-item">
+        <div class="faq-question">
+          How long does shipping take?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Standard shipping typically takes 3-5 business days within the US. International shipping times vary by destination but usually take 7-14 business days. Expedited shipping options are available at checkout.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          Do you ship internationally?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, we ship to most countries worldwide. Shipping costs and delivery times vary depending on the destination. You'll see the exact shipping costs at checkout before you complete your order.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          Can I track my order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, once your order has shipped, you'll receive a confirmation email with a tracking number. You can use this number to track your package through our website or the carrier's website.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Returns & Exchanges</h2>
+      <div class="faq-item">
+        <div class="faq-question">
+          What is your return policy?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We offer a 30-day return policy for most items. Items must be unused, in their original packaging, and with all tags attached. Some items like sale products or intimate apparel may be final sale.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I initiate a return?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>To initiate a return, log into your account, go to your order history, and select the item(s) you wish to return. Follow the instructions to print a return label and send your package back to us.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          How long does it take to process a refund?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Once we receive your returned item, refunds are typically processed within 3-5 business days. It may take additional time for the refund to appear on your original payment method.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <h2>Product Information</h2>
+      <div class="faq-item">
+        <div class="faq-question">
+          How do I know what size to order?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>We provide detailed size charts for each product. Please refer to these measurements rather than your usual size, as sizing can vary between brands and styles.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          Are your products ethically sourced?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Yes, we're committed to ethical sourcing and sustainability. All our partners must meet strict standards for fair labor practices and environmental responsibility.</p>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          How should I care for my TrendAura items?
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="faq-answer">
+          <p>Care instructions vary by material. Always check the care label inside your garment. In general, we recommend washing similar colors together in cold water and avoiding high heat when drying to preserve your items.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Chat Toggle Button -->
+  <button class="chat-toggle-btn" id="chatToggleBtn">
+    <i class="fas fa-comment-dots"></i>
+    <span class="chat-toggle-text">Need help? Chat with us</span>
+  </button>
+
+  <!-- Tawk.to Chat Container -->
+  <div class="tawk-chat-container" id="tawkChatContainer">
+    <!-- Tawk.to iframe will be inserted here -->
+  </div>
+
+  <script>
+    // Set cart/wishlist badge counts
+    document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+    document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+
+    // FAQ Accordion Functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('active');
+        
+        document.querySelectorAll('.faq-item').forEach(otherItem => {
+          if (otherItem !== item && otherItem.classList.contains('active')) {
+            otherItem.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // Tawk.to Chat Implementation
+    function initializeTawkTo() {
+      // Replace these with your actual Tawk.to credentials
+      const tawkToPropertyId = '663d7b7d9a809f19fb2f8d4e'; // Example Tawk.to property ID
+      const tawkToWidgetId = '1htdf1q4h';     // Example Tawk.to widget ID
+      
+      // Create Tawk.to iframe
+      const tawkIframe = document.createElement('iframe');
+      tawkIframe.src = `https://embed.tawk.to/${tawkToPropertyId}/${tawkToWidgetId}`;
+      tawkIframe.style.width = '100%';
+      tawkIframe.style.height = '100%';
+      tawkIframe.style.border = 'none';
+      tawkIframe.setAttribute('allowfullscreen', 'true');
+      tawkIframe.setAttribute('allowtransparency', 'true');
+      
+      document.getElementById('tawkChatContainer').appendChild(tawkIframe);
+      
+      // Toggle chat visibility
+      const chatContainer = document.getElementById('tawkChatContainer');
+      const toggleBtn = document.getElementById('chatToggleBtn');
+      
+      toggleBtn.addEventListener('click', function() {
+        if (chatContainer.style.display === 'block') {
+          chatContainer.style.display = 'none';
+        } else {
+          chatContainer.style.display = 'block';
+          // Force refresh the iframe when opening
+          tawkIframe.src = tawkIframe.src;
+        }
+      });
+      
+      // Close chat when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!chatContainer.contains(event.target) && 
+            event.target !== toggleBtn && 
+            !toggleBtn.contains(event.target)) {
+          chatContainer.style.display = 'none';
+        }
+      });
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', initializeTawkTo);
+
+    // Optional: Auto-open chat after 30 seconds
+    setTimeout(() => {
+      if(!localStorage.getItem('chatOpened')) {
+        document.getElementById('tawkChatContainer').style.display = 'block';
+        localStorage.setItem('chatOpened', 'true');
+      }
+    }, 30000);
+    // Set cart/wishlist badge counts
+    document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+    document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+  </script>
+  
+  <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .search-container select, 
+        .search-container input {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .icon:hover {
+            color: #e83e8c;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #e83e8c;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+         /* Remove the old icon-text */
+        .icon-text {
+            display: none;
+        }
+
+        /* Improve tooltip positioning */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-group .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            margin-top: 5px;
+        }
+
+        .icon-group:hover .tooltip {
+            opacity: 1;
+        }
+        /* Adjust the gap between icons */
+        .action-icons {
+            display: flex;
+            gap: 3rem; /* Increase this value for more space */
+            align-items: center;
+        }
+
+        /* Ensure icons and badges are properly aligned */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center; /* Center-align icons and tooltips */
+        }
+
+        /* Optional: Adjust icon size if needed */
+        .icon {
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        /* Add your existing styles here */
+        .checkout-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 5%;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .order-summary {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .payment-section {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #e83e8c;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #e83e8c;
+        }
+        
+        .payment-options {
+            margin-top: 1.5rem;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method:hover {
+            border-color: #e83e8c;
+        }
+        
+        .payment-method.selected {
+            border-color: #e83e8c;
+            background-color: #fff0f5;
+        }
+        
+        .payment-method input {
+            margin-right: 1rem;
+            accent-color: #e83e8c;
+        }
+        
+        .payment-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #555;
+        }
+        
+        .payment-details {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-total {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+        
+        .address-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .address-card h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+        
+        .btn:hover {
+            background: #d2337a;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #e83e8c;
+            color: #e83e8c;
+            margin-right: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: #fff0f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-container {
+                flex-direction: column;
+            }
+        }
+        .upi-scanner-container {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        #scan-upi-btn {
+            background: white;
+            color: #e83e8c;
+            border: 1px solid #e83e8c;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scan-upi-btn:hover {
+            background: #fff0f5;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        /* Scanner Animation */
+        @keyframes scan {
+            0% {
+                top: 0;
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                top: 100%;
+                opacity: 0.3;
+            }
+        }
+
+        /* File Upload Button */
+        .file-upload-label {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            background: #e0e0e0;
+        }
+
+        /* Form Row for Card Details */
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .amount-breakdown {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .amount-breakdown div {
+            margin-bottom: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header (Same as before) -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="search-container">
+                    <div class="icon-group" id="searchTrigger">
+                        <a href="collections1.html">
+                            <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                            <div class="tooltip">Search</div>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Wishlist">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="tooltip">Wishlist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group" title="Cart">
+                        <a href="cart.html" aria-hidden="true"></i>
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="tooltip">Cart</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="#" id="logout-btn" style="color: inherit;">
+                            <i class="fas fa-sign-out-alt icon"></i>
+                            <div class="tooltip">Logout</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Payment Content -->
+    <div class="checkout-container">
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2 class="section-title">Order Summary</h2>
+            
+            <div class="address-card">
+                <h4>Delivery Address</h4>
+                <div id="delivery-address-display">
+                    <!-- Address will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="summary-item">
+                <span>Subtotal</span>
+                <span id="subtotal">₹0.00</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Shipping</span>
+                <span>FREE</span>
+            </div>
+            
+            <div class="summary-item">
+                <span>Tax (10%)</span>
+                <span id="tax">₹0.00</span>
+            </div>
+            
+            <div class="summary-item summary-total">
+                <span>Total</span>
+                <span id="total">₹0.00</span>
+            </div>
+            
+            <a href="address.html" class="btn btn-outline">Change Address</a>
+        </div>
+        
+        <!-- Payment Section -->
+        <div class="payment-section">
+            <h2 class="section-title">Payment Options</h2>
+            
+            <div class="payment-options">
+                <div class="payment-method" data-method="upi">
+                    <input type="radio" name="payment" id="upi" checked>
+                    <i class="fas fa-mobile-alt payment-icon"></i>
+                    <div>
+                        <label for="upi">UPI Payment</label>
+                        <p>Pay via Google Pay, PhonePe, PayTM etc.</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="card">
+                    <input type="radio" name="payment" id="card">
+                    <i class="far fa-credit-card payment-icon"></i>
+                    <div>
+                        <label for="card">Credit/Debit Card</label>
+                        <p>Pay using Visa, Mastercard, Rupay etc.</p>
+                    </div>
+                </div>
+                
+                <div class="payment-method" data-method="cod">
+                    <input type="radio" name="payment" id="cod">
+                    <i class="fas fa-money-bill-wave payment-icon"></i>
+                    <div>
+                        <label for="cod">Cash on Delivery</label>
+                        <p>Pay when you receive your order</p>
+                    </div>
+                </div>
+            </div>
+        
+            
+            <!-- UPI Payment Details -->
+            <div class="payment-details" id="upi-details">
+                <div class="form-group">
+                    <label for="upi-id">UPI ID</label>
+                    <input type="text" id="upi-id" class="form-control" placeholder="yourname@upi">
+                </div>
+
+                <div class="upi-scanner-container">
+                    <p style="text-align: center; margin: 15px 0; color: #666;">- OR -</p>
+                    <button id="scan-upi-btn" class="btn btn-outline" style="width: auto; padding: 0.8rem 1.5rem; margin: 0 auto; display: block;">
+                        <i class="fas fa-qrcode" style="margin-right: 8px;"></i> Scan QR Code
+                    </button>
+
+                    <div id="scanner-container" style="display: none; margin-top: 20px; text-align: center;">
+                        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; max-width: 300px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <!-- Scanner frame with animation -->
+                            <div style="position: relative; width: 250px; height: 250px; margin: 0 auto; border: 2px solid #e83e8c; overflow: hidden;">
+                                <!-- Scanner overlay animation -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 30px; background: rgba(232, 62, 140, 0.3); animation: scan 2s linear infinite;"></div>
+                                
+                                <!-- QR Code image -->
+                                <img id="upi-qr-code" 
+                                     alt="UPI QR Code" 
+                                     style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            
+                            <div class="amount-breakdown" style="margin-top: 15px;">
+                                <div>Subtotal: <span id="qr-subtotal">₹0.00</span></div>
+                                <div>Tax (10%): <span id="qr-tax">₹0.00</span></div>
+                                <div style="font-weight: bold; color: #e83e8c;">Total: <span id="qr-total">₹0.00</span></div>
+                            </div>
+                            
+                            <p style="margin-top: 10px; font-size: 0.9rem; color: #555;">
+                                Scan this QR code with any UPI app to pay
+                            </p>
+                            <p style="font-weight: bold; margin-top: 5px; color: #e83e8c;">
+                                UPI ID: 8520096953@ybl
+                            </p>
+                        </div>
+
+                        <div style="margin-top: 20px;">
+                            <label for="payment-screenshot" style="display: block; margin-bottom: 8px; font-size: 0.9rem;">
+                                Upload Payment Screenshot (Optional)
+                            </label>
+                            <input type="file" id="payment-screenshot" accept="image/*" style="display: none;">
+                            <label for="payment-screenshot" class="file-upload-label">
+                                <i class="fas fa-upload" style="margin-right: 5px;"></i> Choose File
+                            </label>
+                            <span id="file-name" style="margin-left: 10px; font-size: 0.8rem; color: #666;">No file chosen</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Card Payment Details -->
+            <div class="payment-details" id="card-details">
+                <div class="form-group">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" class="form-control" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" class="form-control" placeholder="123">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="card-name">Name on Card</label>
+                    <input type="text" id="card-name" class="form-control">
+                </div>
+            </div>
+
+            
+            <button class="btn" id="confirm-order-btn">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        // Load user data and order summary
+        function loadCheckoutData() {
+            // Check if user is logged in
+            const isLoggedIn = localStorage.getItem('isAuthenticated') === 'true';
+            
+            if (!isLoggedIn) {
+                // Redirect to login page if not logged in
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Load delivery address
+            const address = JSON.parse(localStorage.getItem('deliveryAddress'));
+            
+            if (!address) {
+                // If no address, redirect to address page
+                window.location.href = 'address.html';
+                return;
+            }
+            
+            // Display address
+            document.getElementById('delivery-address-display').innerHTML = `
+                <p><strong>${address.fullName}</strong> (${address.phone})</p>
+                <p>${address.landmark}</p>
+                <p>${address.village}, ${address.mandal}</p>
+                <p>${address.district}, ${address.state} - ${address.pincode}</p>
+            `;
+            
+            // Calculate order summary (you would load this from cart in real app)
+            const subtotal = 1999.00; // Example amount
+            const tax = subtotal * 0.10; // 10% tax
+            const total = subtotal + tax;
+            
+            // Update order summary
+            document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
+            
+            // Update QR code scanner amounts
+            document.getElementById('qr-subtotal').textContent = `₹${subtotal.toFixed(2)}`;
+            document.getElementById('qr-tax').textContent = `₹${tax.toFixed(2)}`;
+            document.getElementById('qr-total').textContent = `₹${total.toFixed(2)}`;
+            
+            // Update QR code with correct total amount
+            document.getElementById('upi-qr-code').src = 
+                `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=8520096953@ybl&pn=TrendAura&am=${total.toFixed(2)}&cu=INR`;
+        }
+        
+        // Handle payment method selection
+        document.querySelectorAll('.payment-method').forEach(method => {
+            method.addEventListener('click', function() {
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // Show corresponding payment details
+                document.querySelectorAll('.payment-details').forEach(detail => {
+                    detail.style.display = 'none';
+                });
+                
+                const methodType = this.getAttribute('data-method');
+                if (methodType === 'upi') {
+                    document.getElementById('upi-details').style.display = 'block';
+                } else if (methodType === 'card') {
+                    document.getElementById('card-details').style.display = 'block';
+                }
+            });
+        });
+        
+        // Handle order confirmation
+        document.getElementById('confirm-order-btn').addEventListener('click', function() {
+            // Validate payment method
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').id;
+            let paymentValid = true;
+            
+            if (paymentMethod === 'upi') {
+                const upiId = document.getElementById('upi-id').value;
+                if (!upiId || !upiId.includes('@')) {
+                    alert('Please enter a valid UPI ID');
+                    paymentValid = false;
+                }
+            } else if (paymentMethod === 'card') {
+                const cardNumber = document.getElementById('card-number').value;
+                const expiry = document.getElementById('expiry').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardNumber || cardNumber.replace(/\s/g, '').length !== 16) {
+                    alert('Please enter a valid 16-digit card number');
+                    paymentValid = false;
+                } else if (!expiry || !expiry.match(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/)) {
+                    alert('Please enter a valid expiry date (MM/YY)');
+                    paymentValid = false;
+                } else if (!cvv || cvv.length !== 3) {
+                    alert('Please enter a valid 3-digit CVV');
+                    paymentValid = false;
+                }
+            }
+            
+            if (!paymentValid) return;
+            
+            // Create order (in a real app, this would be sent to a server)
+            const order = {
+                id: 'TREND-' + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toISOString(),
+                items: [], // You would load this from cart
+                address: JSON.parse(localStorage.getItem('deliveryAddress')),
+                paymentMethod: paymentMethod === 'upi' ? 'UPI' : 
+                              paymentMethod === 'card' ? 'Credit/Debit Card' : 'Cash on Delivery',
+                subtotal: document.getElementById('subtotal').textContent,
+                tax: document.getElementById('tax').textContent,
+                total: document.getElementById('total').textContent
+            };
+            
+            // Save order to localStorage
+            localStorage.setItem('currentOrder', JSON.stringify(order));
+            
+            // Clear cart (in a real app)
+            localStorage.removeItem('cart');
+            
+            // Redirect to confirmation page
+            window.location.href = 'confirmation.html';
+        });
+        
+        // Handle UPI scanner button
+        document.getElementById('scan-upi-btn').addEventListener('click', function() {
+            const scannerContainer = document.getElementById('scanner-container');
+            scannerContainer.style.display = scannerContainer.style.display === 'none' ? 'block' : 'none';
+            
+            // Auto-fill the UPI ID field with admin UPI when scanner is shown
+            if (scannerContainer.style.display === 'block') {
+                document.getElementById('upi-id').value = '8520096953@ybl';
+            }
+        });
+        
+        // Handle file name display for screenshot upload
+        document.getElementById('payment-screenshot').addEventListener('change', function(e) {
+            const fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
+            document.getElementById('file-name').textContent = fileName;
+            
+            if (e.target.files.length > 0) {
+                // In a real app, you would upload this to your server
+                console.log('Payment screenshot uploaded:', e.target.files[0].name);
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCheckoutData();
+            
+            // Select UPI by default and show its details
+            document.querySelector('.payment-method[data-method="upi"]').click();
+            
+            // Set cart/wishlist badge counts
+            document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+            document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+        });
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections - TrendAura</title>
+    <style>
+        /* Header Styles */
+        * {
+          margin: 0;
+          padding:1px;
+          box-sizing: border-box;
+          font-family: 'Georgia', sans-serif;
+        }
+        body {
+          margin: 0;
+          background: #f5f5f5;
+          padding-top: 10px;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-container select, 
+        .search-container input {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 0.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .icon:hover {
+            color: #e83e8c;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        /* Remove the old icon-text */
+        .icon-text {
+            display: none;
+        }
+
+        /* Improve tooltip positioning */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-group .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            margin-top: 5px;
+        }
+
+        .icon-group:hover .tooltip {
+            opacity: 1;
+        }
+        /* Adjust the gap between icons */
+        .action-icons {
+            display: flex;
+            gap: 3rem; /* Increase this value for more space */
+            align-items: center;
+        }
+
+        /* Ensure icons and badges are properly aligned */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center; /* Center-align icons and tooltips */
+        }
+
+        /* Optional: Adjust icon size if needed */
+        .icon {
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .collections-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-title h1 {
+            font-size: 2.5rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+        
+        .category-section {
+            margin-bottom: 4rem;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            color: #e83e8c;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e83e8c;
+        }
+        
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .collection-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .collection-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .collection-img {
+            height: 300px;
+            overflow: hidden;
+        }
+        
+        .collection-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .collection-item:hover .collection-img img {
+            transform: scale(1.05);
+        }
+        
+        .collection-name {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .collection-name h3 {
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .collections-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .collections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html" class="active">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <!-- Search Icon -->
+                    <div class="icon-group" title="Search">
+                        <a href="collections1.html">
+                            <i class="fas fa-search icon"></i>
+                            <span class="tooltip">Search</span>
+                            <div class="icon-text">Search</div>
+                        </a>
+                    </div>
+                
+                    <!-- Wishlist Icon -->
+                    <div class="icon-group" title="Wishlist">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="tooltip">Wishlist</div>
+                        </a>
+                    </div>
+                
+                    <!-- Cart Icon -->
+                    <div class="icon-group" title="Cart">
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <span class="tooltip">Cart</span>
+                        </a>
+                    </div>
+                
+                    <!-- Admin Icon -->
+                    <div class="icon-group" title="Admin">
+                        <a href="login.html">
+                            <i class="fas fa-user-cog icon"></i>
+                            <span class="tooltip">Admin</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="collections-container">
+        <div class="page-title">
+            <h1>Our Collections</h1>
+            <p>Discover our fashion categories</p>
+        </div>
+        
+        <!-- Women's Collections -->
+        <div class="category-section">
+            <h2 class="category-title">Women</h2>
+            <div class="collections-grid">
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://ilovesarees.com/cdn/shop/files/Himani-Rose-Gold-Tissue-Cotton-Saree8_a36aeedb-234f-4d6b-9da4-377c018a473e.webp?v=1717568699&width=1445" alt="Women's Cotton sarees">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Cotton Sarees</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://assets.ajio.com/medias/sys_master/root/20231116/9aXk/6555dd3bafa4cf41f58cff96/-473Wx593H-466805488-red-MODEL.jpg" alt="Women's Silk sarees">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Silk Sarees</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://www.anantexports.in/cdn/shop/files/1007-a8de1054-ca12-4f8d-8aa8-af0b9d14a644.jpg?v=1728414572" alt="Women's Silk sarees">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Georgette Sarees</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://www.jaipurfabric.com/cdn/shop/files/JF186285_bc118217-dd5b-4f97-a989-a68e9cf172f8.jpg?v=1731407759" alt="Women's Silk sarees">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Banarasi Saree</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://www.mohifashion.com/cdn/shop/files/1_b9d1f39d-8630-477d-b5d6-581b00c8d810.jpg?v=1722960980" alt="Women's Bridal Lehenga">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Bridal Lehenga</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://cdn.exoticindia.com/images/products/original/textiles-11-2024/gak615-darklilac.jpg" alt="Women's Party Lehenga">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Party Lehenga</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://www.anantexports.in/cdn/shop/files/IMG-20240619_143036.jpg?v=1718787673&width=1946" alt="Women's Designer Lehenga">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Designer Lehenga</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://sareevillahub.com/cdn/shop/files/1_16ed55c6-f004-4826-a944-5fe17507095a.jpg?v=1707736774" alt="Women's Anarkali Gown">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Anarkali Gown</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://taractara.com/cdn/shop/products/white-floral-printed-hand-block-printed-cotton-kurta-set-with-dupatta-885735.jpg?v=1706182185" alt="Women's Printed Kurta Set">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Printed Kurta Set</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://img.tatacliq.com/images/i22//437Wx649H/MP000000025261593_437Wx649H_202502042302071.jpeg" alt="Women's Embroidered Kurta">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Embroidered Kurta</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://m.media-amazon.com/images/I/81LXzqScQ6L._AC_UY1100_.jpg" alt="Women's Designer Kurta">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Designer Kurta</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://sukritistore.com/cdn/shop/files/WhatsAppImage2024-05-15at8.38.33PM.jpg?v=1715949153" alt="Women's Cotton Kurta Set">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Cotton Kurta Set</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Men's Collections -->
+        <div class="category-section">
+            <h2 class="category-title">Men</h2>
+            <div class="collections-grid">
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Men's Shirts">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Shirts</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Men's T-Shirts">
+                    </div>
+                    <div class="collection-name">
+                        <h3>T-Shirts</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Men's Jeans">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Jeans</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://assets.ajio.com/medias/sys_master/root/20241007/ZFrf/6703c255260f9c41e85e9c84/-473Wx593H-700534921-blue-MODEL.jpg" alt="Men's Ethnic">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Ethnic Wear</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://assets.myntassets.com/w_412,q_60,dpr_2,fl_progressive/assets/images/2024/NOVEMBER/28/kZXkrVOH_e597f94b58d74d298164c16f6e618cb7.jpg" alt="Men's T-Shirts">
+                    </div>
+                    <div class="collection-name">
+                        <h3>jackets</h3>
+                    </div>
+                </div>
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://rukminim3.flixcart.com/image/850/1000/xif0q/ethnic-set/z/3/v/xxl-kurta-and-pyjama-set-crystal-revenue-original-imagrhfmcmhrnhwt.jpeg?q=20&crop=false" alt="Men's T-Shirts">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Kurtas</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kids' Collections -->
+        <div class="category-section">
+            <h2 class="category-title">Kids</h2>
+            <div class="collections-grid">
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcTXuIqARHn0PBZ5mtl8aL-dw5JuB3KMv4krLMGvJtRQdccV9-12SapqQgJO_ijXn_0xrRznGMBzTcPxaKlBMPBoMc7j85PqZ-MXIosMOTHj" alt="Kids' Clothing">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Clothing</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://liandli.in/cdn/shop/files/LICD118_5_-min_800x.jpg?v=1695182482" alt="Kids' Dresses">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Dresses</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://i.pinimg.com/originals/c9/f5/6b/c9f56b1f42a094174d80ba83fb779061.jpg" alt="Kids' Ethnic">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Ethnic Wear</h3>
+                    </div>
+                </div>
+                
+                <div class="collection-item">
+                    <div class="collection-img">
+                        <img src="https://blog.g3fashion.com/wp-content/uploads/2020/07/printed-t-shirt-with-shorts-for-kid-boy-e1597743722833.jpg" alt="Kids' Accessories">
+                    </div>
+                    <div class="collection-name">
+                        <h3>Daily Wear</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

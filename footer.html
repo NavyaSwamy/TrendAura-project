@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Integrated Footer</title>
+  <style>
+    /* Footer Styles */
+    .footer {
+      background-color: #515050;
+      color: #fdfbfb;
+      padding: 40px 20px;
+      font-family: 'Arial', sans-serif;
+      border-top: 1px solid #e7e7e7;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .footer-section {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .newsletter {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .newsletter h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .newsletter p {
+      margin-bottom: 20px;
+      line-height: 1.5;
+      color: #f1f1f1;
+    }
+
+    .email-input {
+      display: flex;
+      max-width: 100%;
+    }
+
+    .email-input input {
+      flex: 1;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px 0 0 4px;
+      font-size: 14px;
+    }
+
+    .email-input button {
+      background-color: #000;
+      color: white;
+      border: none;
+      padding: 0 20px;
+      border-radius: 0 4px 4px 0;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .footer-links h4 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #f1f1f1;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .footer-bottom-content {
+      width: 100%;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #444;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .main-menu {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .main-menu a {
+      color: #f1f1f1;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .main-menu a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .store-info {
+      line-height: 1.6;
+      color: #f1f1f1;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .main-menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-section {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <!-- Newsletter Section -->
+      <div class="footer-section newsletter">
+        <h3>Why pay more..??</h3>
+        <p>We'll sweeten the deal with 10% Off on your first purchase. Sign up with TREND AURA today to access the best discounts first, track your orders effortlessly, and get notified to our upcoming Drops before it runs out.</p>
+        <div class="email-input">
+          <input type="email" placeholder="Enter your email" />
+          <button>Sign Up</button>
+        </div>
+      </div>
+
+      <!-- Policies Links -->
+      <div class="footer-section footer-links">
+        <h4>Policies:</h4>
+        <ul>
+          <li><a href="#">Return and Refund</a></li>
+          <li><a href="#">Shipping and Delivery</a></li>
+          <li><a href="#">Contact Information</a></li>
+          <li><a href="#">Terms and Conditions</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <!-- Store Information -->
+      <div class="footer-section footer-links">
+        <h4>Store Information:</h4>
+        <ul>
+          <li>Trademark: TRENDAURA ENTERPRISES</li>
+          <li>GST Number: 36CPNPA5785C1ZS</li>
+          <li>Office Address: Hyderabad 500092</li>
+          <li>WhatsApp: +91 8520096953</li>
+          <li>Email: trendaura@gmail.com</li>
+        </ul>
+      </div>
+
+      <!-- Footer Bottom Content -->
+      <div class="footer-bottom-content">
+        <div class="main-menu">
+          <a href="#">Home</a>
+          <a href="#">All Collections</a>
+          <a href="#">Contact</a>
+          <a href="#">Q&A</a>
+          <a href="#">About us</a>
+        </div>
+        <div class="store-info">
+          <p>© TrendAura 2025. All Rights Reserved.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | TrendAura</title>
+    <style>
+        :root {
+            --primary-color: #e83e8c;
+            --primary-hover: #d2337a;
+            --success-color: #4CAF50;
+            --whatsapp-color: #25D366;
+            --text-color: #333;
+            --text-light: #777;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #eee;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        .confirmation-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 5%;
+        }
+
+        .confirmation-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .confirmation-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+            animation: bounce 1s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+
+        .confirmation-message {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--success-dark);
+            font-weight: 600;
+        }
+
+        .order-details {
+            background: rgba(248, 248, 248, 0.8);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .order-details h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .order-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .order-items th {
+            text-align: left;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .order-items td {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: var(--whatsapp-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .confirmation-card {
+                padding: 2rem 1rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header - Consistent with main page -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="fas fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Account" style="color: inherit;">
+                        <a href="profile.html">
+                            <i class="fas fa-user icon"></i>
+                            <div class="icon-text">Profile</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="confirmation-container">
+        <div class="confirmation-card">
+            <i class="fas fa-check-circle confirmation-icon"></i>
+            <h2 class="confirmation-message">Your Order Has Been Confirmed!</h2>
+            <p>Thank you for shopping with TrendAura. Your order is being processed.</p>
+            
+            <div class="order-details">
+                <h3>Order Summary</h3>
+                <p><strong>Order ID:</strong> <span id="order-id">TRD-784592</span></p>
+                <p><strong>Order Date:</strong> <span id="order-date">March 15, 2024 at 2:30 PM</span></p>
+                <p><strong>Order Status:</strong> <span id="order-status">Processing</span></p>
+                <p><strong>Estimated Delivery:</strong> <span id="delivery-date">March 18, 2024</span></p>
+            </div>
+
+            <div class="order-details">
+                <h3>Order Items</h3>
+                <table class="order-items" id="order-items-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-items-body">
+                        <!-- Ordered item will appear here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="order-details">
+                <h3>Order Totals</h3>
+                <p><strong>Subtotal:</strong> <span id="order-subtotal">₹1,499.99</span></p>
+                <p><strong>Shipping:</strong> <span id="order-shipping">₹99.00</span></p>
+                <p><strong>Tax:</strong> <span id="order-tax">₹269.99</span></p>
+                <p><strong>Total Amount:</strong> <span id="order-total">₹1,868.98</span></p>
+                <p><strong>Payment Method:</strong> <span id="payment-method">Credit Card (VISA)</span></p>
+            </div>
+
+            <div class="order-details">
+                <h3>Shipping Information</h3>
+                <p><strong>Name:</strong> <span id="shipping-name">Rahul Sharma</span></p>
+                <p><strong>Address:</strong> <span id="shipping-address">45 Gandhi Road, Andheri East</span></p>
+                <p><strong>City:</strong> <span id="shipping-city">Mumbai</span></p>
+                <p><strong>State:</strong> <span id="shipping-state">Maharashtra</span></p>
+                <p><strong>ZIP Code:</strong> <span id="shipping-zip">400069</span></p>
+                <p><strong>Phone:</strong> <span id="shipping-phone">9876543210</span></p>
+                <p><strong>Email:</strong> <span id="shipping-email">rahul.sharma@example.com</span></p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="#" class="btn btn-whatsapp" id="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                </a>
+                <a href="order-details.html" class="btn btn-primary">
+                    <i class="fas fa-file-alt"></i> View Order Details
+                </a>
+                <a href="index.html" class="btn btn-outline">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order details from localStorage or use sample data
+            const order = JSON.parse(localStorage.getItem('currentOrder')) || {
+                id: 'TRD-' + Math.floor(100000 + Math.random() * 900000),
+                date: new Date().toISOString(),
+                status: 'Processing',
+                subtotal: 1499.99,
+                shipping: 99.00,
+                tax: 269.99,
+                total: 1868.98,
+                items: [
+                    {
+                        id: 'prod1',
+                        name: 'Floral Summer Dress',
+                        price: 1499.99,
+                        quantity: 1,
+                        variant: 'Size: M, Color: Blue',
+                        image: 'https://via.placeholder.com/80'
+                    }
+                ],
+                shippingInfo: {
+                    name: 'Rahul Sharma',
+                    address: '45 Gandhi Road, Andheri East',
+                    city: 'Mumbai',
+                    state: 'Maharashtra',
+                    zip: '400069',
+                    phone: '9876543210',
+                    email: 'rahul.sharma@example.com'
+                },
+                payment: {
+                    method: 'Credit Card (VISA)'
+                }
+            };
+
+            // Display order items
+            const itemsBody = document.getElementById('order-items-body');
+            order.items.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <img src="${item.image}" alt="${item.name}" class="item-image">
+                            <div>
+                                <div>${item.name}</div>
+                                <small style="color: var(--text-light);">${item.variant}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>₹${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${(item.price * item.quantity).toFixed(2)}</td>
+                `;
+                itemsBody.appendChild(row);
+            });
+
+            // Setup WhatsApp button with order details
+            document.getElementById('whatsapp-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const phoneNumber = '918520096953';
+                const item = order.items[0];
+                const message = `Hi TrendAura,\n\nI have a question about my order #${order.id}\n\n` +
+                               `*Order Details:*\n` +
+                               `Product: ${item.name}\n` +
+                               `Image: ${item.image}\n` +
+                               `Variant: ${item.variant}\n` +
+                               `Quantity: ${item.quantity}\n` +
+                               `Price: ₹${item.price.toFixed(2)}\n` +
+                               `Payment Method: ${order.payment.method}\n\n` +
+                               `*Order Total:* ₹${order.total.toFixed(2)}\n\n` +
+                               `Please assist me with this order.`;
+                
+                window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            });
+
+            // Save order details for the "View Order Details" page
+            localStorage.setItem('currentOrder', JSON.stringify(order));
+            
+            // Clear cart after order is placed
+            localStorage.removeItem('cart');
+        });
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    </script>
+</body>
+</html>

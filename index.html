@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Shop Fashion</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 0px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-display: center;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        .search-container {
+            position: relative;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .search-icon:hover {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .search-form {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 320px;
+            z-index: 100;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .search-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fafafa;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        select:focus {
+            border-color: #e83e8c;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #e83e8c;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #d2337a;
+        }
+        /* Hero Carousel */
+        .hero-carousel {
+            height: 650px;
+            overflow: hidden;
+            position: relative;
+        }
+        .carousel {
+            display: flex;
+            width: 300%;
+            height: 100%;
+            animation: slide 6s infinite;
+        }
+        .carousel img {
+            width: 33.33%;
+            height: 100%;
+            object-fit: cover;
+        }
+        @keyframes slide {
+            0%, 25% { transform: translateX(0); }
+            33.33%, 58.33% { transform: translateX(-33.33%); }
+            66.66%, 91.66% { transform: translateX(-66.66%); }
+        }
+
+        h1 {
+          text-align: center;
+          margin-bottom: 40px;
+          font-size: 2.8rem;
+          color: #222;
+        }
+    
+        .media-section {
+          max-width: 960px;
+          margin: 0 auto 40px auto;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+          border-radius: 16px;
+          overflow: hidden;
+          background: #fff;
+        }
+    
+        .media-section img,
+        .media-section iframe {
+          width: 100%;
+          display: block;
+          border: none;
+        }
+    
+        .media-caption {
+          padding: 10px 20px;
+          background: #fff;
+          text-align: center;
+        }
+    
+        .media-caption h2 {
+          font-size: 1.6rem;
+          color: #2c3e50;
+        }
+    
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 25px;
+          max-width: 1200px;
+          margin: auto;
+        }
+    
+        .card {
+          background: #fff;
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          cursor: pointer;
+        }
+    
+        .card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+    
+        .card img {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+        }
+    
+        .card-content {
+          padding: 15px 20px;
+        }
+    
+        .state-name {
+          font-size: 1.4rem;
+          font-weight: bold;
+          color: #2c3e50;
+          margin-bottom: 8px;
+        }
+    
+        .fashion-update {
+          font-size: 0.95rem;
+          color: #555;
+          line-height: 1.5;
+        }
+    
+        @media (max-width: 500px) {
+          h1 {
+            font-size: 2rem;
+          }
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .menu-left {
+                margin-bottom: 1rem;
+                gap: 1rem;
+            }
+            .logo {
+                position: static;
+                transform: none;
+                margin: 1rem 0;
+                text-align: center;
+            }
+            .menu-right {
+                width: 100%;
+                justify-content: center;
+            }
+            .trends-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .cart-item, .wishlist-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+            .trends-container {
+                grid-template-columns: 1fr;
+            }
+            .product-card {
+                width: 160px;
+            }
+        }
+        .cart-page, .wishlist-page {
+            display: none;
+            padding: 2rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background-color: #f9f3f0;
+            color: #333;
+            line-height: 2.5;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        header {
+            text-align: center;
+            margin: 5px 0;
+            padding-bottom: 0px;
+            
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom:20px;
+        }
+        
+        .meta {
+            color: #777;
+            font-style: italic;
+            margin-bottom: 0;
+        }
+        
+        .intro {
+            font-size: 1.1rem;
+            margin-bottom: 0%;
+            text-align: center;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .state-section {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+        }
+
+        .state-header {
+            color: #e83e8c;
+            padding: 5px 20px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        
+        .state-content {
+            padding: 20px;
+        }
+        
+        .dress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .dress-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .dress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .dress-img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+        
+        .dress-info {
+            padding: 20px;
+        }
+        
+        .dress-name {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .dress-desc {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .state-desc {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            font-size: 2rem;
+            color: #2c3e50;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background-color: #e83e8c;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            border-top: 1px solid #eee;
+            color: #777;
+        }
+        
+        @media (max-width: 768px) {
+            .dress-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .state-header {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="#" class="active" data-page="home">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="search-container">
+                    <div class="icon-group" id="searchTrigger">
+                        <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                        <div class="icon-text">Search</div>
+                    </div>
+                    <div class="search-form" id="searchForm">
+                        <form id="collectionSearchForm">
+                            <a href="collections1.html" style="color: inherit;">
+                                <div class="form-group">
+                                    <label for="stateSelect">Select State</label>
+                                    <select id="stateSelect" name="state" required>
+                                        <option value="">-- Select State --</option>
+                                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                                        <option value="assam">Assam</option>
+                                        <option value="bihar">Bihar</option>
+                                        <option value="gujarat">Gujarat</option>
+                                        <option value="karnataka">Karnataka</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="maharashtra">Maharashtra</option>
+                                        <option value="odisha">Odisha</option>
+                                        <option value="punjab">Punjab</option>
+                                        <option value="rajasthan">Rajasthan</option>
+                                        <option value="tamil_nadu">Tamil Nadu</option>
+                                        <option value="west_bengal">West Bengal</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                                        <option value="chhattisgarh">Chhattisgarh</option>
+                                        <option value="goa">Goa</option>
+                                        <option value="haryana">Haryana</option>
+                                        <option value="himachal_pradesh">Himachal Pradesh</option>
+                                        <option value="jharkhand">Jharkhand</option>
+                                        <option value="madhya_pradesh">Madhya Pradesh</option>
+                                        <option value="manipur">Manipur</option>
+                                        <option value="meghalaya">Meghalaya</option>
+                                        <option value="mizoram">Mizoram</option>
+                                        <option value="nagaland">Nagaland</option>
+                                        <option value="sikkim">Sikkim</option>
+                                        <option value="tripura">Tripura</option>
+                                        <option value="uttar_pradesh">Uttar Pradesh</option>
+                                        <option value="uttarakhand">Uttarakhand</option>
+                                        <option value="andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+                                        <option value="chandigarh">Chandigarh</option>
+                                        <option value="dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                        <option value="delhi">Delhi</option>
+                                        <option value="jammu_and_kashmir">Jammu and Kashmir</option>
+                                        <option value="ladakh">Ladakh</option>
+                                        <option value="lakshadweep">Lakshadweep</option>
+                                        <option value="puducherry">Puducherry</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fashionSelect">Select Fashion</label>
+                                    <select id="fashionSelect" name="type" required>
+                                        <option value="">-- Select Fashion --</option>
+                                        <option value="saree">Saree</option>
+                                        <option value="salwar_kameez">Salwar Kameez</option>
+                                        <option value="lehenga">Lehenga</option>
+                                        <option value="dhoti">Dhoti</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="search-btn">Search Collection</button>
+                            </a>
+                        </form>
+                    </div>
+                </div>
+                <div class="action-icons">
+                    <div class="icon-group" title="Wishlist">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group" title="Cart">
+                        <a href="cart.html" aria-hidden="true"></i>
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group" title="Admin">
+                        <a href="login.html" style="color: inherit; text-decoration: none;">
+                            <i class="fas fa-user-cog icon"></i>
+                            <div class="icon-text">Admin</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Home Page -->
+    <div id="home-page">
+        <!-- Hero Carousel -->
+        <section class="hero-carousel">
+            <div class="carousel">
+                <img src="https://binalpatel.in/cdn/shop/articles/november_blog-07_1920x.jpg?v=1701344224" alt="Telangana Fashion">
+                <img src="/Users/navyaswamy/Downloads/MixCollage-23-May-2025-06-33-PM-9459.jpg" alt="Maharashtra Fashion">
+                <img src="https://cityvibes.in/cdn/shop/articles/Top_Engagement_Outfits_for_Men.png?v=1735388460&width=1200" alt="Punjab Fashion">
+            </div>
+        </section>
+    </div>
+    <div class="container">
+        <header>
+            <h1>Indian Traditional Dresses That Never Go Out of Style</h1>
+        </header>
+        
+        <p class="intro">
+            In a country as diverse as India, identifying its top traditional dresses might seem challenging. 
+            Yet, the saree, salwar, and lehenga remain timeless favorites. Each state adds its unique touch, 
+            showcasing various silks like mulberry and tussar. These traditional outfits continue to captivate, 
+            blending rich heritage with modern elegance. Let's explore the special offerings from different states.
+        </p>
+        
+        <h2 class="section-title">Beloved Traditional Indian Dresses for Women</h2>
+        
+        <!-- Uttar Pradesh -->
+        <div class="state-section">
+            <div class="state-header">Uttar Pradesh</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    Uttar Pradesh is renowned for its exquisite traditional attire that blends grace with sophistication. 
+                    The Banarasi saree, originating from the city of Varanasi, is one of the most celebrated garments. 
+                    Known for its rich silk fabric and intricate zari work, the Banarasi saree is a symbol of opulence 
+                    and is often chosen for weddings and festive occasions. Another traditional garment from Uttar Pradesh 
+                    is the Ghagra Choli, which features a long skirt paired with a blouse and a dupatta. This attire is 
+                    both elegant and versatile, making it a favorite for various celebrations.
+                </p>
+                
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/d/a/dark-olive-green-umbrella-style-net-designer-lehenga-with-pentagon-neck-blouse-gg1038.jpg" alt="Green Designer Lehenga" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Green Designer Lehenga</h3>
+                            <p class="dress-desc">Dark Olive Green Umbrella Style Net Designer Lehenga with Pentagon Neck Blouse</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/s/r/sr27355.jpg" alt="Red Banarasi Silk Saree" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Red Banarasi Silk Saree</h3>
+                            <p class="dress-desc">Sweet Cherry Red Zari Woven Festive Wear Banarasi Silk Saree</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://www.ethnicrang.in/wp-content/uploads/2024/01/ALINA-VOL-4_img6_out-scaled-1.jpg" alt="Salwar kameez Dupatta" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Salwar kameez Dupatta</h3>
+                            <p class="dress-desc">Salwar kameez dress with designer dupatta</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Rajasthan and Gujarat -->
+        <div class="state-section">
+            <div class="state-header">Rajasthan and Gujarat</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    In Rajasthan and Gujarat, traditional dresses are characterized by their vibrant colors and intricate embroidery. 
+                    The Lehenga Choli, a staple in both states, consists of a long skirt, a blouse, and a dupatta, often adorned 
+                    with mirror work, thread embroidery, and colorful patterns. This attire is especially popular during festivals 
+                    and weddings. Additionally, the Ghagras of Gujarat, known for their mirror and embroidery work, reflect the 
+                    lively and festive spirit of the region. These traditional dresses are crafted with love and are often passed 
+                    down through generations.
+                </p>
+                
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/p/a/pastel-blue-panel-style-crepe-sangeet-lehenga-with-leaf-neck-blouse-gc4792-d.jpg" alt="Blue Sangeet Lehenga" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Blue Sangeet Lehenga</h3>
+                            <p class="dress-desc">Pastel Blue Panel Style Crepe Sangeet Lehenga With Leaf Neck Blouse</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://www.elahe.in/cdn/shop/files/ABHN37b_2048x.jpg?v=1705911600" alt="Red Bridal Lehenga" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Jacket for Men</h3>
+                            <p class="dress-desc">Pastel Green Nehru Jacket for Men</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/d/a/dark-red-umbrella-style-raw-silk-bridal-lehenga-with-leaf-neck-blouse-gg1138.jpg" alt="Red Bridal Lehenga" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Red Bridal Lehenga</h3>
+                            <p class="dress-desc">Dark Red Umbrella Style Raw Silk Bridal Lehenga with Leaf Neck Blouse</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Punjab and Haryana -->
+        <div class="state-section">
+            <div class="state-header">Punjab and Haryana</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    The Salwar Kameez is a quintessential traditional dress in Punjab and Haryana. This outfit includes 
+                    a flowing kameez, relaxed salwar pants, and a beautifully coordinated dupatta to complete the look. 
+                    It's admired for its comfort and versatility, making it suitable for everyday wear as well as special 
+                    occasions. The Patiala Salwar, a variant with a more voluminous and pleated design, is particularly 
+                    popular in Punjab. The elegance of the Salwar Kameez lies in its simplicity and adaptability to various 
+                    styles and fabrics.
+                </p>
+                
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/tagalys/product_images/l/i/light-pink-beige-sequins-embroidered-crepe-designer-salwar-ng3360.jpg" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Pink Designer Salwar</h3>
+                            <p class="dress-desc">Pale Pink Pearl Embroidered Crepe Designer Salwar</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/y/e/yellow-tussar-slub-straight-cut-suit-with-sequins-work-and-standup-collar-sl13956.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Yellow Straight Cut Suit</h3>
+                            <p class="dress-desc">Yellow Tussar Slub Straight Cut Suit with Sequins Work and Standup Collar</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://img.faballey.com/images/Product/XMS01300Z/d3.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Kurta-Pajama Suits</h3>
+                            <p class="dress-desc">Skin color kurta with white Pajama suit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Assam -->
+        <div class="state-section">
+            <div class="state-header">Assam</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    Assam is known for its traditional attire, which showcases the region's artistic heritage. 
+                    The Mekhela Chador is a traditional Assamese dress that consists of a two-piece garment: 
+                    a skirt (mekhela) and a draped upper garment (chador). Made from silk or cotton, the Mekhela 
+                    Chador is often adorned with beautiful patterns and motifs, reflecting the rich weaving 
+                    traditions of Assam. This attire is worn with grace and is a symbol of Assamese culture 
+                    and craftsmanship.
+                </p>
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://sereki.in/cdn/shop/products/DSC_8504.jpg?v=1737743117" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mekhela Sador</h3>
+                            <p class="dress-desc">A two-piece garment where the Mekhela is a cylindrical skirt and the Sador is a long cloth draped over the chest.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/56/ef/54/56ef5427aa4ccabb8b889521c23de63f.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Dhoti and Kurta</h3>
+                            <p class="dress-desc">Dhoti is a loose, unstitched lower garment, and Kurta is a long tunic worn over it.</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/a0/ac/cc/a0accc97bffd96ed3e5d154299164dd9.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Assam's Silk Weaving sarees</h3>
+                            <p class="dress-desc">Muga Silk: Renowned for its golden color and strength. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- West Bengal -->
+        <div class="state-section">
+            <div class="state-header">West Bengal</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    In West Bengal, the saree stands as a symbol of timeless elegance and cultural heritage. 
+                    The Baluchari saree, with its detailed motifs and narrative patterns, holds a special place 
+                    in the hearts of Bengali women as a cherished piece of tradition. Another popular saree from 
+                    the region is the Tant saree, characterized by its light cotton fabric, making it ideal for 
+                    everyday wear. The saree is cherished for its ability to enhance a woman's natural beauty 
+                    and is a staple in both casual and formal settings.
+                </p>
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://i.etsystatic.com/19178634/r/il/f00ad0/3989942793/il_570xN.3989942793_i22v.jpg" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Jamdani Saree</h3>
+                            <p class="dress-desc">The intricate motifs are created by adding supplementary weft threads to the base fabric, resulting in a unique design. </p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/31/3a/cf/313acf09dc9ea2ece9575bcc4a6542f4.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Kurta for Men</h3>
+                            <p class="dress-desc">Dhoti, Lungi, and Panjabi (kurta) are the traditional garments for men.</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://images.jdmagicbox.com/quickquotes/images_main/purple-baluchari-silk-saree-2219738564-tk5t4ftg.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Baluchari Silk Saree</h3>
+                            <p class="dress-desc">Primarily silk, though some varieties may include cotton or precious metal threads. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Maharashtra -->
+        <div class="state-section">
+            <div class="state-header">Maharashtra</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    Maharashtra is home to a variety of traditional dresses, each reflecting the region's cultural 
+                    diversity. The Nauvari saree, a classic nine-yard drape, is a signature attire for Maharashtrian 
+                    women, usually styled with a traditional blouse and adorned with elegant jewelry. The Nauvari 
+                    saree is draped in a unique style, highlighting the wearer's grace and poise. Another traditional 
+                    dress is the Lehenga Choli, which features intricate embroidery and is often worn during festivals 
+                    and weddings.
+                </p>
+                
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://img.faballey.com/images/Product/XSR08607Z/3.JPG" alt="Orange Paithani Silk Saree" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Orange Paithani Silk Saree</h3>
+                            <p class="dress-desc">Pink & Orange Dual Tone Paithani Silk Saree With Zari Woven And Unstitched Blouse</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://static3.azafashions.com/tr:w-450/uploads/product_gallery/1-0582892001680602974.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Dothi,kurta,and pheta</h3>
+                            <p class="dress-desc">The dhoti, worn as a lower garment, is a rectangular piece of cloth that is wrapped around the waist and legs. The kurta, worn as an upper garment, is a long shirt that goes up to the knees.</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://media.samyakk.com/pub/media/catalog/product/d/a/dark-green-metallic-embroidered-silk-bridesmaid-lehenga-nh2724.jpg" alt="Green Bridesmaid Lehenga" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Green Bridesmaid Lehenga</h3>
+                            <p class="dress-desc">Dark Green Metallic Embroidered Silk Bridesmaid Lehenga</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Traditional Indian Dresses Loved by South Indians</h2>
+        
+        <!-- Tamil Nadu -->
+        <div class="state-section">
+            <div class="state-header">Tamil Nadu</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    In Tamil Nadu, the Kanchipuram saree is a symbol of luxury and tradition. A tapestry of nature's 
+                    luxury, this saree's silk whispers its softness, while its zari work and vibrant hues paint a 
+                    story of opulence. It is often chosen for weddings and special occasions due to its opulent 
+                    appearance. Another traditional garment is the Pavadai Dhavani, a two-piece attire consisting 
+                    of a skirt and a blouse, often worn with a dupatta draped over the shoulder. Indulge in the 
+                    luxury of both style and comfort with this cherished ensemble.
+                </p>
+                 <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://qph.cf2.quoracdn.net/main-qimg-23a94e5bfbac29980ac3d86e5c94f4d2-lq" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mundu For Men</h3>
+                            <p class="dress-desc">Another traditional garment for men, similar to a lung</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://assets0.mirraw.com/images/12118123/image_zoom.jpeg?1702471566" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Kanjeevaram Sarees</h3>
+                            <p class="dress-desc">Famous for their silk fabric and elaborate designs, often featuring vibrant colors and gold zari work. </p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://ramrajcotton.in/cdn/shop/files/230404_Ecom_Ramraj00792_2b0df118-9479-479c-bf9b-fd0486d4ae69.jpg?v=1686803354&width=2000" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Angavastram Dress</h3>
+                            <p class="dress-desc">Angavastrams are typically made of cotton and come in various colors and designs, including plain white, or with decorative borders like jari or embroidery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Telangana -->
+        <div class="state-section">
+            <div class="state-header">Telangana</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    The traditional attire of Telangana includes the Pochampally saree, renowned for its unique 
+                    Ikat weaving technique. The saree features geometric patterns and vibrant colors, reflecting 
+                    the rich textile traditions of the region. Another traditional dress is the Langa Voni, a 
+                    three-piece outfit comprising a long skirt, a blouse, and a dupatta. Embroidered with intricate 
+                    patterns, this ensemble is a cherished choice for celebrations.
+                </p>
+                 <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://bengalloomsindia.com/cdn/shop/files/gadwal-kangivaram-brocade-silk-saree_8_720x@2x.jpg?v=1725117459" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Gadwal Saree</h3>
+                            <p class="dress-desc">Known for its intricate gold borders and contrasting motifs on the pallu (end of the saree). </p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/c7/b6/76/c7b6766d2e23eccf7c4415a3f300646b.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Langa-Voni (Lehenga-Saree)</h3>
+                            <p class="dress-desc"> A traditional ensemble consisting of a flowy skirt (lehenga), a blouse, and a long dupatta (scarf) wrapped to create an illusion of a saree. </p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://assets.myntassets.com/dpr_1.5,q_60,w_400,c_limit,fl_progressive/assets/images/2024/JULY/30/PLWAYMxM_bc4bd48f7f67404e81b6e125ef1fd677.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Churidars For Women</h3>
+                            <p class="dress-desc">A comfortable and popular choice for everyday wear.  </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Kerala -->
+        <div class="state-section">
+            <div class="state-header">Kerala</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    In the heart of Kerala, the Mundum Neriyathum whispers a story of elegance, woven with simplicity. 
+                    The outfit consists of a mundu (a long cloth wrapped around the waist) and a neriyathum (a blouse-like 
+                    garment worn over the mundu). Made from cotton or silk, this attire is often adorned with gold borders, 
+                    adding a touch of sophistication. People love to dress up in Mundum Neriyathum for special events.
+                </p>
+                 <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://wp-admin.firstlook.fashion/wp-content/uploads/2024/12/Mundum-neriyathum-saree-draping3.jpg?impolicy=resize&r_width=459&r_height=300&resize=459,300&impolicy=resize&r_width=1&w=1" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mundum Neriyathum Saree</h3>
+                            <p class="dress-desc">This traditional two-piece set for women includes a Mundu (wrapped around the hips) and a Neriyathum (placed over the left shoulder). </p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://sargoshi.in/cdn/shop/articles/cb9543978aad259a8ff34fa56973a056_600x.jpg?v=1716279298" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Kasavu Saree</h3>
+                            <p class="dress-desc">The name "kasavu" refers to the golden zari (metallic thread) used in the saree's border, which symbolizes prosperity and wealth</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://byhand.in/cdn/shop/files/1C37A1F0-13C4-4ED7-8FAD-CF4EA995BF4A.jpg?v=1726112429&width=533" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mundu For Men</h3>
+                            <p class="dress-desc">The Mundu is a long, white cotton cloth draped around the waist and tucked in, often worn with a shirt or Jubba.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Karnataka -->
+        <div class="state-section">
+            <div class="state-header">Karnataka</div>
+            <div class="state-content">
+                <p class="state-desc">
+                    The Mysore silk saree is a cherished traditional dress from Karnataka, known for its luxurious silk 
+                    fabric and intricate zari work. This saree is often chosen for weddings and formal occasions due 
+                    to its rich texture and elegant appearance. Another traditional garment is the Langa Davani, similar 
+                    to the Pavadai Dhavani of Tamil Nadu, featuring a long skirt and a blouse with a dupatta. This attire 
+                    is appreciated for its graceful draping and comfortable fit.
+                </p>
+                
+                <div class="dress-grid">
+                    <div class="dress-card">
+                        <img src="https://rmkv.com/cdn/shop/files/RMKV_oct6th0796.webp?v=1728632108" alt="Mysore Silk Saree" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mysore Silk Saree</h3>
+                            <p class="dress-desc">Baby Pink Zari Woven Mysore Silk Saree</p>
+                        </div>
+                    </div>
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/6e/51/ef/6e51ef5545e1ac9063e7fd375e5da524.jpg" alt="Pink Designer Salwar" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Mysore Peta For Men</h3>
+                            <p class="dress-desc">A traditional headdress known as Mysore Peta </p>
+                        </div>
+                    </div>
+                    
+                    <div class="dress-card">
+                        <img src="https://i.pinimg.com/736x/92/11/2f/92112f82f85adf5698091a36ede4ef32.jpg" alt="Yellow Straight Cut Suit" class="dress-img">
+                        <div class="dress-info">
+                            <h3 class="dress-name">Langa Davani</h3>
+                            <p class="dress-desc">Young women in some regions traditionally wear a Langa Davani, a two-piece set consisting of a skirt and blouse. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        // State Trends Data
+        const stateTrends = [
+            { state: "Maharashtra", img: "https://www.fabfunda.com/blog/wp-content/uploads/2023/08/Shalu-Maharashtrian-Wedding-Sarees.webp", name: "Maharashtra Traditional Sarees" },
+            { state: "Punjab", img: "https://ethnicrace.com/wp-content/uploads/2023/05/Buy-Gleaming-Punjabi-Patiala-Suit-With-Short-Kurti-For-Women-3.webp", name: "Punjab Kurtis Collection" },
+            { state: "Delhi", img: "https://akm-img-a-in.tosshub.com/indiatoday/images/photogallery/201308/monisha3_080213110927.jpg?VersionId=BfqdsY8AmsGNZwFWP4BIA5JkzjKmi3jn&size=686:*", name: "Delhi Fusion Fashion" },
+            { state: "Kerala", img: "https://static.wixstatic.com/media/f8c571_b84d565e5f9f4ed9a4ebddbdb9e40b91~mv2.webp/v1/fill/w_320,h_394,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/kerala%20bride%20wearing%20tissue%20set%20mundu.webp", name: "Kerala Handloom Wear" }
+        ];
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix for search functionality
+            const searchTrigger = document.getElementById('searchTrigger');
+            const searchForm = document.getElementById('searchForm');
+            
+            // Toggle search form visibility
+            searchTrigger.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                searchForm.classList.toggle('active');
+            });
+
+            // Close search form when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchForm.contains(e.target) && e.target !== searchTrigger && !searchTrigger.contains(e.target)) {
+                    searchForm.classList.remove('active');
+                }
+            });
+
+            // Prevent form from closing when clicking inside it
+            searchForm.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Handle form submission
+            document.getElementById('collectionSearchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const state = document.getElementById('stateSelect').value;
+                const fashionType = document.getElementById('fashionSelect').value;
+                
+                if (!state || !fashionType) {
+                    alert('Please select both state and fashion type');
+                    return;
+                }
+                
+                alert(`Searching for ${fashionType} from ${state}`);
+                searchForm.classList.remove('active');
+                
+                // In a real implementation, you would redirect to the search results page
+                // window.location.href = `search.html?state=${state}&type=${fashionType}`;
+            });
+
+            // Rest of your initialization code...
+            updateCartCount();
+            updateWishlistCount();
+        });
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            document.getElementById('cart-badge').textContent = count;
+        }
+
+        // Update wishlist count
+        function updateWishlistCount() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            document.getElementById('wishlist-badge').textContent = wishlist.length;
+        }
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+
+        // DOM Elements
+        const homePage = document.getElementById('home-page');
+        const cartPage = document.getElementById('cart-page');
+        const wishlistPage = document.getElementById('wishlist-page');
+        const trendContainer = document.getElementById('trend-container');
+        const productList = document.getElementById('product-list');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const wishlistItemsContainer = document.getElementById('wishlist-items-container');
+        const cartBadge = document.getElementById('cart-badge');
+        const wishlistBadge = document.getElementById('wishlist-badge');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartTotal = document.getElementById('cart-total');
+        const navLinks = document.querySelectorAll('.menu-left a, .action-icons .icon');
+        const searchTrigger = document.getElementById('searchTrigger');
+        const searchForm = document.getElementById('searchForm');
+        const collectionForm = document.getElementById('collectionSearchForm');
+        const proceedToPayBtn = document.getElementById('proceed-to-pay-btn');
+        const checkoutSection = document.getElementById('checkout-section');
+        const checkoutForm = document.getElementById('checkout-form');
+        const paymentMethods = document.querySelectorAll('.payment-method');
+
+        // Initialize the app
+        function init() {
+            renderStateTrends();
+            renderProducts();
+            updateCartCount();
+            updateWishlistCount();
+            setupNavigation();
+            setupSearchForm();
+            setupPaymentMethods();
+            setupCheckout();
+        }
+
+        // Render state trends
+        function renderStateTrends() {
+            trendContainer.innerHTML = '';
+            stateTrends.forEach(trend => {
+                const trendCard = document.createElement('div');
+                trendCard.classList.add('trend-card');
+                trendCard.innerHTML = `
+                    <img src="${trend.img}" alt="${trend.name}">
+                    <div class="trend-info">
+                        <h3>${trend.name}</h3>
+                        <p>Explore the latest fashion from ${trend.state}</p>
+                        <div class="trend-actions">
+                            <button class="wishlist-btn" data-id="${trend.state.toLowerCase()}"><i class="far fa-heart"></i> Wishlist</button>
+                            <button class="cart-btn" data-id="${trend.state.toLowerCase()}"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                trendContainer.appendChild(trendCard);
+            });
+        }
+
+        // Render products
+        function renderProducts() {
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h4>${product.name}</h4>
+                    <p class="price">₹${product.price.toLocaleString()}</p>
+                    <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    <button class="add-to-wishlist" data-id="${product.id}">Add to Wishlist</button>
+                `;
+                productList.appendChild(productCard);
+            });
+
+            // Add event listeners to buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            });
+
+            document.querySelectorAll('.add-to-wishlist').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.getAttribute('data-id'));
+                    addToWishlist(productId);
+                });
+            });
+        }
+
+        // Add to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+
+            updateCartCount();
+            showNotification(`${product.name} added to cart!`);
+            saveCartToStorage();
+        }
+
+        // Add to wishlist
+        function addToWishlist(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = wishlist.find(item => item.id === productId);
+
+            if (!existingItem) {
+                wishlist.push({
+                    ...product,
+                    quantity: 1
+                });
+                updateWishlistCount();
+                showNotification(`${product.name} added to wishlist!`);
+                saveWishlistToStorage();
+            } else {
+                showNotification(`${product.name} is already in your wishlist!`, true);
+            }
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            renderCartItems();
+            showNotification('Item removed from cart', true);
+            saveCartToStorage();
+        }
+
+        // Remove from wishlist
+        function removeFromWishlist(productId) {
+            wishlist = wishlist.filter(item => item.id !== productId);
+            updateWishlistCount();
+            renderWishlistItems();
+            showNotification('Item removed from wishlist', true);
+            saveWishlistToStorage();
+        }
+
+        // Update quantity in cart
+        function updateQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity += change;
+                
+                if (item.quantity < 1) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartCount();
+                    renderCartItems();
+                    saveCartToStorage();
+                }
+            }
+        }
+
+        // Render cart items
+        function renderCartItems() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Your cart is empty</h3>
+                        <p>Looks like you haven't added anything to your cart yet</p>
+                    </div>
+                `;
+                cartSubtotal.textContent = '₹0.00';
+                cartTotal.textContent = '₹50.00';
+                proceedToPayBtn.style.display = 'none';
+                checkoutSection.style.display = 'none';
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p class="price">₹${item.price.toLocaleString()}</p>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        </div>
+                        <p>Total: ₹${itemTotal.toLocaleString()}</p>
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+            
+            const total = subtotal + 50;
+            cartSubtotal.textContent = `₹${subtotal.toLocaleString()}`;
+            cartTotal.textContent = `₹${total.toLocaleString()}`;
+            proceedToPayBtn.style.display = 'block';
+        }
+
+        // Render wishlist items
+        function renderWishlistItems() {
+            wishlistItemsContainer.innerHTML = '';
+            
+            if (wishlist.length === 0) {
+                wishlistItemsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="far fa-heart"></i>
+                        <h3>Your wishlist is empty</h3>
+                        <p>Start adding items you love to your wishlist</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            wishlist.forEach(item => {
+                const wishlistItem = document.createElement('div');
+                wishlistItem.classList.add('wishlist-item');
+                wishlistItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p class="price">₹${item.price.toLocaleString()}</p>
+                    </div>
+                    <div>
+                        <button class="cart-btn" onclick="addToCart(${item.id})"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
+                        <button class="remove-btn" onclick="removeFromWishlist(${item.id})">Remove</button>
+                    </div>
+                `;
+                wishlistItemsContainer.appendChild(wishlistItem);
+            });
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartBadge.textContent = count;
+        }
+
+        // Update wishlist count
+        function updateWishlistCount() {
+            wishlistBadge.textContent = wishlist.length;
+        }
+
+        // Show notification
+        function showNotification(message, isError = false) {
+            notificationMessage.textContent = message;
+            notification.classList.toggle('error', isError);
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Save cart to localStorage
+        function saveCartToStorage() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Save wishlist to localStorage
+        function saveWishlistToStorage() {
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
+
+        // Setup navigation
+        function setupNavigation() {
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-page')) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = link.getAttribute('data-page');
+                        
+                        // Hide all pages
+                        homePage.style.display = 'none';
+                        cartPage.style.display = 'none';
+                        wishlistPage.style.display = 'none';
+                        
+                        // Show selected page
+                        if (page === 'cart') {
+                            cartPage.style.display = 'block';
+                            renderCartItems();
+                        } else if (page === 'wishlist') {
+                            wishlistPage.style.display = 'block';
+                            renderWishlistItems();
+                        } else {
+                            homePage.style.display = 'block';
+                        }
+                        
+                        // Update active nav link
+                        document.querySelectorAll('.menu-left a').forEach(a => {
+                            a.classList.toggle('active', a === link);
+                        });
+                    });
+                }
+            });
+        }
+
+        // Setup search form
+        function setupSearchForm() {
+            searchTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                searchForm.classList.toggle('active');
+            });
+
+            // Close search form when clicking outside
+            document.addEventListener('click', function() {
+                searchForm.classList.remove('active');
+            });
+
+            // Prevent form from closing when clicking inside it
+            searchForm.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Handle form submission
+            collectionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const state = document.getElementById('stateSelect').value;
+                const fashionType = document.getElementById('fashionSelect').value;
+                
+                if (!state || !fashionType) {
+                    showNotification('Please select both state and fashion type', true);
+                    return;
+                }
+                
+                showNotification(`Searching for ${fashionType} from ${state}`);
+                searchForm.classList.remove('active');
+            });
+        }
+
+        // Setup payment methods selection
+        function setupPaymentMethods() {
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        // Setup checkout process
+        function setupCheckout() {
+            proceedToPayBtn.addEventListener('click', function() {
+                if (cart.length === 0) {
+                    showNotification('Your cart is empty!', true);
+                    return;
+                }
+                
+                checkoutSection.style.display = 'block';
+                this.style.display = 'none';
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+            
+            checkoutForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                const cardName = document.getElementById('card-name').value;
+                const cardNumber = document.getElementById('card-number').value;
+                const expiryDate = document.getElementById('expiry-date').value;
+                const cvv = document.getElementById('cvv').value;
+                const address = document.getElementById('address').value;
+                const selectedMethod = document.querySelector('.payment-method.selected');
+                
+                if (!cardName || !cardNumber || !expiryDate || !cvv || !address) {
+                    showNotification('Please fill all payment details', true);
+                    return;
+                }
+                
+                if (!selectedMethod) {
+                    showNotification('Please select a payment method', true);
+                    return;
+                }
+                
+                // Process payment
+                showNotification('Payment successful! Your order has been placed.');
+                
+                // Clear cart
+                cart = [];
+                saveCartToStorage();
+                updateCartCount();
+                
+                // Reset form
+                checkoutForm.reset();
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                checkoutSection.style.display = 'none';
+                proceedToPayBtn.style.display = 'block';
+                
+                // Show empty cart
+                renderCartItems();
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+        // Make functions available globally for onclick handlers
+        window.updateQuantity = updateQuantity;
+        window.removeFromCart = removeFromCart;
+        window.removeFromWishlist = removeFromWishlist;
+        window.addToCart = addToCart;
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - TrendAura</title>
+    <style>
+        * {
+          margin: 0;
+          padding:1px;
+          box-sizing: border-box;
+          font-family: 'Georgia', sans-serif;
+        }
+        body {
+          margin: 0;
+          background: #f5f5f5;
+          padding-top: 10px;
+        }
+    
+        /* Header Styles */
+        .header {
+          background-color: white;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          position: sticky;
+          top: 0;
+          width: 100%;
+          z-index: 1000;
+        }
+    
+        .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 5%;
+          margin: 0 auto;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-container select, 
+        .search-container input {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .icon:hover {
+            color: #e83e8c;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        /* Remove the old icon-text */
+        .icon-text {
+            display: none;
+        }
+
+        /* Improve tooltip positioning */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-group .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            margin-top: 5px;
+        }
+
+        .icon-group:hover .tooltip {
+            opacity: 1;
+        }
+        /* Adjust the gap between icons */
+        .action-icons {
+            display: flex;
+            gap: 3rem; /* Increase this value for more space */
+            align-items: center;
+        }
+
+        /* Ensure icons and badges are properly aligned */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center; /* Center-align icons and tooltips */
+        }
+
+        /* Optional: Adjust icon size if needed */
+        .icon {
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #e83e8c;
+        }
+        
+        .nav-links a.active {
+            color: #e83e8c;
+            font-weight: 600;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #e83e8c;
+        }
+        
+        .about-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2.8rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .about-section {
+            background: white;
+            border-radius: 8px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: #e83e8c;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #e83e8c;
+        }
+        
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .mission-card, .vision-card {
+            background: #fff9fb;
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid #e83e8c;
+        }
+        
+        .mission-card h3, .vision-card h3 {
+            color: #e83e8c;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .team-section {
+            margin-top: 3rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .member-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 3px solid #e83e8c;
+        }
+        
+        .member-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .member-role {
+            color: #e83e8c;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .values-list {
+            margin: 2rem 0;
+        }
+        
+        .value-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .value-icon {
+            color: #e83e8c;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            margin-top: 0.3rem;
+        }
+        
+        .value-content h4 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .about-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="collections.html">Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html" class="active">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group" id="searchTrigger">
+                        <a href="collections1.html">
+                            <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                            <div class="tooltip">Search</div>
+                        </a>
+                    </div>
+                    <div class="icon" title="Wishlist">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <span class="tooltip">Wishlist</span>
+                        </a>
+                    </div>
+                    
+                    <div class="icon" title="Cart">
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <span class="tooltip">Cart</span>
+                        </a>
+                    </div>
+                    
+                    <div class="icon" title="Admin">
+                        <a href="login.html">
+                            <i class="fas fa-user-cog"></i>
+                            <span class="tooltip">Admin</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="about-container">
+        <div class="page-header">
+            <h1>About TrendAura</h1>
+            <p>Discover the story behind India's premier fashion destination</p>
+        </div>
+        
+        <div class="about-section">
+            <h2 class="section-title">Our Origin</h2>
+            <p><strong> <i>🌸 Origin Story of Trendaura :</strong></i>
+                In a land as diverse as India, where each state tells its own story through colors, fabrics, and patterns, fashion is more than just style—it's tradition, identity, and expression. Yet, this rich and ever-evolving heritage often goes unnoticed or underrepresented in the digital world.
+                
+                Trendaura was born from a simple yet powerful idea:
+                
+                "What if we could showcase the pulse of Indian fashion—state by state, day by day?"
+                
+                Founded by a passionate group of cultural explorers and tech enthusiasts, Trendaura set out to become more than just a fashion website. It became a living canvas that highlights the daily trends, regional styles, and authentic voices of India's vibrant fashion landscape.
+                
+                From the pastel Phulkari dupattas of Punjab to the bold ikat weaves of Odisha, and the elegant handloom silks of Tamil Nadu to the indie streetwear of Northeast India—Trendaura captures it all. Every day, it curates fresh, state-wise fashion updates that celebrate local artisans, modern trends, and sustainable choices.
+                
+                Whether you're a fashion lover, a designer seeking inspiration, or someone curious about how your state is influencing today's trends—Trendaura is your window into India's fashion heartbeat.
+                
+                </p>
+        </div>
+        
+        <div class="about-section">
+            <h2 class="section-title">Our Mission</h2>
+            <div class="mission-vision">
+                <div class="mission-card">
+                    <h3>Daily Fashion Updates</h3>
+                    <p>We're dedicated to keeping you updated with daily fashion trends from every corner of India. From traditional Kerala kasavu to Punjabi phulkari, from Bengali tant to Rajasthani leheriya - we bring you authentic regional styles with a modern twist.</p>
+                </div>
+                
+                <div class="vision-card">
+                    <h3>E-Commerce Excellence</h3>
+                    <p>TrendAura is revolutionizing online fashion retail in India with seamless shopping experiences, authentic regional collections, and personalized recommendations based on your location and preferences.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-section">
+            <h2 class="section-title">What Makes Us Unique</h2>
+            <div class="values-list">
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>State-Wise Fashion Curation</h4>
+                        <p>We're the first Indian platform to organize fashion by states, helping you discover and celebrate regional textile heritage while staying fashion-forward.</p>
+                    </div>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Authentic Regional Styles</h4>
+                        <p>We collaborate directly with local artisans and designers across India to bring you genuine regional fashion with modern appeal.</p>
+                    </div>
+                </div>
+                
+                <div class="value-item">
+                    <div class="value-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="value-content">
+                        <h4>Daily Trend Updates</h4>
+                        <p>Our fashion experts constantly monitor and analyze trends across India to bring you daily updates on what's trending in each region.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="about-section team-section">
+            <h2 class="section-title">Our Team</h2>
+            <p>TrendAura is powered by a diverse team of fashion enthusiasts, tech experts, and regional specialists from across India who share a common passion for making Indian fashion accessible to all.</p>
+        </div>
+        
+        <div class="about-section">
+            <h2 class="section-title">Our Promise</h2>
+            <p>At TrendAura, we're committed to:</p>
+            <ul style="margin: 1rem 0 1rem 2rem;">
+                <li style="margin-bottom: 0.5rem;">Showcasing authentic Indian fashion from every state</li>
+                <li style="margin-bottom: 0.5rem;">Providing daily updates on regional trends</li>
+                <li style="margin-bottom: 0.5rem;">Supporting local artisans and designers</li>
+                <li style="margin-bottom: 0.5rem;">Making Indian fashion accessible to everyone</li>
+                <li>Delivering an exceptional e-commerce experience</li>
+            </ul>
+            <p>Join us in celebrating the vibrant diversity of Indian fashion!</p>
+        </div>
+    </main>
+    <script>
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>
