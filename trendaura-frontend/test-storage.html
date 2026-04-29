@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Test - TrendAura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        button {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d2337a;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>TrendAura Storage Test</h1>
+    
+    <div class="container">
+        <h2>Storage Manager Test</h2>
+        <div class="test-section">
+            <h3>Test Collection Storage</h3>
+            <button onclick="testProductStorage()">Test Product Storage</button>
+            <button onclick="testWishlistStorage()">Test Wishlist Storage</button>
+            <button onclick="testCartStorage()">Test Cart Storage</button>
+            <button onclick="testMigration()">Test Migration</button>
+            <button onclick="clearAllData()">Clear All Data</button>
+            <div id="testResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Current Storage Status</h3>
+            <button onclick="showStorageStatus()">Show Storage Status</button>
+            <div id="storageStatus" class="result"></div>
+        </div>
+    </div>
+
+    <script src="js/storage-manager.js"></script>
+    <script>
+        function log(message, type = 'info') {
+            const resultDiv = document.getElementById('testResult');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            resultDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+        }
+
+        function testProductStorage() {
+            log('=== Testing Product Storage ===');
+            
+            try {
+                // Test adding products
+                const testProducts = [
+                    { id: 1001, name: "Test Saree 1", price: 2999, image: "test1.jpg", type: "saree", state: "karnataka" },
+                    { id: 1002, name: "Test Saree 2", price: 3999, image: "test2.jpg", type: "saree", state: "tamil_nadu" }
+                ];
+                
+                // Clear existing products
+                storage.setProducts([]);
+                
+                // Add test products
+                testProducts.forEach(product => {
+                    storage.addProduct(product);
+                });
+                
+                // Retrieve products
+                const retrievedProducts = storage.getProducts();
+                
+                if (retrievedProducts.length === testProducts.length) {
+                    log('Products stored and retrieved successfully', 'success');
+                    log(`Found ${retrievedProducts.length} products`);
+                    retrievedProducts.forEach(p => log(`- ${p.name} (ID: ${p.id})`));
+                } else {
+                    log(`Product count mismatch: expected ${testProducts.length}, got ${retrievedProducts.length}`, 'error');
+                }
+                
+                // Test updating a product
+                storage.updateProduct(1001, { price: 3499 });
+                const updatedProduct = storage.getProducts().find(p => p.id === 1001);
+                if (updatedProduct && updatedProduct.price === 3499) {
+                    log('Product update test passed', 'success');
+                } else {
+                    log('Product update test failed', 'error');
+                }
+                
+                // Test removing a product
+                storage.removeProduct(1002);
+                const productsAfterRemoval = storage.getProducts();
+                if (productsAfterRemoval.length === 1) {
+                    log('Product removal test passed', 'success');
+                } else {
+                    log('Product removal test failed', 'error');
+                }
+                
+            } catch (error) {
+                log(`Product storage test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function testWishlistStorage() {
+            log('=== Testing Wishlist Storage ===');
+            
+            try {
+                // Clear wishlist
+                storage.setWishlist([]);
+                
+                // Add items to wishlist
+                storage.addToWishlist(1001);
+                storage.addToWishlist(1003);
+                storage.addToWishlist(1005);
+                
+                const wishlist = storage.getWishlist();
+                if (wishlist.length === 3) {
+                    log('Wishlist items added successfully', 'success');
+                    log(`Wishlist contains: ${wishlist.join(', ')}`);
+                } else {
+                    log(`Wishlist count mismatch: expected 3, got ${wishlist.length}`, 'error');
+                }
+                
+                // Test isInWishlist
+                if (storage.isInWishlist(1001)) {
+                    log('isInWishlist test passed', 'success');
+                } else {
+                    log('isInWishlist test failed', 'error');
+                }
+                
+                // Test removal
+                storage.removeFromWishlist(1003);
+                const wishlistAfterRemoval = storage.getWishlist();
+                if (wishlistAfterRemoval.length === 2 && !wishlistAfterRemoval.includes(1003)) {
+                    log('Wishlist removal test passed', 'success');
+                } else {
+                    log('Wishlist removal test failed', 'error');
+                }
+                
+            } catch (error) {
+                log(`Wishlist storage test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function testCartStorage() {
+            log('=== Testing Cart Storage ===');
+            
+            try {
+                // Clear cart
+                storage.setCart([]);
+                
+                // Add items to cart
+                const testProduct1 = { id: 1001, name: "Test Product 1", price: 2999 };
+                const testProduct2 = { id: 1003, name: "Test Product 2", price: 3999 };
+                
+                storage.addToCart(testProduct1, 2);
+                storage.addToCart(testProduct2, 1);
+                
+                const cart = storage.getCart();
+                if (cart.length === 2) {
+                    log('Cart items added successfully', 'success');
+                    cart.forEach(item => log(`- ${item.name} (Qty: ${item.quantity})`));
+                } else {
+                    log(`Cart count mismatch: expected 2, got ${cart.length}`, 'error');
+                }
+                
+                // Test cart item count
+                const itemCount = storage.getCartItemCount();
+                if (itemCount === 3) {
+                    log('Cart item count test passed', 'success');
+                } else {
+                    log(`Cart item count test failed: expected 3, got ${itemCount}`, 'error');
+                }
+                
+                // Test cart total
+                const total = storage.getCartTotal();
+                if (total === 9997) { // (2999 * 2) + (3999 * 1)
+                    log('Cart total test passed', 'success');
+                    log(`Cart total: ${total}`);
+                } else {
+                    log(`Cart total test failed: expected 9997, got ${total}`, 'error');
+                }
+                
+                // Test quantity update
+                storage.updateCartItemQuantity(1001, 5);
+                const updatedCart = storage.getCart();
+                const updatedItem = updatedCart.find(item => item.id === 1001);
+                if (updatedItem && updatedItem.quantity === 5) {
+                    log('Cart quantity update test passed', 'success');
+                } else {
+                    log('Cart quantity update test failed', 'error');
+                }
+                
+            } catch (error) {
+                log(`Cart storage test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function testMigration() {
+            log('=== Testing Data Migration ===');
+            
+            try {
+                // Simulate old data
+                localStorage.setItem('products', JSON.stringify([
+                    { id: 1, name: "Old Product 1", price: 1999 },
+                    { id: 2, name: "Old Product 2", price: 2999 }
+                ]));
+                localStorage.setItem('wishlist', JSON.stringify([1, 3, 5]));
+                localStorage.setItem('cart', JSON.stringify([{ id: 1, quantity: 2 }]));
+                
+                // Create new storage manager instance to trigger migration
+                const testStorage = new StorageManager();
+                
+                // Check if migration worked
+                const migratedProducts = testStorage.getProducts();
+                const migratedWishlist = testStorage.getWishlist();
+                const migratedCart = testStorage.getCart();
+                
+                if (migratedProducts.length === 2 && migratedWishlist.length === 3 && migratedCart.length === 1) {
+                    log('Data migration test passed', 'success');
+                    log('Old data successfully migrated to new storage format');
+                } else {
+                    log('Data migration test failed', 'error');
+                }
+                
+                // Check if old keys are removed
+                if (!localStorage.getItem('products') && !localStorage.getItem('wishlist') && !localStorage.getItem('cart')) {
+                    log('Old storage keys cleaned up successfully', 'success');
+                } else {
+                    log('Old storage keys not cleaned up', 'error');
+                }
+                
+            } catch (error) {
+                log(`Migration test failed: ${error.message}`, 'error');
+            }
+        }
+
+        function showStorageStatus() {
+            log('=== Current Storage Status ===');
+            
+            try {
+                const storageSize = storage.getStorageSize();
+                const products = storage.getProducts();
+                const wishlist = storage.getWishlist();
+                const cart = storage.getCart();
+                const user = storage.getUser();
+                const isAuthenticated = storage.isAuthenticated();
+                
+                log(`Storage size: ${storageSize} bytes`, 'info');
+                log(`Products: ${products.length} items`, 'info');
+                log(`Wishlist: ${wishlist.length} items`, 'info');
+                log(`Cart: ${cart.length} items (${storage.getCartItemCount()} total quantity)`, 'info');
+                log(`Cart total: ${storage.getCartTotal()}`, 'info');
+                log(`User logged in: ${isAuthenticated}`, 'info');
+                if (user) {
+                    log(`User: ${user.email || 'Unknown'}`, 'info');
+                }
+                
+                // Show localStorage keys
+                log('\n=== localStorage Keys ===');
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('trendaura_')) {
+                        const value = localStorage.getItem(key);
+                        log(`${key}: ${value.substring(0, 50)}${value.length > 50 ? '...' : ''}`, 'info');
+                    }
+                }
+                
+            } catch (error) {
+                log(`Storage status check failed: ${error.message}`, 'error');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all TrendAura data?')) {
+                storage.clearAll();
+                log('All TrendAura data cleared', 'success');
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            log('Storage test page loaded successfully', 'success');
+            log('Ready to run storage tests', 'info');
+        });
+    </script>
+</body>
+</html>

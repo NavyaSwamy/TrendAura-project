@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Shop Fashion</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        .search-container {
+            position: relative;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .search-icon:hover {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .search-form {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 320px;
+            z-index: 100;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .search-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background-color: #fafafa;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        select:focus {
+            border-color: #e83e8c;
+            outline: none;
+        }
+        .search-btn {
+            background-color: #e83e8c;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .search-btn:hover {
+            background-color: #d2337a;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 1.2rem;
+        }
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .product-info .seller {
+            color: #7f7f7f;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+        .product-info .product-description {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 0.9rem;
+            max-height: 4.2rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-info .price {
+            color: #e83e8c;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        .wishlist-btn, .cart-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .wishlist-btn {
+            background: none;
+            color: #555;
+        }
+        .wishlist-btn.active {
+            color: #e83e8c;
+        }
+        .cart-btn {
+            background: #e83e8c;
+            color: white;
+        }
+        .cart-btn:hover {
+            background: #d2337a;
+        }
+        
+        /* Delete Button */
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #ff4757;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background: #ff4757;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ed573;
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.error {
+            background: #ff4757;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 4rem 0;
+        }
+        .empty-state i {
+            font-size: 3rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .empty-state p {
+            color: #666;
+        }
+        
+        /* Admin Modal Styles */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .admin-modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        .admin-form-group {
+            margin-bottom: 1rem;
+        }
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .admin-form-group input,
+        .admin-form-group select,
+        .admin-form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .admin-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .admin-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .admin-btn-cancel {
+            background: #f1f1f1;
+            color: #333;
+        }
+        .admin-btn-cancel:hover {
+            background: #e1e1e1;
+        }
+        .admin-btn-submit {
+            background: #e83e8c;
+            color: white;
+        }
+        .admin-btn-submit:hover {
+            background: #d2337a;
+        }
+        .admin-btn-delete {
+            background: #ff4757;
+            color: white;
+        }
+        .admin-btn-delete:hover {
+            background: #e84118;
+        }
+        .admin-login-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e83e8c;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .admin-login-btn i {
+            font-size: 1.5rem;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 1rem;
+            display: none;
+        }
+        .new-product-highlight {
+            box-shadow: 0 0 0 3px #e83e8c;
+            animation: highlightFade 2s ease-out forwards;
+        }
+        @keyframes highlightFade {
+            0% { box-shadow: 0 0 0 4px #e83e8c; }
+            100% { box-shadow: 0 0 0 0 rgba(232,62,140,0); }
+        }
+        .account-link {
+            color: inherit;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(232, 62, 140, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .account-link:hover {
+            background: rgba(232, 62, 140, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html" class="active">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <a href="#" onclick="handleProfileNavigation(); return false;" class="account-link">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <div class="search-container">
+                    <div class="icon-group" id="searchTrigger">
+                        <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                        <div class="icon-text">Search</div>
+                    </div>
+                    <div class="search-form" id="searchForm">
+                        <form id="collectionSearchForm">
+                            <div class="form-group">
+                                <label for="productNameSearch">Search by Product Name</label>
+                                <input type="text" id="productNameSearch" name="productName" placeholder="Enter product name..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="stateSelect">Select State</label>
+                                <select id="stateSelect" name="state" required>
+                                    <option value="">-- Select State --</option>
+                                    <option value="andhra_pradesh">Andhra Pradesh</option>
+                                    <option value="assam">Assam</option>
+                                    <option value="bihar">Bihar</option>
+                                    <option value="gujarat">Gujarat</option>
+                                    <option value="karnataka">Karnataka</option>
+                                    <option value="kerala">Kerala</option>
+                                    <option value="maharashtra">Maharashtra</option>
+                                    <option value="odisha">Odisha</option>
+                                    <option value="punjab">Punjab</option>
+                                    <option value="rajasthan">Rajasthan</option>
+                                    <option value="tamil_nadu">Tamil Nadu</option>
+                                    <option value="west_bengal">West Bengal</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                                    <option value="chhattisgarh">Chhattisgarh</option>
+                                    <option value="goa">Goa</option>
+                                    <option value="haryana">Haryana</option>
+                                    <option value="himachal_pradesh">Himachal Pradesh</option>
+                                    <option value="jharkhand">Jharkhand</option>
+                                    <option value="madhya_pradesh">Madhya Pradesh</option>
+                                    <option value="manipur">Manipur</option>
+                                    <option value="meghalaya">Meghalaya</option>
+                                    <option value="mizoram">Mizoram</option>
+                                    <option value="nagaland">Nagaland</option>
+                                    <option value="sikkim">Sikkim</option>
+                                    <option value="tripura">Tripura</option>
+                                    <option value="uttar_pradesh">Uttar Pradesh</option>
+                                    <option value="uttarakhand">Uttarakhand</option>
+                                    <option value="andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+                                    <option value="chandigarh">Chandigarh</option>
+                                    <option value="dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                                    <option value="delhi">Delhi</option>
+                                    <option value="jammu_and_kashmir">Jammu and Kashmir</option>
+                                    <option value="ladakh">Ladakh</option>
+                                    <option value="lakshadweep">Lakshadweep</option>
+                                    <option value="puducherry">Puducherry</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="fashionSelect">Select Fashion</label>
+                                <select id="fashionSelect" name="type" required>
+                                    <option value="">-- Select Fashion --</option>
+                                    <option value="saree">Saree</option>
+                                    <option value="salwar_kameez">Salwar Kameez</option>
+                                    <option value="lehenga">Lehenga</option>
+                                    <option value="dhoti">Dhoti</option>
+                                    <option value="kurta">Kurta</option>
+                                    <option value="sherwani">Sherwani</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="search-btn">Search Collection</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group" id="sellerIndicator" style="display: none;">
+                        <a href="collections1.html" style="color: inherit;">
+                            <i class="fas fa-store icon"></i>
+                            <span class="badge" style="background: #28a745;">SELLER</span>
+                            <div class="icon-text">Seller Portal</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="product-grid">
+        <!-- Products will be loaded here -->
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notification-message"></span>
+    </div>
+    <div class="admin-login-btn" id="adminLoginBtn">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Seller Login Modal -->
+    <div class="admin-modal" id="sellerLoginModal">
+        <div class="admin-modal-content">
+            <h2>Seller Login</h2>
+            <form id="sellerLoginForm">
+                <div class="admin-form-group">
+                    <label for="sellerEmail">Email</label>
+                    <input type="email" id="sellerEmail" required placeholder="seller@example.com">
+                </div>
+                <div class="admin-form-group">
+                    <label for="sellerPassword">Password</label>
+                    <input type="password" id="sellerPassword" required placeholder="Enter your password">
+                </div>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-cancel" id="cancelSellerLogin">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-submit">Login</button>
+                </div>
+                <p class="admin-note">Don’t have an account? <a href="login.html">Register here</a> before adding products.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="admin-modal" id="addProductModal">
+        <div class="admin-modal-content">
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <div class="admin-form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productPrice">Price (₹)</label>
+                    <input type="number" id="productPrice" min="1" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productSize">Available Sizes (comma separated)</label>
+                    <input type="text" id="productSize" placeholder="Example: XS, S, M, L, XL" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productImage">Image URL</label>
+                    <input type="url" id="productImage" required>
+                    <img id="imagePreview" class="preview-image" alt="Image Preview">
+                </div>
+                <div class="admin-form-group">
+                    <label for="productExtraImages">Additional Image URLs (optional, comma separated)</label>
+                    <input type="text" id="productExtraImages" placeholder="Paste extra image links, separated by commas">
+                </div>
+                <div class="admin-form-group">
+                    <label for="productState">State</label>
+                    <select id="productState" required>
+                        <option value="">-- Select State --</option>
+                        <option value="andhra_pradesh">Andhra Pradesh</option>
+                        <option value="assam">Assam</option>
+                        <option value="bihar">Bihar</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="karnataka">Karnataka</option>
+                        <option value="kerala">Kerala</option>
+                        <option value="maharashtra">Maharashtra</option>
+                        <option value="odisha">Odisha</option>
+                        <option value="punjab">Punjab</option>
+                        <option value="rajasthan">Rajasthan</option>
+                        <option value="tamil_nadu">Tamil Nadu</option>
+                        <option value="west_bengal">West Bengal</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="arunachal_pradesh">Arunachal Pradesh</option>
+                        <option value="chhattisgarh">Chhattisgarh</option>
+                        <option value="goa">Goa</option>
+                        <option value="haryana">Haryana</option>
+                        <option value="himachal_pradesh">Himachal Pradesh</option>
+                        <option value="jharkhand">Jharkhand</option>
+                        <option value="madhya_pradesh">Madhya Pradesh</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tripura">Tripura</option>
+                        <option value="uttar_pradesh">Uttar Pradesh</option>
+                        <option value="uttarakhand">Uttarakhand</option>
+                        <option value="andaman_and_nicobar_islands">Andaman and Nicobar Islands</option>
+                        <option value="chandigarh">Chandigarh</option>
+                        <option value="dadra_and_nagar_haveli_and_daman_and_diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option value="delhi">Delhi</option>
+                        <option value="jammu_and_kashmir">Jammu and Kashmir</option>
+                        <option value="ladakh">Ladakh</option>
+                        <option value="lakshadweep">Lakshadweep</option>
+                        <option value="puducherry">Puducherry</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productType">Fashion Type</label>
+                    <select id="productType" required>
+                        <option value="">-- Select Fashion --</option>
+                        <option value="saree">Saree</option>
+                        <option value="salwar_kameez">Salwar Kameez</option>
+                        <option value="lehenga">Lehenga</option>
+                        <option value="dhoti">Dhoti</option>
+                        <option value="kurta">Kurta</option>
+                        <option value="sherwani">Sherwani</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productCategory">Product Category</label>
+                    <select id="productCategory" required>
+                        <option value="">-- Select Category --</option>
+                        <option value="women">Women's Wear</option>
+                        <option value="mens">Men's Wear</option>
+                        <option value="kids">Kids' Wear</option>
+                        <option value="bridal">Bridal</option>
+                        <option value="festive">Festive</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="productColors">Available Colors (optional, comma separated)</label>
+                    <input type="text" id="productColors" placeholder="Example: Red, Gold, Navy Blue">
+                </div>
+                <div class="admin-form-group">
+                    <label for="productBoutique">Boutique / Seller Name (optional)</label>
+                    <input type="text" id="productBoutique" placeholder="Local boutique name">
+                </div>
+                <div class="admin-form-group">
+                    <label for="productDescription">Short Saree Description (optional)</label>
+                    <textarea id="productDescription" rows="3" placeholder="Fabric, weave, story behind this piece"></textarea>
+                </div>
+                <div class="admin-form-actions">
+                    <button type="button" class="admin-btn admin-btn-cancel" id="cancelAddProduct">Cancel</button>
+                    <button type="submit" class="admin-btn admin-btn-submit">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="admin-modal" id="deleteProductModal">
+        <div class="admin-modal-content">
+            <h2>Confirm Deletion</h2>
+            <p id="deleteConfirmationText">Are you sure you want to delete this product?</p>
+            <div class="admin-form-actions">
+                <button type="button" class="admin-btn admin-btn-cancel" id="cancelDeleteProduct">Cancel</button>
+                <button type="button" class="admin-btn admin-btn-delete" id="confirmDeleteProduct">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage-manager.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth-helper.js"></script>
+    <script src="js/page-tracker.js"></script>
+    <script>
+        // Enhanced backup storage functions
+        function createProductBackup(product) {
+            try {
+                // Create backup with timestamp
+                const backupKey = `trendaura_backup_${product.id}_${Date.now()}`;
+                const backupData = {
+                    product: product,
+                    backupTimestamp: new Date().toISOString(),
+                    backupVersion: '1.0'
+                };
+                
+                // Store in localStorage with expiration management
+                localStorage.setItem(backupKey, JSON.stringify(backupData));
+                
+                // Maintain a list of backup keys
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                backupKeys.unshift(backupKey);
+                
+                // Keep only last 50 backups per seller to prevent storage overflow
+                const sellerId = product.sellerId || 'anonymous';
+                const sellerBackups = backupKeys.filter(key => key.includes(sellerId));
+                if (sellerBackups.length > 50) {
+                    const excessBackups = sellerBackups.slice(50);
+                    excessBackups.forEach(key => localStorage.removeItem(key));
+                    excessBackups.forEach(key => {
+                        const index = backupKeys.indexOf(key);
+                        if (index > -1) backupKeys.splice(index, 1);
+                    });
+                }
+                
+                localStorage.setItem('trendaura_backup_keys', JSON.stringify(backupKeys));
+                console.log('Product backup created:', backupKey);
+            } catch (error) {
+                console.error('Failed to create product backup:', error);
+            }
+        }
+
+        function createSessionStorageBackup(product) {
+            try {
+                // Use sessionStorage for temporary backup (cleared when browser closes)
+                const sessionKey = `trendaura_session_${product.id}`;
+                const sessionData = {
+                    product: product,
+                    sessionTimestamp: new Date().toISOString(),
+                    sessionId: Date.now()
+                };
+                
+                sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+                console.log('Session storage backup created:', sessionKey);
+            } catch (error) {
+                console.error('Failed to create session storage backup:', error);
+            }
+        }
+
+        function logProductUploadAttempt(product, backendSuccess) {
+            try {
+                const uploadLog = JSON.parse(localStorage.getItem('trendaura_upload_log') || '[]');
+                const logEntry = {
+                    productId: product.id,
+                    productName: product.name,
+                    sellerId: product.sellerId,
+                    sellerEmail: product.sellerEmail,
+                    timestamp: new Date().toISOString(),
+                    backendSuccess: backendSuccess,
+                    uploadSource: product.uploadSource,
+                    userAgent: navigator.userAgent
+                };
+                
+                uploadLog.unshift(logEntry);
+                
+                // Keep only last 100 upload logs
+                if (uploadLog.length > 100) {
+                    uploadLog.splice(100);
+                }
+                
+                localStorage.setItem('trendaura_upload_log', JSON.stringify(uploadLog));
+                console.log('Upload attempt logged:', logEntry);
+            } catch (error) {
+                console.error('Failed to log upload attempt:', error);
+            }
+        }
+
+        function restoreFromBackups() {
+            try {
+                console.log('Checking for product backups to restore...');
+                
+                // Check for failed uploads that might be recoverable
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                const currentProducts = storage.getProducts();
+                
+                failedUploads.forEach((failedProduct, index) => {
+                    // Check if this failed product already exists
+                    const exists = currentProducts.some(p => 
+                        p.uniqueId === failedProduct.uniqueId || 
+                        (p.name === failedProduct.name && p.sellerId === failedProduct.sellerId)
+                    );
+                    
+                    if (!exists) {
+                        // Try to restore the failed product
+                        try {
+                            const restoredProduct = {
+                                ...failedProduct,
+                                uploadStatus: 'restored',
+                                restoredAt: new Date().toISOString(),
+                                originalError: failedProduct.error
+                            };
+                            delete restoredProduct.error;
+                            delete restoredProduct.uploadStatus;
+                            
+                            storage.addProduct(restoredProduct);
+                            console.log('Restored failed product:', restoredProduct.name);
+                            
+                            // Remove from failed uploads
+                            failedUploads.splice(index, 1);
+                        } catch (restoreError) {
+                            console.error('Failed to restore product:', restoreError);
+                        }
+                    }
+                });
+                
+                // Update failed uploads list
+                localStorage.setItem('trendaura_failed_uploads', JSON.stringify(failedUploads));
+                
+                // Check session storage for any products not in main storage
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key.startsWith('trendaura_session_')) {
+                        try {
+                            const sessionData = JSON.parse(sessionStorage.getItem(key));
+                            const sessionProduct = sessionData.product;
+                            
+                            const exists = currentProducts.some(p => 
+                                p.id === sessionProduct.id || 
+                                p.uniqueId === sessionProduct.uniqueId
+                            );
+                            
+                            if (!exists) {
+                                storage.addProduct(sessionProduct);
+                                console.log('Restored from session storage:', sessionProduct.name);
+                            }
+                        } catch (sessionError) {
+                            console.error('Failed to restore from session storage:', sessionError);
+                        }
+                    }
+                }
+                
+                console.log('Backup restoration completed');
+            } catch (error) {
+                console.error('Backup restoration failed:', error);
+            }
+        }
+
+        function getUploadStatistics() {
+            try {
+                const uploadLog = JSON.parse(localStorage.getItem('trendaura_upload_log') || '[]');
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                
+                const stats = {
+                    totalUploads: uploadLog.length,
+                    successfulUploads: uploadLog.filter(log => log.backendSuccess).length,
+                    failedUploads: failedUploads.length,
+                    backupCount: backupKeys.length,
+                    recentUploads: uploadLog.slice(0, 5),
+                    successRate: uploadLog.length > 0 ? 
+                        ((uploadLog.filter(log => log.backendSuccess).length / uploadLog.length) * 100).toFixed(1) + '%' : 
+                        '0%'
+                };
+                
+                return stats;
+            } catch (error) {
+                console.error('Failed to get upload statistics:', error);
+                return null;
+            }
+        }
+
+        // Initialize products using storage manager
+        const storedProducts = storage.getProducts();
+        console.log('Stored products:', storedProducts);
+        console.log('Stored products count:', storedProducts.length);
+        if (storedProducts.length > 0) {
+            console.log('First stored product ID:', storedProducts[0].id);
+        }
+        let products = storedProducts.length > 0 ? storedProducts : [
+            // Andhra Pradesh - Sarees
+            { id: 1, name: "Uppada Silk Saree", price: 4599, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTWHlpXBq07fH8TtK_GNFVFeSp1OnM5P_4zCWl_lqWBG5vuoA8Lh3QBtvi7imZIL2ZkTcibgWQx7ClkX1CdovDmE_2ywZOKwXIs8LYalH4P", type: "saree", state: "andhra_pradesh" },
+            { id: 2, name: "Mangalagiri Cotton Saree", price: 3500, image: "https://thenmozhidesigns.com/cdn/shop/files/3S2A3673.jpg?v=1729245268&width=4000", type: "saree", state: "andhra_pradesh" },
+            { id: 3, name: "Venkatagiri Saree", price: 3299, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSoaNyGNxMhEzadynMgYx9vgICIor77YEcad3w8PI3TkvhQSTJkwI20ROMKeVDKp29GzMT0t7DIen-uZjTuwjkkQzG5NWv3ovg0490jDt4c", type: "saree", state: "andhra_pradesh" },
+            { id: 4, name: "Gadwal Silk Saree", price: 3899, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQD73Po1sqMPCE6ZT8WGyFu4yuawNqcI8juHRlAwHatdsORL8y3BTfqH3Zq4srKA5gAOS10Of0t_1ZWi-Qy0nwr33JAi8MtbdEGcziXzDuMuOhaBx-w6NNT", type: "saree", state: "andhra_pradesh" },
+            { id: 5, name: "Kalamkari Printed Saree", price: 2799, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTZBf8wcrGpBSGeIHp5NHRHSHg2tO7OxC_nzXXWXMg0K3vs2aKcwe3V9fYx-0XmXwHtJNb8y6i4F8wJ5icjj-KYubPIZGldgKkznij4Cjzm", type: "saree", state: "andhra_pradesh" },
+            
+            // Assam - Sarees
+            { id: 6, name: "Muga Silk Saree", price: 5899, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcSfvY-IVoUJ5j14Vy0_vVpp5Kp0xcxr_z3xIIc9V4cg1ByJ80uygxvPQm9-iOpvuZAGaqjEn6Dl7GuQyhOGKapkDm28gqRyfjoncFgXAhY", type: "saree", state: "assam" },
+            { id: 7, name: "Pat Silk Saree", price: 4799, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSlvR_uCeDw-EK8woG7fPemSjTrQZKXCcmqCpnS58sCV8mUVyCsa_QCxrNViA9imQzZUBamztZYvIUEPWax9lmwv1ne4xIHZJ2uS0yA9PrQ5O3vbU-c1OUy_A", type: "saree", state: "assam" },
+            { id: 8, name: "Mekhela Chador Set", price: 5299, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQGA3qBfly8PFc91rsE2TD9PJc8uotyvBsFyOyM9Q6uxObr98fgoNzCRA7bhAPM_fWBJ52y8q_WWlHb5llIM-8yQi34c5xH30Evz5Ezd2ZUVfwlngti74jmsQ", type: "saree", state: "assam" },
+            { id: 9, name: "Eri Silk Saree", price: 4299, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRPZsn9VMCodmGsx5HwBR4bpQ0vdtcZYY_1wtBCv1hCVxoLsB87kPFRu8Rn-PBEWePZKddqVJr25IGAxErrR7JIVCE7DVxWUzHFwPFXni8", type: "saree", state: "assam" },
+            { id: 10, name: "Assam Tribal Saree", price: 3499, image: "https://korobidesign.com/cdn/shop/files/001-8_89592bb3-2f97-42f1-a84a-be087638c072.jpg?v=1708364314", type: "saree", state: "assam" },
+            
+            // Gujarat - Sarees
+            { id: 11, name: "Patola Silk Saree", price: 8999, image: "https://ik.imagekit.io/bhsa3gea8yj/products/tr:w-1200/2023/Aug/PATOLA-PRINT-PURE-PATOLA-SILK-SAREE-WITH-BLOUSE-In-Green-Colour-SR01352486-A.jpg", type: "saree", state: "gujarat" },
+            { id: 12, name: "Bandhani Saree", price: 2799, image: "https://i.pinimg.com/736x/fd/31/4c/fd314ca31a0ec68181ba9e18e2a9ea1d.jpg", type: "saree", state: "gujarat" },
+            { id: 13, name: "Gharchola Saree", price: 3499, image: "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/6/6/66a2f0bPSAEH3091_3.jpg?rnd=20200526195200&tr=w-512", type: "saree", state: "gujarat" },
+            { id: 14, name: "Kutch Embroidery Saree", price: 4599, image: "https://sunasa.in/cdn/shop/files/gujarati-kutch-work-silk-sarees-designs-with-price-yellow_1445x.jpg?v=1696431749", type: "saree", state: "gujarat" },
+            { id: 15, name: "Panetar Saree", price: 3899, image: "https://i.pinimg.com/originals/39/d9/cd/39d9cdee7cdfcd76d052ea46a1b156b2.jpg", type: "saree", state: "gujarat" },
+            
+            // Karnataka - Sarees
+            { id: 16, name: "Mysore Silk Saree", price: 4999, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQNpiymeVBHPbsSxecoI1BRLZGr9BGTXhBMt4JV6wW96pawMAex3tc5uI_QkIl7VTQNb5oVcklVhLSnbrF2D7CmkOnHLNyjAJcJDHabK33q", type: "saree", state: "karnataka" },
+            { id: 17, name: "Ilkal Saree", price: 2799, image: "https://static.wixstatic.com/media/faf1ba_60cde15e7714454f9a51af1c20af38cb~mv2.jpg/v1/fill/w_526,h_781,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/faf1ba_60cde15e7714454f9a51af1c20af38cb~mv2.jpg", type: "saree", state: "karnataka" },
+            { id: 18, name: "Molakalmuru Saree", price: 3299, image: "https://images.meesho.com/images/products/392701297/ijzmk_512.webp", type: "saree", state: "karnataka" },
+            { id: 19, name: "Kasuti Saree", price: 3899, image: "https://assets.ajio.com/medias/sys_master/root/hba/h80/11096287412254/-473Wx593H-460176332-red-MODEL.jpg", type: "saree", state: "karnataka" },
+            { id: 20, name: "Mysore Crepe Saree", price: 2599, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5yBAGKz0-zoStPPUgshH3-lvukwXlsOrIRw&s", type: "saree", state: "karnataka" },
+            
+            // Kerala - Sarees
+            { id: 21, name: "Kasavu Saree", price: 3299, image: "https://sargoshi.in/cdn/shop/articles/cb9543978aad259a8ff34fa56973a056_600x.jpg?v=1716279298", type: "saree", state: "kerala" },
+            { id: 22, name: "Kerala Cotton Saree", price: 1899, image: "https://sherinz.com/cdn/shop/products/IMG-20220417-WA0006_1.jpg?v=1651315352&width=1445", type: "saree", state: "kerala" },
+            { id: 23, name: "Mundum Neriyathum", price: 2799, image: "https://wp-admin.firstlook.fashion/wp-content/uploads/2024/12/Mundum-neriyathum-saree-draping3.jpg?impolicy=resize&r_width=459&r_height=300&resize=459,300&impolicy=resize&r_width=1&w=1", type: "saree", state: "kerala" },
+            { id: 24, name: "Kasavu Golden Border", price: 3599, image: "https://ilovesarees.com/cdn/shop/files/Dhathuvairi-White-Cotton-With-Golden-Zari-Border-Kerala-Kasav-Saree00001.webp?v=1722261138&width=1445", type: "saree", state: "kerala" },
+            { id: 25, name: "Kerala Kasavu Set", price: 4199, image: "https://southloom.com/cdn/shop/files/rn-image_picker_lib_temp_0b7a8f64-a164-4ed1-940c-72660fd1ef80_1946x.jpg?v=1725075540", type: "saree", state: "kerala" },
+            
+            // Maharashtra - Sarees
+            { id: 26, name: "Paithani Silk Saree", price: 8999, image: "https://sunasa.in/cdn/shop/files/handloom-paithani-silk-pink-bridal-saree-online-shopping_1445x.jpg?v=1712328088", type: "saree", state: "maharashtra" },
+            { id: 27, name: "Narayan Peth Saree", price: 3299, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAxPdb0XKZ5R0N6_3WABTaIGmqjdDbCgqBjg&s", type: "saree", state: "maharashtra" },
+            { id: 28, name: "Yeola Silk Saree", price: 4599, image: "https://soojidaara.in/cdn/shop/articles/Nauvari_Silk_Sarees_Maharashtrian.jpg?v=1722579243", type: "saree", state: "maharashtra" },
+            { id: 29, name: "Maharashtra Cotton Saree", price: 1899, image: "https://www.utsavpedia.com/wp-content/uploads/2013/06/nauvari-art-silk-saree.jpg", type: "saree", state: "maharashtra" },
+            { id: 30, name: "Paithani Bridal Saree", price: 12999, image: "https://static.wixstatic.com/media/05f89e_6a14fb1a3f054ec0b3472749a331d261~mv2.jpg/v1/fill/w_568,h_710,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/05f89e_6a14fb1a3f054ec0b3472749a331d261~mv2.jpg", type: "saree", state: "maharashtra" },
+            
+            // Odisha - Sarees
+            { id: 31, name: "Sambalpuri Silk Saree", price: 4599, image: "", type: "saree", state: "odisha" },
+            { id: 32, name: "Bomkai Saree", price: 3899, image: "", type: "saree", state: "odisha" },
+            { id: 33, name: "Berhampuri Silk Saree", price: 4299, image: "", type: "saree", state: "odisha" },
+            { id: 34, name: "Sambalpuri Cotton", price: 2199, image: "", type: "saree", state: "odisha" },
+            { id: 35, name: "Bomkai Silk Cotton", price: 2999, image: "", type: "saree", state: "odisha" },
+            
+            // Punjab - Salwar Kameez
+            { id: 36, name: "Phulkari Suit", price: 2899, image: "https://i.imgur.com/5tK8LbX.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 37, name: "Patiala Suit", price: 2199, image: "https://i.imgur.com/3nZjx9L.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 38, name: "Punjabi Cotton Suit", price: 1599, image: "https://i.imgur.com/8YfVv7G.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 39, name: "Phulkari Wedding Suit", price: 4599, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "salwar_kameez", state: "punjab" },
+            { id: 40, name: "Patiala Printed Suit", price: 1899, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "salwar_kameez", state: "punjab" },
+            
+            // Rajasthan - Lehengas
+            { id: 41, name: "Rajasthani Lehenga", price: 5999, image: "https://asiakcommerce.com/wp-content/uploads/2024/07/Bharat-Rajastani-Bridal-Lehenga-Cholli-CODE-27000-1.webp", type: "lehenga", state: "rajasthan" },
+            { id: 42, name: "Bandhani Lehenga", price: 4599, image: "https://vasansi.in/cdn/shop/products/VJ04032104_9857f543-11a1-4272-a8c5-bbb1e3b176aa_400x.jpg?v=1745553476", type: "lehenga", state: "rajasthan" },
+            { id: 43, name: "Gota Patti Lehenga", price: 5299, image: "https://www.anitadongre.com/dw/image/v2/BGCX_PRD/on/demandware.static/-/Sites-masterCatalog_AD_India/default/dwee9541e0/images/hires/F24/Women/F24R45SMTO_BLUE_1.jpg?sw=1300&sh=1950&sm=fit&strip=false", type: "lehenga", state: "rajasthan" },
+            { id: 44, name: "Rajasthani Bridal Lehenga", price: 8999, image: "https://bhasinbrothers.com/cdn/shop/files/ContemporaryRajasthani-InspiredBridalLehenga4_764b9a47-c7ed-4383-a6ab-ec107bf2fb3b.jpg?v=1742577344&width=1080", type: "lehenga", state: "rajasthan" },
+            { id: 45, name: "Bandhani Printed Lehenga", price: 3899, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTekcLR4y2A7yvN2QNA9BpHoXDUnIHfW8rhtQ&s", type: "lehenga", state: "rajasthan" },
+            
+            // Tamil Nadu - Sarees
+            { id: 46, name: "Kanjivaram Silk Saree", price: 7999, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 47, name: "Chettinad Cotton Saree", price: 2899, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 48, name: "Madurai Cotton Saree", price: 2499, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 49, name: "Kanjivaram Bridal Saree", price: 11999, image: "", type: "saree", state: "tamil_nadu" },
+            { id: 50, name: "Kanjivaram Traditional", price: 6599, image: "", type: "saree", state: "tamil_nadu" },
+            
+            // West Bengal - Sarees
+            { id: 51, name: "Baluchari Silk Saree", price: 5999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "saree", state: "west_bengal" },
+            { id: 52, name: "Tant Cotton Saree", price: 1899, image: "https://i.imgur.com/3nZjx9L.jpg", type: "saree", state: "west_bengal" },
+            { id: 53, name: "Baluchari Wedding Saree", price: 8999, image: "https://i.imgur.com/8YfVv7G.jpg", type: "saree", state: "west_bengal" },
+            { id: 54, name: "Tant Printed Saree", price: 1699, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "saree", state: "west_bengal" },
+            { id: 55, name: "Baluchari Traditional", price: 5299, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "saree", state: "west_bengal" },
+            
+            // Bihar - Sarees
+            { id: 56, name: "Bhagalpuri Silk Saree", price: 3899, image: "https://i.imgur.com/9Jv8x3L.jpg", type: "saree", state: "bihar" },
+            { id: 57, name: "Madhubani Printed Saree", price: 2799, image: "https://i.imgur.com/4Lp9QdT.jpg", type: "saree", state: "bihar" },
+            { id: 58, name: "Bhagalpuri Tussar Silk", price: 4299, image: "https://i.imgur.com/7Km3z9P.jpg", type: "saree", state: "bihar" },
+            { id: 59, name: "Madhubani Art Saree", price: 2999, image: "https://i.imgur.com/8Xr8J9h.jpg", type: "saree", state: "bihar" },
+            { id: 60, name: "Bhagalpuri Wedding Saree", price: 5999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "saree", state: "bihar" },
+            
+            // Dhotis
+            { id: 61, name: "Tamil Nadu Silk Dhoti", price: 2499, image: "https://i.imgur.com/Jz8xYfF.jpg", type: "dhoti", state: "tamil_nadu" },
+            { id: 62, name: "Kerala Cotton Dhoti", price: 1299, image: "https://i.imgur.com/VvQhW3n.jpg", type: "dhoti", state: "kerala" },
+            { id: 63, name: "Andhra Pradesh Dhoti", price: 1599, image: "https://i.imgur.com/9LkY7bT.jpg", type: "dhoti", state: "andhra_pradesh" },
+            { id: 64, name: "Karnataka Silk Dhoti", price: 2199, image: "https://i.imgur.com/4Xr8J9h.jpg", type: "dhoti", state: "karnataka" },
+            { id: 65, name: "Tamil Nadu Wedding Dhoti", price: 3499, image: "https://i.imgur.com/7Qm3z9P.jpg", type: "dhoti", state: "tamil_nadu" },
+            
+            // Kurtas
+            { id: 66, name: "Punjabi Pathani Kurta", price: 1499, image: "https://i.imgur.com/5tK8LbX.jpg", type: "kurta", state: "punjab" },
+            { id: 67, name: "Rajasthani Kurta", price: 1699, image: "https://i.imgur.com/3nZjx9L.jpg", type: "kurta", state: "rajasthan" },
+            { id: 68, name: "Lucknowi Chikankari Kurta", price: 1999, image: "https://i.imgur.com/8YfVv7G.jpg", type: "kurta", state: "uttar_pradesh" },
+            { id: 69, name: "Hyderabadi Kurta", price: 1799, image: "https://i.imgur.com/2Lp9QdT.jpg", type: "kurta", state: "telangana" },
+            { id: 70, name: "Punjabi Printed Kurta", price: 1299, image: "https://i.imgur.com/6Xm9z8K.jpg", type: "kurta", state: "punjab" },
+            
+            // Sherwanis
+            { id: 71, name: "Mughal Sherwani", price: 8999, image: "https://i.imgur.com/9Jv8x3L.jpg", type: "sherwani", state: "delhi" },
+            { id: 72, name: "Hyderabadi Sherwani", price: 7999, image: "https://i.imgur.com/4Lp9QdT.jpg", type: "sherwani", state: "telangana" },
+            { id: 73, name: "Rajasthani Sherwani", price: 7599, image: "https://i.imgur.com/7Km3z9P.jpg", type: "sherwani", state: "rajasthan" },
+            { id: 74, name: "Lucknowi Sherwani", price: 6899, image: "https://i.imgur.com/8Xr8J9h.jpg", type: "sherwani", state: "uttar_pradesh" },
+            { id: 75, name: "Mughal Wedding Sherwani", price: 11999, image: "https://i.imgur.com/5tK8LbX.jpg", type: "sherwani", state: "delhi" }
+
+        ];
+
+        // Initialize wishlist and cart using storage manager
+        let wishlist = storage.getWishlist();
+        let cart = storage.getCart();
+
+        // DOM Elements
+        const productGrid = document.getElementById('product-grid');
+        const wishlistBadge = document.getElementById('wishlist-badge');
+        const cartBadge = document.getElementById('cart-badge');
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        const searchTrigger = document.getElementById('searchTrigger');
+        const searchForm = document.getElementById('searchForm');
+        const collectionForm = document.getElementById('collectionSearchForm');
+        const adminLoginBtn = document.getElementById('adminLoginBtn');
+        const sellerLoginModal = document.getElementById('sellerLoginModal');
+        const sellerLoginForm = document.getElementById('sellerLoginForm');
+        const cancelSellerLogin = document.getElementById('cancelSellerLogin');
+        const addProductModal = document.getElementById('addProductModal');
+        const addProductForm = document.getElementById('addProductForm');
+        const cancelAddProduct = document.getElementById('cancelAddProduct');
+        const productImageInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const deleteProductModal = document.getElementById('deleteProductModal');
+        const cancelDeleteProduct = document.getElementById('cancelDeleteProduct');
+        const confirmDeleteProduct = document.getElementById('confirmDeleteProduct');
+        const deleteConfirmationText = document.getElementById('deleteConfirmationText');
+
+        // Seller / Product upload state
+        let isSellerLoggedIn = false;
+        let productToDelete = null;
+
+        // Render Products
+        function renderProducts(productsToRender = products) {
+            console.log('renderProducts called with', productsToRender.length, 'products');
+            productGrid.innerHTML = '';
+            
+            if (productsToRender.length === 0) {
+                console.log('No products found, showing empty state');
+                productGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No products found</h3>
+                        <p>Try different search criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get current seller info
+            const currentUser = getCurrentUser();
+            const currentSellerId = currentUser ? (currentUser.id || currentUser.email) : null;
+            
+            productsToRender.forEach(product => {
+                console.log('Creating product card for:', product.name, 'ID:', product.id);
+                const isInWishlist = wishlist.includes(product.id);
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.setAttribute('data-id', product.id);
+                console.log('Product card created with data-id:', productCard.getAttribute('data-id'));
+                
+                // Show delete button only if:
+                // 1. User is logged in as seller, AND
+                // 2. Product belongs to this seller (matches sellerId or sellerEmail)
+                const canDelete = isSellerLoggedIn && currentSellerId && 
+                    (product.sellerId === currentSellerId || product.sellerEmail === currentSellerId);
+                
+                const deleteButton = canDelete ? 
+                    `<button class="delete-btn" data-id="${product.id}" title="Delete your product">
+                        <i class="fas fa-trash"></i>
+                    </button>` : '';
+                
+                productCard.innerHTML = `
+                    ${deleteButton}
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        ${product.sellerName ? `<p class="seller">By ${product.sellerName}</p>` : ''}
+                        ${product.description ? `<p class="product-description">${product.description}</p>` : ''}
+                        <p class="price">¥${product.price.toLocaleString()}</p>
+                        <div class="product-actions">
+                            <button class="wishlist-btn ${isInWishlist ? 'active' : ''}" data-id="${product.id}">
+                                <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i> Wishlist
+                            </button>
+                            <button class="cart-btn" data-id="${product.id}">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(productCard);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.wishlist-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    toggleWishlist(productId);
+                });
+            });
+
+            document.querySelectorAll('.cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            });
+
+            // Navigate to product details when clicking on the card (except on action buttons)
+            const productCards = document.querySelectorAll('.product-card');
+            console.log('Found', productCards.length, 'product cards');
+            productCards.forEach((card, index) => {
+                console.log('Setting up click listener for card', index, 'data-id:', card.getAttribute('data-id'));
+                card.addEventListener('click', function(e) {
+                    console.log('Product card clicked');
+                    console.log('Click target:', e.target);
+                    console.log('Card data-id:', this.getAttribute('data-id'));
+                    
+                    if (e.target.closest('.wishlist-btn') || e.target.closest('.cart-btn') || e.target.closest('.delete-btn')) {
+                        console.log('Click on action button, ignoring');
+                        return;
+                    }
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Parsed ID:', id);
+                    if (!id) {
+                        console.log('No ID found, returning');
+                        return;
+                    }
+                    localStorage.setItem('selectedProductId', String(id));
+                    console.log('Navigating to product-details.html?id=' + id);
+                    window.location.href = 'product-details.html?id=' + encodeURIComponent(id);
+                });
+            });
+
+            // Add event listener for delete buttons
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    productToDelete = parseInt(this.getAttribute('data-id'));
+                    const product = products.find(p => p.id === productToDelete);
+                    deleteConfirmationText.textContent = `Are you sure you want to delete "${product.name}"?`;
+                    deleteProductModal.style.display = 'flex';
+                });
+            });
+        }
+
+        async function loadBackendProducts() {
+            try {
+                const backendProducts = await apiRequest('/products?size=200');
+                if (Array.isArray(backendProducts) && backendProducts.length > 0) {
+                    products = backendProducts.map(product => ({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.imageUrl || product.image || '',
+                        state: product.stateCode || product.state || '',
+                        type: product.fashionType || product.type || '',
+                        sellerName: product.sellerName || null,
+                        sellerId: product.sellerId || null,
+                        sellerEmail: product.sellerEmail || null,
+                        description: product.description || null
+                    }));
+                    storage.setProducts(products);
+                }
+            } catch (error) {
+                console.warn('Backend products unavailable, using local dataset');
+            }
+        }
+
+        // Toggle Wishlist
+        function toggleWishlist(productId) {
+            if (storage.isInWishlist(productId)) {
+                storage.removeFromWishlist(productId);
+                showNotification('Removed from wishlist');
+            } else {
+                storage.addToWishlist(productId);
+                showNotification('Added to wishlist!');
+            }
+            wishlist = storage.getWishlist();
+            updateWishlistBadge();
+            renderProducts();
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                storage.addToCart(product, 1);
+                cart = storage.getCart();
+                updateCartBadge();
+                showNotification('Added to cart!');
+            }
+        }
+
+        // Delete Product
+        function deleteProduct(productId) {
+            const currentUser = getCurrentUser();
+            const currentSellerId = currentUser ? (currentUser.id || currentUser.email) : null;
+            const product = products.find(p => p.id === productId);
+            
+            // Verify ownership before deletion
+            if (!currentSellerId || !product || 
+                (product.sellerId !== currentSellerId && product.sellerEmail !== currentSellerId)) {
+                showNotification('You can only delete your own products!', true);
+                return;
+            }
+            
+            // Remove from products array
+            storage.removeProduct(productId);
+            storage.removeFromWishlist(productId);
+            storage.removeFromCart(productId);
+            
+            // Update local variables
+            products = storage.getProducts();
+            wishlist = storage.getWishlist();
+            cart = storage.getCart();
+            
+            // Update UI
+            updateWishlistBadge();
+            updateCartBadge();
+            renderProducts();
+            
+            showNotification('Your product deleted successfully!');
+        }
+
+        // Update Badges
+        function updateWishlistBadge() {
+            wishlistBadge.textContent = storage.getWishlist().length;
+        }
+
+        function updateCartBadge() {
+            cartBadge.textContent = storage.getCartItemCount();
+        }
+
+        // Show Notification
+        function showNotification(message, isError = false) {
+            notificationMessage.textContent = message;
+            notification.classList.toggle('error', isError);
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Setup Search Form
+        function setupSearchForm() {
+            searchTrigger.addEventListener('click', function(e) {
+                e.stopPropagation();
+                searchForm.classList.toggle('active');
+            });
+
+            // Close search form when clicking outside
+            document.addEventListener('click', function() {
+                searchForm.classList.remove('active');
+            });
+
+            // Prevent form from closing when clicking inside it
+            searchForm.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Real-time search by product name
+            const productNameSearch = document.getElementById('productNameSearch');
+            if (productNameSearch) {
+                productNameSearch.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    
+                    if (searchTerm === '') {
+                        // If search is empty, show all products
+                        renderProducts(products);
+                    } else {
+                        // Filter products by name
+                        const filteredProducts = products.filter(product => 
+                            product.name.toLowerCase().includes(searchTerm)
+                        );
+                        
+                        // If no exact match found, show similar products
+                        if (filteredProducts.length === 0) {
+                            // Find products by type or category
+                            const similarProducts = products.filter(product =>
+                                product.type.toLowerCase().includes(searchTerm) ||
+                                (product.state && product.state.toLowerCase().includes(searchTerm))
+                            );
+                            renderProducts(similarProducts.length > 0 ? similarProducts : []);
+                        } else {
+                            renderProducts(filteredProducts);
+                        }
+                    }
+                });
+            }
+
+            // Handle form submission
+            collectionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const state = document.getElementById('stateSelect').value;
+                const fashionType = document.getElementById('fashionSelect').value;
+                const productName = document.getElementById('productNameSearch').value.toLowerCase();
+                
+                let filteredProducts = products;
+                
+                // Filter by product name if provided
+                if (productName) {
+                    filteredProducts = filteredProducts.filter(product => 
+                        product.name.toLowerCase().includes(productName)
+                    );
+                }
+                
+                // Filter by state if selected
+                if (state) {
+                    filteredProducts = filteredProducts.filter(product => 
+                        product.state === state
+                    );
+                }
+                
+                // Filter by fashion type if selected
+                if (fashionType) {
+                    filteredProducts = filteredProducts.filter(product => 
+                        product.type === fashionType
+                    );
+                }
+                
+                // If no results found, show similar products
+                if (filteredProducts.length === 0 && productName) {
+                    const similarProducts = products.filter(product =>
+                        product.type.toLowerCase().includes(productName) ||
+                        product.name.toLowerCase().includes(productName.split(' ')[0])
+                    );
+                    filteredProducts = similarProducts.slice(0, 10);
+                }
+                
+                // Display filtered products
+                renderProducts(filteredProducts);
+                searchForm.classList.remove('active');
+            });
+        }
+
+        // Setup Admin Panel
+        async function setupAdminPanel() {
+            // For testing: Always show admin button
+            adminLoginBtn.style.display = 'block';
+            adminLoginBtn.innerHTML = '<i class="fas fa-plus"></i>';
+            
+            // Check if user is logged in and is a seller
+            const currentUser = getCurrentUser();
+            const isLoggedIn = isUserLoggedIn();
+            
+            if (isLoggedIn && currentUser) {
+                // Check if user is a seller from registration data or backend profile
+                const isSeller = currentUser.isSeller || false;
+                
+                if (isSeller) {
+                    isSellerLoggedIn = true;
+                    document.getElementById('sellerIndicator').style.display = 'block';
+                    showNotification('Seller portal active! You can add products.');
+                } else {
+                    // User is logged in but not a seller
+                    document.getElementById('sellerIndicator').style.display = 'none';
+                }
+            } else {
+                // User not logged in - check backend profile as fallback
+                try {
+                    const user = await getUserProfile();
+                    if (user && user.isSeller) {
+                        isSellerLoggedIn = true;
+                        document.getElementById('sellerIndicator').style.display = 'block';
+                    } else {
+                        document.getElementById('sellerIndicator').style.display = 'none';
+                    }
+                } catch (error) {
+                    // User not logged in or not a seller
+                    document.getElementById('sellerIndicator').style.display = 'none';
+                }
+            }
+
+            // Show login modal when seller button clicked
+            adminLoginBtn.addEventListener('click', function() {
+                if (isSellerLoggedIn) {
+                    addProductModal.style.display = 'flex';
+                } else {
+                    sellerLoginModal.style.display = 'flex';
+                }
+            });
+
+            // Handle seller login
+            sellerLoginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const email = document.getElementById('sellerEmail').value.trim();
+                const password = document.getElementById('sellerPassword').value;
+
+                if (!email || !password) {
+                    showNotification('Please enter email and password', true);
+                    return;
+                }
+
+                try {
+                    await loginUser(email, password);
+                    isSellerLoggedIn = true;
+                    sellerLoginModal.style.display = 'none';
+                    showNotification('Seller login successful! You can now add products.');
+                    adminLoginBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                    addProductModal.style.display = 'flex';
+                } catch (err) {
+                    showNotification('Login failed. Check your credentials.', true);
+                }
+
+                this.reset();
+            });
+
+            // Cancel seller login
+            cancelSellerLogin.addEventListener('click', function() {
+                sellerLoginModal.style.display = 'none';
+                sellerLoginForm.reset();
+            });
+
+            // Cancel add product
+            cancelAddProduct.addEventListener('click', function() {
+                addProductModal.style.display = 'none';
+                addProductForm.reset();
+                imagePreview.style.display = 'none';
+            });
+
+            // Preview image when URL is entered
+            productImageInput.addEventListener('input', function() {
+                if (this.value) {
+                    imagePreview.src = this.value;
+                    imagePreview.style.display = 'block';
+                } else {
+                    imagePreview.style.display = 'none';
+                }
+            });
+
+            // Enhanced seller upload with multiple backup mechanisms
+            addProductForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const newProductPayload = {
+                    name: document.getElementById('productName').value.trim(),
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    imageUrl: document.getElementById('productImage').value.trim(),
+                    stateCode: document.getElementById('productState').value,
+                    fashionType: document.getElementById('productType').value,
+                    category: document.getElementById('productCategory').value,
+                    availableSizes: document.getElementById('productSize').value
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(Boolean)
+                        .join(','),
+                    extraImageUrls: document.getElementById('productExtraImages').value
+                        .split(',')
+                        .map(s => s.trim())
+                        .filter(Boolean)
+                        .join(','),
+                    availableColors: document.getElementById('productColors').value
+                        .split(',')
+                        .map(c => c.trim())
+                        .filter(Boolean)
+                        .join(','),
+                    sellerName: document.getElementById('productBoutique').value.trim() || null,
+                    description: document.getElementById('productDescription').value.trim() || null,
+                    stock: 10
+                };
+
+                if (!newProductPayload.name || !newProductPayload.price || !newProductPayload.stateCode || !newProductPayload.fashionType || !newProductPayload.category) {
+                    showNotification('Please complete all required product fields before submitting.', true);
+                    return;
+                }
+
+                try {
+                    // Add current seller info to the product
+                    const currentUser = getCurrentUser();
+                    console.log('Current user:', currentUser);
+                    
+                    if (currentUser) {
+                        newProductPayload.sellerId = currentUser.id || currentUser.email;
+                        newProductPayload.sellerEmail = currentUser.email;
+                        newProductPayload.sellerName = currentUser.firstName ? 
+                            `${currentUser.firstName} ${currentUser.lastName || ''}`.trim() : 
+                            currentUser.email;
+                        console.log('Added seller info:', {
+                            sellerId: newProductPayload.sellerId,
+                            sellerEmail: newProductPayload.sellerEmail,
+                            sellerName: newProductPayload.sellerName
+                        });
+                    }
+
+                    console.log('Product payload being sent:', newProductPayload);
+                    
+                    // Create robust product with multiple identifiers for persistence
+                    const timestamp = Date.now();
+                    const sellerId = newProductPayload.sellerId || 'anonymous';
+                    const uniqueId = `${sellerId}_${timestamp}`;
+                    
+                    const localProduct = {
+                        id: timestamp, // Primary ID
+                        uniqueId: uniqueId, // Backup unique identifier
+                        sellerProductId: `seller_${sellerId}_${timestamp}`, // Seller-specific ID
+                        ...newProductPayload,
+                        imageUrl: newProductPayload.imageUrl,
+                        createdAt: new Date().toISOString(),
+                        uploadSource: 'local',
+                        version: '1.0'
+                    };
+                    
+                    let productResponse = localProduct;
+                    let backendSuccess = false;
+                    
+                    // Multi-layered storage approach
+                    console.log('Starting multi-layered product storage...');
+                    
+                    // 1. Save to localStorage immediately (primary storage)
+                    products.unshift(localProduct);
+                    storage.setProducts(products);
+                    console.log('Step 1: Saved to localStorage');
+                    
+                    // 2. Create additional backup in localStorage
+                    createProductBackup(localProduct);
+                    console.log('Step 2: Created backup storage');
+                    
+                    // 3. Try to save to backend database
+                    try {
+                        const backendResponse = await apiRequest('/products', {
+                            method: 'POST',
+                            body: JSON.stringify(newProductPayload)
+                        });
+                        console.log('Backend response:', backendResponse);
+                        
+                        if (backendResponse && backendResponse.id) {
+                            productResponse = backendResponse;
+                            backendSuccess = true;
+                            console.log('Step 3: Successfully saved to backend');
+                            
+                            // Update local product with backend ID
+                            const updatedProduct = {
+                                ...localProduct,
+                                backendId: backendResponse.id,
+                                uploadSource: 'backend',
+                                syncedAt: new Date().toISOString()
+                            };
+                            
+                            // Update the product in localStorage
+                            const index = products.findIndex(p => p.id === timestamp);
+                            if (index !== -1) {
+                                products[index] = updatedProduct;
+                                storage.setProducts(products);
+                                createProductBackup(updatedProduct);
+                            }
+                        }
+                    } catch (apiError) {
+                        console.warn('Backend upload failed, product remains local:', apiError);
+                        // Product stays in local storage, no failure
+                    }
+                    
+                    // 4. Create session storage backup for extra persistence
+                    createSessionStorageBackup(localProduct);
+                    console.log('Step 4: Created session storage backup');
+                    
+                    // 5. Log upload attempt for tracking
+                    logProductUploadAttempt(localProduct, backendSuccess);
+                    
+                    const mappedProduct = {
+                        id: productResponse.id,
+                        uniqueId: productResponse.uniqueId || localProduct.uniqueId,
+                        name: productResponse.name,
+                        price: productResponse.price,
+                        image: productResponse.imageUrl,
+                        state: productResponse.stateCode,
+                        type: productResponse.fashionType,
+                        sellerName: productResponse.sellerName,
+                        sellerId: productResponse.sellerId,
+                        sellerEmail: productResponse.sellerEmail,
+                        description: productResponse.description,
+                        createdAt: productResponse.createdAt,
+                        uploadSource: backendSuccess ? 'backend' : 'local'
+                    };
+
+                    // Ensure product is at the beginning of the array
+                    const currentProducts = storage.getProducts();
+                    const existingIndex = currentProducts.findIndex(p => p.id === mappedProduct.id);
+                    
+                    if (existingIndex === -1) {
+                        currentProducts.unshift(mappedProduct);
+                    } else {
+                        currentProducts[existingIndex] = mappedProduct;
+                    }
+                    
+                    storage.setProducts(currentProducts);
+                    
+                    renderProducts();
+                    logActivity('SELLER_PORTAL', 'ADD_PRODUCT', {
+                        productId: mappedProduct.id,
+                        productName: mappedProduct.name,
+                        state: mappedProduct.state,
+                        category: newProductPayload.category,
+                        sellerId: mappedProduct.sellerId,
+                        uploadSource: mappedProduct.uploadSource,
+                        backendSuccess: backendSuccess
+                    });
+
+                    // Show appropriate success message
+                    const message = backendSuccess ? 
+                        'Product added successfully! (Saved in backend + local backup)' : 
+                        'Product added successfully! (Saved locally with multiple backups)';
+                    showNotification(message);
+                    
+                    console.log('Product upload completed with persistence guarantees');
+                    
+                } catch (error) {
+                    console.error('Product upload failed:', error);
+                    console.error('Error details:', error?.details);
+                    console.error('Error message:', error?.message);
+                    
+                    // Even if upload fails, try to save what we can
+                    try {
+                        const currentUser = getCurrentUser();
+                        const timestamp = Date.now();
+                        const failedProduct = {
+                            id: timestamp,
+                            uniqueId: `failed_${timestamp}`,
+                            ...newProductPayload,
+                            uploadStatus: 'failed',
+                            error: error.message,
+                            createdAt: new Date().toISOString(),
+                            sellerId: currentUser?.id || 'anonymous'
+                        };
+                        
+                        // Save failed attempt for recovery
+                        const failedProducts = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                        failedProducts.push(failedProduct);
+                        localStorage.setItem('trendaura_failed_uploads', JSON.stringify(failedProducts));
+                        
+                        console.log('Failed upload saved for potential recovery');
+                    } catch (recoveryError) {
+                        console.error('Could not save failed upload:', recoveryError);
+                    }
+                    
+                    // Show user-friendly error message
+                    let errorMessage = 'Unable to upload product. Please try again.';
+                    if (error?.details?.message) {
+                        errorMessage = error.details.message;
+                    } else if (error?.message) {
+                        errorMessage = error.message;
+                    }
+                    
+                    showNotification(errorMessage, true);
+                    return;
+                }
+
+                addProductModal.style.display = 'none';
+                this.reset();
+                imagePreview.style.display = 'none';
+            });
+
+            // Delete confirmation handlers
+            cancelDeleteProduct.addEventListener('click', function() {
+                deleteProductModal.style.display = 'none';
+                productToDelete = null;
+            });
+
+            confirmDeleteProduct.addEventListener('click', function() {
+                if (productToDelete) {
+                    deleteProduct(productToDelete);
+                    deleteProductModal.style.display = 'none';
+                    productToDelete = null;
+                }
+            });
+        }
+
+        // Initialize the page
+        async function init() {
+            // Storage is automatically initialized by storage manager
+            
+            // Restore any products from backups before loading
+            restoreFromBackups();
+            
+            // Initialize authentication (checks login status and updates UI)
+            initAuth();
+            
+            const currentUser = getCurrentUser();
+            const isLoggedIn = isUserLoggedIn();
+            
+            // For testing: Always show admin button
+            adminLoginBtn.style.display = 'block';
+            adminLoginBtn.innerHTML = '<i class="fas fa-plus"></i>';
+            
+            if (isLoggedIn && currentUser && currentUser.isSeller) {
+                isSellerLoggedIn = true;
+                adminLoginBtn.innerHTML = '<i class="fas fa-plus"></i>';
+                document.getElementById('sellerIndicator').style.display = 'block';
+            } else {
+                isSellerLoggedIn = false;
+                document.getElementById('sellerIndicator').style.display = 'none';
+            }
+
+            await loadBackendProducts();
+
+            // Parse URL parameters for category filtering or product detail view
+            const urlParams = new URLSearchParams(window.location.search);
+            const category = urlParams.get('category');
+            const type = urlParams.get('type');
+            const productId = urlParams.get('productId');
+            
+            let productsToDisplay = products;
+            
+            // If productId is provided, show that specific product
+            if (productId) {
+                const product = products.find(p => p.id === parseInt(productId));
+                if (product) {
+                    productsToDisplay = [product];
+                    // Also load similar products based on category
+                    const similarProducts = products.filter(p => 
+                        p.type === product.type && p.id !== product.id
+                    );
+                    productsToDisplay = [...productsToDisplay, ...similarProducts.slice(0, 3)];
+                }
+            }
+            // Filter products by category and type if provided
+            else if (category && type) {
+                // Map categories to states for filtering
+                const categoryMap = {
+                    'women': ['all'], // Women's category includes multiple states
+                    'mens': ['all'],   // Men's category includes multiple states
+                    'kids': ['all']    // Kids' category includes multiple states
+                };
+                
+                // Filter by type (e.g., "Cotton Sarees", "Shirts", "Clothing")
+                productsToDisplay = products.filter(p => {
+                    // Check if product name contains the type
+                    return p.name.toLowerCase().includes(type.toLowerCase()) ||
+                           p.type === type.toLowerCase().replace(/\s+/g, '_');
+                });
+                
+                // If no exact match, show all products
+                if (productsToDisplay.length === 0) {
+                    productsToDisplay = products;
+                }
+            }
+            
+            renderProducts(productsToDisplay);
+            updateWishlistBadge();
+            updateCartBadge();
+            setupSearchForm();
+            setupAdminPanel();
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

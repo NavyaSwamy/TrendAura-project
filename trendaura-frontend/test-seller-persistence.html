@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Upload Persistence Test - TrendAura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        .warning {
+            color: #ffc107;
+            font-weight: bold;
+        }
+        button {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d2337a;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid #e83e8c;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #e83e8c;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .product-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border-left: 3px solid #e83e8c;
+        }
+        .backup-info {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1> Seller Upload Persistence Test</h1>
+    
+    <div class="container">
+        <h2>Multi-Layer Storage Test</h2>
+        <p>This test verifies that seller products persist across system changes using multiple backup mechanisms.</p>
+        
+        <div class="test-section">
+            <h3>Storage Status</h3>
+            <button onclick="showStorageStatus()">Check Storage Status</button>
+            <button onclick="showUploadStatistics()">Show Upload Statistics</button>
+            <button onclick="testBackupRestoration()">Test Backup Restoration</button>
+            <div id="storageStatus" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Simulate Seller Upload</h3>
+            <button onclick="simulateSellerUpload()">Simulate Product Upload</button>
+            <button onclick="simulateFailedUpload()">Simulate Failed Upload</button>
+            <button onclick="simulateSystemChange()">Simulate System Change</button>
+            <div id="uploadResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Backup Verification</h3>
+            <button onclick="verifyBackups()">Verify All Backups</button>
+            <button onclick="testRecovery()">Test Recovery from Backups</button>
+            <button onclick="clearTestData()">Clear Test Data</button>
+            <div id="backupResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>Current Products</h3>
+            <button onclick="showCurrentProducts()">Show Current Products</button>
+            <div id="currentProducts" class="result"></div>
+        </div>
+    </div>
+
+    <script src="js/storage-manager.js"></script>
+    <script>
+        function log(message, type = 'info', containerId = 'uploadResult') {
+            const resultDiv = document.getElementById(containerId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
+            resultDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+        }
+
+        function showStorageStatus() {
+            log('=== Storage Status Check ===', 'info', 'storageStatus');
+            
+            try {
+                // Check main storage
+                const products = storage.getProducts();
+                const wishlist = storage.getWishlist();
+                const cart = storage.getCart();
+                
+                log(`Main Products: ${products.length} items`, 'info', 'storageStatus');
+                log(`Wishlist: ${wishlist.length} items`, 'info', 'storageStatus');
+                log(`Cart: ${cart.length} items`, 'info', 'storageStatus');
+                
+                // Check backup storage
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                const uploadLog = JSON.parse(localStorage.getItem('trendaura_upload_log') || '[]');
+                
+                log(`Backup Keys: ${backupKeys.length} backups`, 'info', 'storageStatus');
+                log(`Failed Uploads: ${failedUploads.length} items`, 'info', 'storageStatus');
+                log(`Upload Log: ${uploadLog.length} entries`, 'info', 'storageStatus');
+                
+                // Check session storage
+                let sessionBackups = 0;
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key.startsWith('trendaura_session_')) {
+                        sessionBackups++;
+                    }
+                }
+                log(`Session Storage: ${sessionBackups} backups`, 'info', 'storageStatus');
+                
+                // Storage size
+                const storageSize = storage.getStorageSize();
+                log(`Total Storage Size: ${storageSize} bytes`, 'info', 'storageStatus');
+                
+                log('Storage status check completed', 'success', 'storageStatus');
+                
+            } catch (error) {
+                log(`Storage status check failed: ${error.message}`, 'error', 'storageStatus');
+            }
+        }
+
+        function showUploadStatistics() {
+            log('=== Upload Statistics ===', 'info', 'storageStatus');
+            
+            try {
+                const stats = getUploadStatistics();
+                if (stats) {
+                    log(`Total Uploads: ${stats.totalUploads}`, 'info', 'storageStatus');
+                    log(`Successful Uploads: ${stats.successfulUploads}`, 'success', 'storageStatus');
+                    log(`Failed Uploads: ${stats.failedUploads}`, 'warning', 'storageStatus');
+                    log(`Backup Count: ${stats.backupCount}`, 'info', 'storageStatus');
+                    log(`Success Rate: ${stats.successRate}`, 'info', 'storageStatus');
+                    
+                    if (stats.recentUploads.length > 0) {
+                        log('\nRecent Uploads:', 'info', 'storageStatus');
+                        stats.recentUploads.forEach(upload => {
+                            const status = upload.backendSuccess ? 'SUCCESS' : 'LOCAL';
+                            log(`- ${upload.productName} (${status})`, upload.backendSuccess ? 'success' : 'warning', 'storageStatus');
+                        });
+                    }
+                } else {
+                    log('No upload statistics available', 'warning', 'storageStatus');
+                }
+            } catch (error) {
+                log(`Failed to get statistics: ${error.message}`, 'error', 'storageStatus');
+            }
+        }
+
+        function simulateSellerUpload() {
+            log('=== Simulating Seller Upload ===', 'info', 'uploadResult');
+            
+            try {
+                const testProduct = {
+                    id: Date.now(),
+                    uniqueId: `test_${Date.now()}`,
+                    sellerProductId: `seller_test_${Date.now()}`,
+                    name: `Test Saree ${Date.now()}`,
+                    price: Math.floor(Math.random() * 5000) + 1000,
+                    image: `https://example.com/test-${Date.now()}.jpg`,
+                    state: 'karnataka',
+                    type: 'saree',
+                    sellerName: 'Test Seller',
+                    sellerId: 'test_seller@example.com',
+                    sellerEmail: 'test_seller@example.com',
+                    description: 'This is a test product for persistence verification',
+                    createdAt: new Date().toISOString(),
+                    uploadSource: 'local',
+                    version: '1.0'
+                };
+                
+                // Simulate the multi-layered storage
+                log('Step 1: Adding to main storage...', 'info', 'uploadResult');
+                storage.addProduct(testProduct);
+                
+                log('Step 2: Creating backup storage...', 'info', 'uploadResult');
+                createProductBackup(testProduct);
+                
+                log('Step 3: Creating session storage backup...', 'info', 'uploadResult');
+                createSessionStorageBackup(testProduct);
+                
+                log('Step 4: Logging upload attempt...', 'info', 'uploadResult');
+                logProductUploadAttempt(testProduct, false); // Simulate local upload
+                
+                log(`Product "${testProduct.name}" uploaded successfully with multiple backups!`, 'success', 'uploadResult');
+                log(`Product ID: ${testProduct.id}`, 'info', 'uploadResult');
+                log(`Unique ID: ${testProduct.uniqueId}`, 'info', 'uploadResult');
+                
+            } catch (error) {
+                log(`Upload simulation failed: ${error.message}`, 'error', 'uploadResult');
+            }
+        }
+
+        function simulateFailedUpload() {
+            log('=== Simulating Failed Upload ===', 'info', 'uploadResult');
+            
+            try {
+                const failedProduct = {
+                    id: Date.now(),
+                    uniqueId: `failed_${Date.now()}`,
+                    name: `Failed Test Product ${Date.now()}`,
+                    price: 2999,
+                    image: 'https://example.com/failed.jpg',
+                    state: 'tamil_nadu',
+                    type: 'saree',
+                    sellerId: 'test_seller@example.com',
+                    uploadStatus: 'failed',
+                    error: 'Network connection failed',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Save failed upload for recovery testing
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                failedUploads.push(failedProduct);
+                localStorage.setItem('trendaura_failed_uploads', JSON.stringify(failedUploads));
+                
+                log(`Failed upload saved for recovery: ${failedProduct.name}`, 'warning', 'uploadResult');
+                log('This product can be recovered using backup restoration', 'info', 'uploadResult');
+                
+            } catch (error) {
+                log(`Failed upload simulation failed: ${error.message}`, 'error', 'uploadResult');
+            }
+        }
+
+        function simulateSystemChange() {
+            log('=== Simulating System Change ===', 'info', 'uploadResult');
+            
+            try {
+                // Simulate system change by clearing current products but keeping backups
+                const currentProducts = storage.getProducts();
+                log(`Current products before system change: ${currentProducts.length}`, 'info', 'uploadResult');
+                
+                // Clear main storage (simulate system reset)
+                storage.setProducts([]);
+                
+                log('Main storage cleared (simulating system change)', 'warning', 'uploadResult');
+                
+                // Now test restoration
+                setTimeout(() => {
+                    log('Testing backup restoration after system change...', 'info', 'uploadResult');
+                    restoreFromBackups();
+                    
+                    const restoredProducts = storage.getProducts();
+                    log(`Products restored after system change: ${restoredProducts.length}`, 'success', 'uploadResult');
+                    
+                    if (restoredProducts.length > 0) {
+                        log('System change test PASSED - products survived!', 'success', 'uploadResult');
+                        restoredProducts.forEach(product => {
+                            log(`- Restored: ${product.name}`, 'success', 'uploadResult');
+                        });
+                    } else {
+                        log('System change test FAILED - no products restored', 'error', 'uploadResult');
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                log(`System change simulation failed: ${error.message}`, 'error', 'uploadResult');
+            }
+        }
+
+        function testBackupRestoration() {
+            log('=== Testing Backup Restoration ===', 'info', 'storageStatus');
+            
+            try {
+                const beforeCount = storage.getProducts().length;
+                log(`Products before restoration: ${beforeCount}`, 'info', 'storageStatus');
+                
+                restoreFromBackups();
+                
+                const afterCount = storage.getProducts().length;
+                log(`Products after restoration: ${afterCount}`, 'info', 'storageStatus');
+                
+                if (afterCount >= beforeCount) {
+                    log('Backup restoration completed successfully', 'success', 'storageStatus');
+                } else {
+                    log('Backup restoration had issues', 'warning', 'storageStatus');
+                }
+                
+            } catch (error) {
+                log(`Backup restoration test failed: ${error.message}`, 'error', 'storageStatus');
+            }
+        }
+
+        function verifyBackups() {
+            log('=== Verifying All Backups ===', 'info', 'backupResult');
+            
+            try {
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                log(`Found ${backupKeys.length} backup keys`, 'info', 'backupResult');
+                
+                let validBackups = 0;
+                let invalidBackups = 0;
+                
+                backupKeys.forEach(key => {
+                    try {
+                        const backupData = JSON.parse(localStorage.getItem(key));
+                        if (backupData && backupData.product) {
+                            validBackups++;
+                            log(`Valid backup: ${backupData.product.name}`, 'success', 'backupResult');
+                        } else {
+                            invalidBackups++;
+                        }
+                    } catch (error) {
+                        invalidBackups++;
+                        log(`Invalid backup: ${key}`, 'error', 'backupResult');
+                    }
+                });
+                
+                log(`Backup verification: ${validBackups} valid, ${invalidBackups} invalid`, 
+                    validBackups > 0 ? 'success' : 'error', 'backupResult');
+                
+            } catch (error) {
+                log(`Backup verification failed: ${error.message}`, 'error', 'backupResult');
+            }
+        }
+
+        function testRecovery() {
+            log('=== Testing Recovery from Backups ===', 'info', 'backupResult');
+            
+            try {
+                // Clear current products
+                storage.setProducts([]);
+                log('Cleared current products for recovery test', 'warning', 'backupResult');
+                
+                // Run restoration
+                restoreFromBackups();
+                
+                const recoveredProducts = storage.getProducts();
+                log(`Recovered ${recoveredProducts.length} products from backups`, 'success', 'backupResult');
+                
+                recoveredProducts.forEach(product => {
+                    log(`- ${product.name} (${product.uploadSource || 'unknown'})`, 'success', 'backupResult');
+                });
+                
+                if (recoveredProducts.length > 0) {
+                    log('Recovery test PASSED!', 'success', 'backupResult');
+                } else {
+                    log('Recovery test FAILED - no products recovered', 'error', 'backupResult');
+                }
+                
+            } catch (error) {
+                log(`Recovery test failed: ${error.message}`, 'error', 'backupResult');
+            }
+        }
+
+        function showCurrentProducts() {
+            log('=== Current Products ===', 'info', 'currentProducts');
+            
+            try {
+                const products = storage.getProducts();
+                log(`Total products: ${products.length}`, 'info', 'currentProducts');
+                
+                if (products.length === 0) {
+                    log('No products found in storage', 'warning', 'currentProducts');
+                    return;
+                }
+                
+                products.forEach((product, index) => {
+                    log(`\n${index + 1}. ${product.name}`, 'info', 'currentProducts');
+                    log(`   ID: ${product.id}`, 'info', 'currentProducts');
+                    log(`   Price: ${product.price}`, 'info', 'currentProducts');
+                    log(`   State: ${product.state}`, 'info', 'currentProducts');
+                    log(`   Type: ${product.type}`, 'info', 'currentProducts');
+                    log(`   Upload Source: ${product.uploadSource || 'unknown'}`, 'info', 'currentProducts');
+                    if (product.createdAt) {
+                        log(`   Created: ${new Date(product.createdAt).toLocaleString()}`, 'info', 'currentProducts');
+                    }
+                    if (product.sellerName) {
+                        log(`   Seller: ${product.sellerName}`, 'info', 'currentProducts');
+                    }
+                });
+                
+            } catch (error) {
+                log(`Failed to show products: ${error.message}`, 'error', 'currentProducts');
+            }
+        }
+
+        function clearTestData() {
+            if (confirm('This will clear all test data. Are you sure?')) {
+                try {
+                    // Clear test-related data
+                    localStorage.removeItem('trendaura_backup_keys');
+                    localStorage.removeItem('trendaura_failed_uploads');
+                    localStorage.removeItem('trendaura_upload_log');
+                    
+                    // Clear session storage
+                    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+                        const key = sessionStorage.key(i);
+                        if (key.startsWith('trendaura_session_')) {
+                            sessionStorage.removeItem(key);
+                        }
+                    }
+                    
+                    // Clear backup keys
+                    const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                    backupKeys.forEach(key => localStorage.removeItem(key));
+                    
+                    log('All test data cleared', 'success', 'backupResult');
+                    
+                } catch (error) {
+                    log(`Failed to clear test data: ${error.message}`, 'error', 'backupResult');
+                }
+            }
+        }
+
+        // Include the backup functions from collections1.html
+        function createProductBackup(product) {
+            try {
+                const backupKey = `trendaura_backup_${product.id}_${Date.now()}`;
+                const backupData = {
+                    product: product,
+                    backupTimestamp: new Date().toISOString(),
+                    backupVersion: '1.0'
+                };
+                
+                localStorage.setItem(backupKey, JSON.stringify(backupData));
+                
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                backupKeys.unshift(backupKey);
+                
+                const sellerId = product.sellerId || 'anonymous';
+                const sellerBackups = backupKeys.filter(key => key.includes(sellerId));
+                if (sellerBackups.length > 50) {
+                    const excessBackups = sellerBackups.slice(50);
+                    excessBackups.forEach(key => localStorage.removeItem(key));
+                    excessBackups.forEach(key => {
+                        const index = backupKeys.indexOf(key);
+                        if (index > -1) backupKeys.splice(index, 1);
+                    });
+                }
+                
+                localStorage.setItem('trendaura_backup_keys', JSON.stringify(backupKeys));
+            } catch (error) {
+                console.error('Failed to create product backup:', error);
+            }
+        }
+
+        function createSessionStorageBackup(product) {
+            try {
+                const sessionKey = `trendaura_session_${product.id}`;
+                const sessionData = {
+                    product: product,
+                    sessionTimestamp: new Date().toISOString(),
+                    sessionId: Date.now()
+                };
+                
+                sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+            } catch (error) {
+                console.error('Failed to create session storage backup:', error);
+            }
+        }
+
+        function logProductUploadAttempt(product, backendSuccess) {
+            try {
+                const uploadLog = JSON.parse(localStorage.getItem('trendaura_upload_log') || '[]');
+                const logEntry = {
+                    productId: product.id,
+                    productName: product.name,
+                    sellerId: product.sellerId,
+                    sellerEmail: product.sellerEmail,
+                    timestamp: new Date().toISOString(),
+                    backendSuccess: backendSuccess,
+                    uploadSource: product.uploadSource,
+                    userAgent: navigator.userAgent
+                };
+                
+                uploadLog.unshift(logEntry);
+                
+                if (uploadLog.length > 100) {
+                    uploadLog.splice(100);
+                }
+                
+                localStorage.setItem('trendaura_upload_log', JSON.stringify(uploadLog));
+            } catch (error) {
+                console.error('Failed to log upload attempt:', error);
+            }
+        }
+
+        function restoreFromBackups() {
+            try {
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                const currentProducts = storage.getProducts();
+                
+                failedUploads.forEach((failedProduct, index) => {
+                    const exists = currentProducts.some(p => 
+                        p.uniqueId === failedProduct.uniqueId || 
+                        (p.name === failedProduct.name && p.sellerId === failedProduct.sellerId)
+                    );
+                    
+                    if (!exists) {
+                        try {
+                            const restoredProduct = {
+                                ...failedProduct,
+                                uploadStatus: 'restored',
+                                restoredAt: new Date().toISOString(),
+                                originalError: failedProduct.error
+                            };
+                            delete restoredProduct.error;
+                            delete restoredProduct.uploadStatus;
+                            
+                            storage.addProduct(restoredProduct);
+                            failedUploads.splice(index, 1);
+                        } catch (restoreError) {
+                            console.error('Failed to restore product:', restoreError);
+                        }
+                    }
+                });
+                
+                localStorage.setItem('trendaura_failed_uploads', JSON.stringify(failedUploads));
+                
+                for (let i = 0; i < sessionStorage.length; i++) {
+                    const key = sessionStorage.key(i);
+                    if (key.startsWith('trendaura_session_')) {
+                        try {
+                            const sessionData = JSON.parse(sessionStorage.getItem(key));
+                            const sessionProduct = sessionData.product;
+                            
+                            const exists = currentProducts.some(p => 
+                                p.id === sessionProduct.id || 
+                                p.uniqueId === sessionProduct.uniqueId
+                            );
+                            
+                            if (!exists) {
+                                storage.addProduct(sessionProduct);
+                            }
+                        } catch (sessionError) {
+                            console.error('Failed to restore from session storage:', sessionError);
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Backup restoration failed:', error);
+            }
+        }
+
+        function getUploadStatistics() {
+            try {
+                const uploadLog = JSON.parse(localStorage.getItem('trendaura_upload_log') || '[]');
+                const failedUploads = JSON.parse(localStorage.getItem('trendaura_failed_uploads') || '[]');
+                const backupKeys = JSON.parse(localStorage.getItem('trendaura_backup_keys') || '[]');
+                
+                const stats = {
+                    totalUploads: uploadLog.length,
+                    successfulUploads: uploadLog.filter(log => log.backendSuccess).length,
+                    failedUploads: failedUploads.length,
+                    backupCount: backupKeys.length,
+                    recentUploads: uploadLog.slice(0, 5),
+                    successRate: uploadLog.length > 0 ? 
+                        ((uploadLog.filter(log => log.backendSuccess).length / uploadLog.length) * 100).toFixed(1) + '%' : 
+                        '0%'
+                };
+                
+                return stats;
+            } catch (error) {
+                console.error('Failed to get upload statistics:', error);
+                return null;
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            log('Seller Upload Persistence Test loaded', 'success', 'uploadResult');
+            log('Ready to test multi-layered storage persistence', 'info', 'uploadResult');
+        });
+    </script>
+</body>
+</html>

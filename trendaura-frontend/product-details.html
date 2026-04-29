@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Product Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        .details-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 4%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            gap: 3rem;
+        }
+        .gallery {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+        .main-image {
+            width: 100%;
+            height: 550px;
+            border-radius: 8px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .thumbnails {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .thumbnail {
+            width: 90px;
+            height: 90px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .thumbnail.active {
+            border-color: #e83e8c;
+        }
+        .main-image-container {
+            position: relative;
+        }
+        .photo-count {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(232, 62, 140, 0.9);
+            color: white;
+            padding: 0.5rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            backdrop-filter: blur(5px);
+        }
+        .main-badge {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: #e83e8c;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .image-viewer {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: grab;
+        }
+        .image-viewer.grabbing {
+            cursor: grabbing;
+        }
+        .main-image.zoomed {
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+        .zoom-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: #e83e8c;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .zoom-btn:hover {
+            background: #e83e8c;
+            color: white;
+            transform: scale(1.1);
+        }
+        .zoom-btn.active {
+            background: #e83e8c;
+            color: white;
+        }
+        .view-mode-indicator {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+        .thumbnail-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(232, 62, 140, 0.9);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .thumbnail:hover .thumbnail-overlay {
+            opacity: 1;
+        }
+        .size-option {
+            position: relative;
+            overflow: hidden;
+        }
+        .size-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(232, 62, 140, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .size-option.selected .size-ripple {
+            width: 100%;
+            height: 100%;
+        }
+        .color-options {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .color-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .color-option:hover {
+            border-color: #e83e8c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 62, 140, 0.2);
+        }
+        .color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .color-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .color-ripple {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(232, 62, 140, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .color-option.selected .color-ripple {
+            width: 100%;
+            height: 100%;
+        }
+        .interactive-actions {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f0f0f0;
+        }
+        .share-section, .quick-actions {
+            margin-bottom: 1.5rem;
+        }
+        .share-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .share-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+        .share-btn[data-platform="facebook"] { background: #1877f2; color: white; }
+        .share-btn[data-platform="whatsapp"] { background: #25d366; color: white; }
+        .share-btn[data-platform="twitter"] { background: #1da1f2; color: white; }
+        .share-btn[data-platform="copy"] { background: #6c757d; color: white; }
+        .share-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .quick-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .quick-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .quick-action-btn:hover {
+            border-color: #e83e8c;
+            color: #e83e8c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 62, 140, 0.2);
+        }
+
+        .info-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+        }
+        .info-panel h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.2;
+        }
+        .price {
+            color: #e83e8c;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin: 0.8rem 0 1.2rem;
+        }
+        .meta {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        .section-label {
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .size-options, .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .size-pill {
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            font-size: 0.85rem;
+        }
+        .size-pill.selected {
+            border-color: #e83e8c;
+            background: #fff0f7;
+        }
+        .color-pill {
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid #ddd;
+            font-size: 0.85rem;
+        }
+        .description {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+        }
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #e83e8c;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #d2337a;
+        }
+        .btn-outline {
+            background: white;
+            border: 1px solid #e83e8c;
+            color: #e83e8c;
+        }
+        .btn-outline.active {
+            background: #fff0f7;
+        }
+
+        .lower-section {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+            gap: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.8rem;
+        }
+        .card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: #333;
+        }
+        .review-list {
+            margin-top: 1rem;
+        }
+        .review {
+            border-top: 1px solid #eee;
+            padding-top: 0.9rem;
+            margin-top: 0.9rem;
+        }
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+        .review-text {
+            font-size: 0.9rem;
+            color: #444;
+        }
+        .rating {
+            color: #f5a623;
+            font-size: 0.9rem;
+        }
+        .muted {
+            font-size: 0.85rem;
+            color: #777;
+        }
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+        textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            resize: vertical;
+            min-height: 80px;
+        }
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .suggest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .suggest-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        .suggest-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .suggest-info {
+            padding: 0.6rem 0.8rem 0.9rem;
+        }
+        .suggest-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .suggest-info .price {
+            font-size: 0.9rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ed573;
+            color: white;
+            padding: 0.9rem 1.2rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            font-size: 0.9rem;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.error {
+            background: #ff4757;
+        }
+
+        @media (max-width: 900px) {
+            .details-container {
+                grid-template-columns: 1fr;
+            }
+            .lower-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="collections1.html">
+                            <i class="fas fa-search icon"></i>
+                            <div class="icon-text">Search</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="wishlist1.html">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="details-container" id="details-container">
+        <!-- Filled by JavaScript -->
+    </div>
+
+    <div class="lower-section" id="lower-section" style="display:none;">
+        <div class="card" id="reviews-card">
+            <h3>Reviews & Suggestions</h3>
+            <p class="muted" id="review-hint">Share your experience with this saree. Only logged-in users can add reviews.</p>
+            <div id="add-review-section" style="margin-top:1rem;"></div>
+            <div class="review-list" id="review-list"></div>
+        </div>
+        <div class="card">
+            <h3>Similar Styles You May Like</h3>
+            <div class="suggest-grid" id="suggest-grid"></div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        <span id="notification-message"></span>
+    </div>
+    
+    <!-- Debug Panel -->
+    <div class="debug-panel" style="position: fixed; bottom: 20px; right: 20px; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;">
+        <h4 style="margin-bottom: 0.5rem;">Debug Tools</h4>
+        <button onclick="clearAllData()" style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem;">Clear All Data</button>
+        <button onclick="updateBadges()" style="background: #007bff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Update Badges</button>
+    </div>
+
+    <iframe src="footer.html" style="width:100%; height:300px; border:none; margin-top: 40px;"></iframe>
+
+    <script>
+        function getColorCode(colorName) {
+            const colors = {
+                'red': '#ff0000',
+                'blue': '#0000ff',
+                'green': '#008000',
+                'yellow': '#ffff00',
+                'black': '#000000',
+                'white': '#ffffff',
+                'pink': '#ffc0cb',
+                'purple': '#800080',
+                'orange': '#ffa500',
+                'brown': '#a52a2a',
+                'gray': '#808080',
+                'navy': '#000080',
+                'maroon': '#800000',
+                'olive': '#808000',
+                'teal': '#008080',
+                'silver': '#c0c0c0'
+            };
+            return colors[colorName.toLowerCase()] || '#cccccc';
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            if (isError) notification.classList.add('error');
+            notification.innerHTML = `
+                <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function getQueryId() {
+            const params = new URLSearchParams(window.location.search);
+            const fromQuery = params.get('id');
+            if (fromQuery) return parseInt(fromQuery);
+            const stored = localStorage.getItem('selectedProductId');
+            return stored ? parseInt(stored) : null;
+        }
+
+        function getProducts() {
+            console.log('=== DEBUGGING PRODUCT RETRIEVAL ===');
+            
+            // Use the same storage system as collections1.html
+            let products = JSON.parse(localStorage.getItem('trendaura_products') || '[]');
+            console.log('Parsed products from "trendaura_products" key:', products.length, 'items');
+            console.log('Product IDs:', products.map(p => p.id));
+            
+            // Check if we have the specific product we're looking for
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get('id');
+            console.log('Looking for product ID:', targetId);
+            
+            if (targetId && products && products.length > 0) {
+                const foundProduct = products.find(p => 
+                    p.id === parseInt(targetId) || 
+                    String(p.id) === String(targetId)
+                );
+                console.log('Found target product:', foundProduct ? 'YES' : 'NO');
+                if (foundProduct) {
+                    console.log('Target product details:', foundProduct);
+                }
+            }
+            
+            // If we have products from localStorage, return them
+            if (products && products.length > 0) {
+                console.log('Returning products from localStorage:', products.length, 'products');
+                return products;
+            }
+            
+            // Only use fallback hardcoded products if absolutely no products exist
+            console.log('No products found in localStorage, using fallback products');
+            return [
+                { id: 1, name: "Uppada Silk Saree", price: 4599, image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTWHlpXBq07fH8TtK_GNFVFeSp1OnM5P_4zCWl_lqWBG5vuoA8Lh3QBtvi7imZIL2ZkTcibgWQx7ClkX1CdovDmE_2ywZOKwXIs8LYalH4P", type: "saree", state: "andhra_pradesh" },
+                { id: 2, name: "Mangalagiri Cotton Saree", price: 3500, image: "https://thenmozhidesigns.com/cdn/shop/files/3S2A3673.jpg?v=1729245268&width=4000", type: "saree", state: "andhra_pradesh" },
+                { id: 3, name: "Venkatagiri Saree", price: 3299, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSoaNyGNxMhEzadynMgYx9vgICIor77YEcad3w8PI3TkvhQSTJkwI20ROMKeVDKp29GzMT0t7DIen-uZjTuwjkkQzG5NWv3ovg0490jDt4c", type: "saree", state: "andhra_pradesh" },
+                { id: 4, name: "Gadwal Silk Saree", price: 3899, image: "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQD73Po1sqMPCE6ZT8WGyFu4yuawNqcI8juHRlAwHatdsORL8y3BTfqH3Zq4srKA5gAOS10Of0t_1ZWi-Qy0nwr33JAi8MtbdEGcziXzDuMuOhaBx-w6NNT", type: "saree", state: "andhra_pradesh" },
+                { id: 5, name: "Kalamkari Printed Saree", price: 2799, image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTZBf8wcrGpBSGeIHp5NHRHSHg2tO7OxC_nzXXWXMg0K3vs2aKcwe3V9fYx-0XmXwHtJNb8y6i4F8wJ5icjj-KYubPIZGldgKkznij4Cjzm", type: "saree", state: "andhra_pradesh" }
+            ];
+        }
+
+        function getWishlist() {
+            return JSON.parse(localStorage.getItem('trendaura_wishlist') || '[]');
+        }
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem('trendaura_cart') || '[]');
+        }
+
+        function saveWishlist(list) {
+            localStorage.setItem('trendaura_wishlist', JSON.stringify(list));
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('trendaura_cart', JSON.stringify(cart));
+        }
+
+        function updateBadges() {
+            try {
+                console.log('Updating badges...');
+                
+                const wishlist = getWishlist();
+                const cart = getCart();
+                
+                console.log('Wishlist items:', wishlist);
+                console.log('Cart items:', cart);
+                
+                const wishlistBadge = document.getElementById('wishlist-badge');
+                const cartBadge = document.getElementById('cart-badge');
+                
+                if (wishlistBadge) {
+                    const wishlistCount = Array.isArray(wishlist) ? wishlist.length : 0;
+                    wishlistBadge.textContent = wishlistCount;
+                    console.log('Wishlist badge updated to:', wishlistCount);
+                } else {
+                    console.error('Wishlist badge element not found');
+                }
+                
+                if (cartBadge) {
+                    const cartCount = Array.isArray(cart) ? 
+                        cart.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
+                    cartBadge.textContent = cartCount;
+                    console.log('Cart badge updated to:', cartCount);
+                } else {
+                    console.error('Cart badge element not found');
+                }
+                
+                // Add visual feedback for counts
+                if (wishlistBadge && wishlistCount > 0) {
+                    wishlistBadge.style.background = '#e83e8c';
+                    wishlistBadge.style.color = 'white';
+                } else {
+                    wishlistBadge.style.background = '#6c757d';
+                    wishlistBadge.style.color = 'white';
+                }
+                
+                if (cartBadge && cartCount > 0) {
+                    cartBadge.style.background = '#e83e8c';
+                    cartBadge.style.color = 'white';
+                } else {
+                    cartBadge.style.background = '#6c757d';
+                    cartBadge.style.color = 'white';
+                }
+                
+            } catch (error) {
+                console.error('Error updating badges:', error);
+            }
+        }
+
+        // Function to clear all wishlist and cart items
+        function clearAllData() {
+            localStorage.setItem('trendaura_wishlist', JSON.stringify([]));
+            localStorage.setItem('trendaura_cart', JSON.stringify([]));
+            updateBadges();
+            showNotification('All wishlist and cart items cleared!');
+        }
+
+        // Helper function to manually add a product if it's missing
+        function addMissingProduct() {
+            const targetId = '1776712586147';
+            const products = getProducts();
+            
+            // Check if the product already exists
+            const exists = products.find(p => 
+                p.id === parseInt(targetId) || 
+                String(p.id) === String(targetId)
+            );
+            
+            if (!exists) {
+                // Create a sample product with the missing ID
+                const newProduct = {
+                    id: parseInt(targetId),
+                    name: "Your New Product",
+                    price: 2999,
+                    image: "https://via.placeholder.com/400x500/FF69B4/FFFFFF?text=New+Product",
+                    type: "saree",
+                    state: "andhra_pradesh",
+                    description: "This is your newly added product. Update the details as needed.",
+                    sizes: ["S", "M", "L", "XL"],
+                    colors: ["Red", "Blue", "Green"]
+                };
+                
+                products.push(newProduct);
+                localStorage.setItem('trendaura_products', JSON.stringify(products));
+                
+                console.log('Added missing product:', newProduct);
+                alert('Product has been added! Refresh the page to see it.');
+                
+                // Refresh the page
+                window.location.reload();
+            } else {
+                console.log('Product already exists:', exists);
+                alert('Product already exists in storage!');
+            }
+        }
+
+        function toggleWishlist(productId) {
+            let wishlist = getWishlist();
+            const idx = wishlist.indexOf(productId);
+            if (idx === -1) {
+                wishlist.push(productId);
+                showNotification('Added to wishlist');
+            } else {
+                wishlist.splice(idx, 1);
+                showNotification('Removed from wishlist');
+            }
+            saveWishlist(wishlist);
+            updateBadges();
+            renderDetail(productId);
+        }
+
+        function addToCart(product, sizeValue) {
+            let cart = getCart();
+            const key = product.id + (sizeValue ? '::' + sizeValue : '');
+            let existing = cart.find(item => item._key === key);
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+                const copy = Object.assign({}, product);
+                copy.quantity = 1;
+                copy.selectedSize = sizeValue || null;
+                copy._key = key;
+                cart.push(copy);
+            }
+            saveCart(cart);
+            updateBadges();
+            showNotification('Added to cart');
+        }
+
+        function getReviews(productId) {
+            const map = JSON.parse(localStorage.getItem('productReviews') || '{}');
+            return map[productId] || [];
+        }
+
+        function saveReview(productId, review) {
+            const map = JSON.parse(localStorage.getItem('productReviews') || '{}');
+            map[productId] = map[productId] || [];
+            map[productId].unshift(review);
+            localStorage.setItem('productReviews', JSON.stringify(map));
+        }
+
+        function renderDetail(productId) {
+            const container = document.getElementById('details-container');
+            const products = getProducts();
+            
+            console.log('Looking for product ID:', productId);
+            console.log('Available products:', products.map(p => ({ id: p.id, name: p.name })));
+            
+            // Try to find product by exact ID match first
+            let product = products.find(p => p.id === productId);
+            
+            // If not found, try to find by string comparison (for timestamp IDs)
+            if (!product) {
+                product = products.find(p => String(p.id) === String(productId));
+            }
+            
+            // If still not found, try to find by index (fallback for simple IDs)
+            if (!product && typeof productId === 'number' && productId > 0 && productId <= products.length) {
+                product = products[productId - 1];
+            }
+
+            if (!product) {
+                console.log('Product not found, showing error message');
+                container.innerHTML = `
+                    <div style="grid-column:1 / -1; text-align:center; padding:4rem 0;">
+                        <h2>Product not found</h2>
+                        <p style="margin:1rem 0 2rem;">This item may have been removed or is unavailable.</p>
+                        <p style="margin:1rem 0 2rem; font-size: 0.9rem; color: #666;">
+                            Looking for product ID: ${productId}<br>
+                            Available products: ${products.length}
+                        </p>
+                        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="collections1.html" class="btn btn-primary" style="text-decoration:none;">Back to Collections</a>
+                            <button onclick="addMissingProduct()" class="btn btn-outline" style="background: white; color: #e83e8c; border: 2px solid #e83e8c; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Add Missing Product
+                            </button>
+                        </div>
+                        <p style="margin-top: 2rem; font-size: 0.85rem; color: #999;">
+                            Click "Add Missing Product" to create this product automatically
+                        </p>
+                    </div>
+                `;
+                document.getElementById('lower-section').style.display = 'none';
+                return;
+            }
+            
+            console.log('Found product:', product);
+
+            const wishlist = getWishlist();
+            const inWishlist = wishlist.includes(product.id);
+            
+            // Handle seller-uploaded product data with fallbacks
+            const sizes = Array.isArray(product.sizes) && product.sizes.length ? product.sizes : 
+                         (product.size ? [product.size] : ['Free size']);
+            const colors = Array.isArray(product.colors) && product.colors.length ? product.colors : 
+                        (product.color ? [product.color] : []);
+            
+            // Comprehensive handling of additional photos from local sellers
+            let extraImages = [];
+            
+            // Try multiple ways to get additional images
+            if (Array.isArray(product.extraImages) && product.extraImages.length > 0) {
+                extraImages = product.extraImages;
+            } else if (Array.isArray(product.images) && product.images.length > 1) {
+                // Remove the first image (main image) and keep the rest as additional
+                extraImages = product.images.slice(1);
+            } else if (Array.isArray(product.additionalPhotos) && product.additionalPhotos.length > 0) {
+                extraImages = product.additionalPhotos;
+            } else if (Array.isArray(product.moreImages) && product.moreImages.length > 0) {
+                extraImages = product.moreImages;
+            } else if (product.photo1 || product.photo2 || product.photo3) {
+                // Handle individual photo properties
+                extraImages = [product.photo1, product.photo2, product.photo3].filter(Boolean);
+            }
+            
+            // Handle main image with multiple fallbacks
+            const mainImage = product.image || 
+                            product.mainImage || 
+                            product.images?.[0] || 
+                            product.photo0 ||
+                            'https://via.placeholder.com/400x500/FF69B4/FFFFFF?text=No+Image';
+            
+            // Combine all images for the gallery
+            const galleryImages = [mainImage].concat(extraImages).filter(Boolean);
+            
+            console.log('Product images:', {
+                name: product.name,
+                mainImage,
+                extraImages,
+                totalImages: galleryImages.length,
+                allImageSources: {
+                    image: product.image,
+                    mainImage: product.mainImage,
+                    images: product.images,
+                    extraImages: product.extraImages,
+                    additionalPhotos: product.additionalPhotos,
+                    moreImages: product.moreImages,
+                    photo0: product.photo0,
+                    photo1: product.photo1,
+                    photo2: product.photo2,
+                    photo3: product.photo3
+                }
+            });
+            
+            // Ensure we have at least one valid image
+            const validImages = galleryImages.length > 0 ? galleryImages : [
+                'https://via.placeholder.com/400x500/FF69B4/FFFFFF?text=No+Image'
+            ];
+
+            container.innerHTML = `
+                <div class="gallery">
+                    <div class="main-image-container">
+                        <div class="image-viewer" id="image-viewer">
+                            <img src="${validImages[0]}" class="main-image" id="main-image" alt="${product.name}" 
+                                 onerror="this.src='https://via.placeholder.com/400x500/FF69B4/FFFFFF?text=Image+Not+Found'">
+                            <div class="zoom-controls">
+                                <button class="zoom-btn" id="zoom-in-btn" title="Zoom In">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                                <button class="zoom-btn" id="zoom-out-btn" title="Zoom Out">
+                                    <i class="fas fa-search-minus"></i>
+                                </button>
+                                <button class="zoom-btn" id="zoom-reset-btn" title="Reset Zoom">
+                                    <i class="fas fa-compress"></i>
+                                </button>
+                                <button class="zoom-btn" id="360-view-btn" title="360° View">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="view-mode-indicator" id="view-mode-indicator">
+                                <span class="mode-text">Standard View</span>
+                            </div>
+                        </div>
+                        ${validImages.length > 1 ? `
+                            <div class="photo-count">
+                                <i class="fas fa-camera"></i> ${validImages.length} Photos
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="thumbnails" id="thumbnails">
+                        ${validImages.map((src, index) => `
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" data-index="${index}">
+                                <img src="${src}" alt="${product.name} thumbnail ${index + 1}"
+                                     onerror="this.src='https://via.placeholder.com/100x100/FF69B4/FFFFFF?text=No+Img'">
+                                ${index === 0 ? '<div class="main-badge">Main</div>' : ''}
+                                <div class="thumbnail-overlay">
+                                    <i class="fas fa-search-plus"></i>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="info-panel">
+                    <h2>${product.name}</h2>
+                    <div class="price">₹${Number(product.price).toLocaleString('en-IN')}</div>
+                    <div class="meta">
+                        ${product.type ? `<span>Fashion: ${product.type.replace('_', ' ')}</span>` : ''}
+                        ${product.state ? ` • <span>State: ${product.state}</span>` : ''}
+                    </div>
+                    <div class="section-label">Available Sizes</div>
+                    <div class="size-options" id="size-options">
+                        ${sizes.map((s, i) => `
+                            <span class="size-option ${i === 0 ? 'selected' : ''}" data-size="${s}">
+                                ${s}
+                                <div class="size-ripple"></div>
+                            </span>
+                        `).join('')}
+                    </div>
+                    ${colors.length ? `
+                        <div class="section-label">Available Colors</div>
+                        <div class="color-options">
+                            ${colors.map(c => `
+                                <span class="color-option" data-color="${c}">
+                                    <div class="color-swatch" style="background-color: ${getColorCode(c)}"></div>
+                                    <span class="color-name">${c}</span>
+                                    <div class="color-ripple"></div>
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="interactive-actions">
+                        <div class="share-section">
+                            <div class="section-label">Share Product</div>
+                            <div class="share-buttons">
+                                <button class="share-btn" data-platform="facebook" title="Share on Facebook">
+                                    <i class="fab fa-facebook-f"></i>
+                                </button>
+                                <button class="share-btn" data-platform="whatsapp" title="Share on WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                                <button class="share-btn" data-platform="twitter" title="Share on Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </button>
+                                <button class="share-btn" data-platform="copy" title="Copy Link">
+                                    <i class="fas fa-link"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <button class="quick-action-btn" id="compare-btn" title="Add to Compare">
+                                <i class="fas fa-balance-scale"></i>
+                                <span>Compare</span>
+                            </button>
+                            <button class="quick-action-btn" id="quick-view-btn" title="Quick View">
+                                <i class="fas fa-eye"></i>
+                                <span>Quick View</span>
+                            </button>
+                            <button class="quick-action-btn" id="virtual-try-btn" title="Virtual Try-On">
+                                <i class="fas fa-magic"></i>
+                                <span>Try On</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="section-label">About this saree</div>
+                    <p class="description">
+                        ${product.description || 'Beautifully crafted piece curated from Indian local boutiques on TrendAura.'}
+                    </p>
+                    <div class="actions">
+                        <button class="btn btn-primary" id="add-cart-btn">
+                            <i class="fas fa-shopping-bag"></i> Add to Cart
+                        </button>
+                        <button class="btn btn-outline ${inWishlist ? 'active' : ''}" id="toggle-wishlist-btn">
+                            <i class="${inWishlist ? 'fas' : 'far'} fa-heart"></i>
+                            ${inWishlist ? 'In Wishlist' : 'Add to Wishlist'}
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const mainImageElement = document.getElementById('main-image');
+            const imageViewer = document.getElementById('image-viewer');
+            const viewModeIndicator = document.getElementById('view-mode-indicator');
+            
+            // Interactive zoom and pan functionality
+            let currentZoom = 1;
+            let isPanning = false;
+            let startX, startY, scrollLeft, scrollTop;
+            let is360Mode = false;
+            let rotation360 = 0;
+            let rotationInterval;
+            
+            // Zoom controls
+            document.getElementById('zoom-in-btn').addEventListener('click', () => {
+                if (!is360Mode) {
+                    currentZoom = Math.min(currentZoom + 0.5, 3);
+                    updateZoom();
+                }
+            });
+            
+            document.getElementById('zoom-out-btn').addEventListener('click', () => {
+                if (!is360Mode) {
+                    currentZoom = Math.max(currentZoom - 0.5, 1);
+                    updateZoom();
+                }
+            });
+            
+            document.getElementById('zoom-reset-btn').addEventListener('click', () => {
+                if (is360Mode) {
+                    stop360View();
+                } else {
+                    currentZoom = 1;
+                    updateZoom();
+                    resetPan();
+                }
+            });
+            
+            document.getElementById('360-view-btn').addEventListener('click', () => {
+                if (validImages.length > 1) {
+                    if (is360Mode) {
+                        stop360View();
+                    } else {
+                        start360View();
+                    }
+                }
+            });
+            
+            function updateZoom() {
+                mainImageElement.style.transform = `scale(${currentZoom})`;
+                mainImageElement.classList.add('zoomed');
+                viewModeIndicator.querySelector('.mode-text').textContent = 
+                    currentZoom > 1 ? `Zoom: ${Math.round(currentZoom * 100)}%` : 'Standard View';
+            }
+            
+            function resetPan() {
+                imageViewer.scrollTop = 0;
+                imageViewer.scrollLeft = 0;
+            }
+            
+            function start360View() {
+                is360Mode = true;
+                rotation360 = 0;
+                document.getElementById('360-view-btn').classList.add('active');
+                viewModeIndicator.querySelector('.mode-text').textContent = '360° View';
+                
+                rotationInterval = setInterval(() => {
+                    rotation360 = (rotation360 + 2) % 360;
+                    mainImageElement.style.transform = `rotateY(${rotation360}deg)`;
+                }, 50);
+            }
+            
+            function stop360View() {
+                is360Mode = false;
+                clearInterval(rotationInterval);
+                document.getElementById('360-view-btn').classList.remove('active');
+                mainImageElement.style.transform = `scale(${currentZoom})`;
+                viewModeIndicator.querySelector('.mode-text').textContent = 
+                    currentZoom > 1 ? `Zoom: ${Math.round(currentZoom * 100)}%` : 'Standard View';
+            }
+            
+            // Pan functionality for zoomed images
+            imageViewer.addEventListener('mousedown', (e) => {
+                if (currentZoom > 1 && !is360Mode) {
+                    isPanning = true;
+                    imageViewer.classList.add('grabbing');
+                    startX = e.pageX - imageViewer.offsetLeft;
+                    startY = e.pageY - imageViewer.offsetTop;
+                    scrollLeft = imageViewer.scrollLeft;
+                    scrollTop = imageViewer.scrollTop;
+                    e.preventDefault();
+                }
+            });
+            
+            imageViewer.addEventListener('mouseleave', () => {
+                isPanning = false;
+                imageViewer.classList.remove('grabbing');
+            });
+            
+            imageViewer.addEventListener('mouseup', () => {
+                isPanning = false;
+                imageViewer.classList.remove('grabbing');
+            });
+            
+            imageViewer.addEventListener('mousemove', (e) => {
+                if (!isPanning) return;
+                e.preventDefault();
+                const x = e.pageX - imageViewer.offsetLeft;
+                const y = e.pageY - imageViewer.offsetTop;
+                const walkX = (x - startX) * 1.5;
+                const walkY = (y - startY) * 1.5;
+                imageViewer.scrollLeft = scrollLeft - walkX;
+                imageViewer.scrollTop = scrollTop - walkY;
+            });
+            
+            // Mouse wheel zoom
+            imageViewer.addEventListener('wheel', (e) => {
+                if (!is360Mode) {
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? -0.5 : 0.5;
+                    currentZoom = Math.max(1, Math.min(3, currentZoom + delta));
+                    updateZoom();
+                }
+            });
+            
+            // Thumbnail click functionality
+            document.querySelectorAll('.thumbnail').forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    mainImageElement.src = galleryImages[index];
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Reset zoom when changing images
+                    currentZoom = 1;
+                    updateZoom();
+                    resetPan();
+                    
+                    // Stop 360 view if active
+                    if (is360Mode) {
+                        stop360View();
+                    }
+                });
+            });
+
+            document.getElementById('size-options').addEventListener('click', function(e) {
+                const pill = e.target.closest('.size-option');
+                if (!pill) return;
+                document.querySelectorAll('.size-option').forEach(p => p.classList.remove('selected'));
+                pill.classList.add('selected');
+                showNotification(`Size: ${pill.getAttribute('data-size')} selected`);
+            });
+            
+            // Color selection with ripple effect
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    showNotification(`Color: ${this.getAttribute('data-color')} selected`);
+                });
+            });
+            
+            // Social sharing functionality
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const platform = this.getAttribute('data-platform');
+                    const productUrl = window.location.href;
+                    const productTitle = product.name;
+                    const message = `Check out this beautiful ${product.name} on TrendAura!`;
+                    
+                    switch(platform) {
+                        case 'facebook':
+                            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}`, '_blank');
+                            break;
+                        case 'whatsapp':
+                            window.open(`https://wa.me/?text=${encodeURIComponent(message + ' ' + productUrl)}`, '_blank');
+                            break;
+                        case 'twitter':
+                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(productUrl)}`, '_blank');
+                            break;
+                        case 'copy':
+                            navigator.clipboard.writeText(productUrl).then(() => {
+                                showNotification('Link copied to clipboard!');
+                            });
+                            break;
+                    }
+                });
+            });
+            
+            // Quick actions functionality
+            document.getElementById('compare-btn').addEventListener('click', () => {
+                let compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+                if (!compareList.find(p => p.id === product.id)) {
+                    compareList.push(product);
+                    localStorage.setItem('compareList', JSON.stringify(compareList));
+                    showNotification('Added to comparison!');
+                } else {
+                    showNotification('Already in comparison list');
+                }
+            });
+            
+            document.getElementById('quick-view-btn').addEventListener('click', () => {
+                showNotification('Quick view feature coming soon!');
+            });
+            
+            document.getElementById('virtual-try-btn').addEventListener('click', () => {
+                showNotification('Virtual try-on feature coming soon!');
+            });
+
+            document.getElementById('add-cart-btn').addEventListener('click', function() {
+                const selected = document.querySelector('.size-option.selected');
+                const sizeValue = selected ? selected.getAttribute('data-size') : null;
+                addToCart(product, sizeValue);
+            });
+
+            document.getElementById('toggle-wishlist-btn').addEventListener('click', function() {
+                toggleWishlist(product.id);
+            });
+
+            renderReviews(productId);
+            renderSuggestions(product);
+            document.getElementById('lower-section').style.display = 'grid';
+        }
+
+        function renderReviews(productId) {
+            const listEl = document.getElementById('review-list');
+            const addSection = document.getElementById('add-review-section');
+            const reviews = getReviews(productId);
+            const isLoggedIn = localStorage.getItem('isAuthenticated') === 'true';
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+            if (isLoggedIn && user && user.email) {
+                addSection.innerHTML = `
+                    <div class="form-group">
+                        <label for="review-rating" class="muted">Rating</label>
+                        <select id="review-rating">
+                            <option value="5">★★★★★ (5)</option>
+                            <option value="4">★★★★☆ (4)</option>
+                            <option value="3">★★★☆☆ (3)</option>
+                            <option value="2">★★☆☆☆ (2)</option>
+                            <option value="1">★☆☆☆☆ (1)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-text" class="muted">Write a review</label>
+                        <textarea id="review-text" placeholder="Share how the fabric, colors and fit felt for you..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="submit-review-btn">
+                        <i class="fas fa-paper-plane"></i> Post Review
+                    </button>
+                `;
+                document.getElementById('submit-review-btn').addEventListener('click', function() {
+                    const rating = parseInt(document.getElementById('review-rating').value);
+                    const text = document.getElementById('review-text').value.trim();
+                    if (!text) {
+                        showNotification('Please write something in your review', true);
+                        return;
+                    }
+                    const review = {
+                        userName: user.fullName || user.username || 'TrendAura user',
+                        rating,
+                        text,
+                        createdAt: new Date().toISOString()
+                    };
+                    saveReview(productId, review);
+                    document.getElementById('review-text').value = '';
+                    renderReviews(productId);
+                    showNotification('Review added. Thank you!');
+                });
+            } else {
+                addSection.innerHTML = `
+                    <p class="muted">
+                        Please <a href="login.html" style="color:#e83e8c; text-decoration:none;">login</a> to add a review.
+                    </p>
+                `;
+            }
+
+            if (!reviews.length) {
+                listEl.innerHTML = `<p class="muted" style="margin-top:0.8rem;">No reviews yet. Be the first to review this saree.</p>`;
+                return;
+            }
+
+            listEl.innerHTML = reviews.map(r => {
+                const dateStr = new Date(r.createdAt).toLocaleDateString('en-IN');
+                const stars = '★★★★★☆☆☆☆☆'.slice(5 - r.rating, 10 - r.rating);
+                return `
+                    <div class="review">
+                        <div class="review-header">
+                            <strong>${r.userName}</strong>
+                            <span class="rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                        </div>
+                        <div class="review-text">${r.text}</div>
+                        <div class="muted">${dateStr}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSuggestions(product) {
+            const grid = document.getElementById('suggest-grid');
+            const products = getProducts();
+            const similar = products.filter(p =>
+                p.id !== product.id &&
+                ((product.type && p.type === product.type) || (product.state && p.state === product.state))
+            ).slice(0, 4);
+
+            if (!similar.length) {
+                grid.innerHTML = `<p class="muted">We will add suggestions for this saree soon.</p>`;
+                return;
+            }
+
+            grid.innerHTML = similar.map(p => `
+                <div class="suggest-card" data-id="${p.id}">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="suggest-info">
+                        <h4>${p.name}</h4>
+                        <div class="price">₹${Number(p.price).toLocaleString('en-IN')}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            grid.querySelectorAll('.suggest-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    localStorage.setItem('selectedProductId', String(id));
+                    window.location.href = 'product-details.html?id=' + encodeURIComponent(id);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Product details page loaded');
+            
+            const productId = getQueryId();
+            console.log('Product ID from URL:', productId);
+            
+            if (!productId) {
+                showNotification('No product selected', true);
+                document.getElementById('details-container').innerHTML = `
+                    <div style="grid-column:1 / -1; text-align:center; padding:4rem 0;">
+                        <h2>No product selected</h2>
+                        <p style="margin:1rem 0 2rem;">Go back to collections and choose an item.</p>
+                        <a href="collections1.html" class="btn btn-primary" style="text-decoration:none;">Back to Collections</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            renderDetail(productId);
+            updateBadges();
+        });
+    </script>
+</body>
+</html>
+

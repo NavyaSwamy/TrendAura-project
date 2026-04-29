@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Products - TrendAura</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></script>
+    <script src="js/api.js"></script>
+    <script src="js/chatbot.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        /* Search Section */
+        .search-section {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-header h1 {
+            font-size: 2.5rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+
+        .search-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .search-form-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e83e8c;
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #e83e8c, #d2337a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(232, 62, 140, 0.3);
+        }
+
+        .filters-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .filter-group select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+        }
+
+        /* Search Results */
+        .search-results {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-info h2 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-info p {
+            color: #666;
+        }
+
+        .sort-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .sort-select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .view-btn {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .view-btn:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .view-btn:last-child {
+            border-radius: 0 6px 6px 0;
+        }
+
+        .view-btn.active {
+            background: #e83e8c;
+            color: white;
+            border-color: #e83e8c;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .product-info .price {
+            color: #e83e8c;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .wishlist-btn, .cart-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .wishlist-btn {
+            background: none;
+            color: #555;
+        }
+
+        .wishlist-btn.active {
+            color: #e83e8c;
+        }
+
+        .cart-btn {
+            background: #e83e8c;
+            color: white;
+        }
+
+        .cart-btn:hover {
+            background: #d2337a;
+        }
+
+        /* Search Suggestions */
+        .search-suggestions {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-suggestions.active {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .suggestion-item:hover {
+            background: #f8f9fa;
+        }
+
+        .suggestion-item strong {
+            color: #e83e8c;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e83e8c;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+            margin-left: 15px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 2rem;
+        }
+
+        .empty-state .search-btn {
+            display: inline-block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-input-group {
+                flex-direction: column;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search Section -->
+    <div class="search-section">
+        <div class="search-header">
+            <h1>Search Products</h1>
+            <p>Find exactly what you're looking for in our collection</p>
+        </div>
+
+        <div class="search-form-container">
+            <form id="searchForm">
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search for products, brands, or categories..."
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+
+                <div class="search-suggestions" id="searchSuggestions">
+                    <!-- Suggestions will be populated here -->
+                </div>
+
+                <div class="filters-row">
+                    <div class="filter-group">
+                        <label for="categoryFilter">Category</label>
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="WOMEN">Women</option>
+                            <option value="MEN">Men</option>
+                            <option value="KIDS">Kids</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="typeFilter">Product Type</label>
+                        <select id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="SAREE">Saree</option>
+                            <option value="SALWAR_KAMEEZ">Salwar Kameez</option>
+                            <option value="LEHENGA">Lehenga</option>
+                            <option value="KURTA">Kurta</option>
+                            <option value="SHIRT">Shirt</option>
+                            <option value="TSHIRT">T-Shirt</option>
+                            <option value="JEANS">Jeans</option>
+                            <option value="JACKET">Jacket</option>
+                            <option value="DRESS">Dress</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="stateFilter">State</label>
+                        <select id="stateFilter">
+                            <option value="">All States</option>
+                            <option value="andhra_pradesh">Andhra Pradesh</option>
+                            <option value="assam">Assam</option>
+                            <option value="bihar">Bihar</option>
+                            <option value="gujarat">Gujarat</option>
+                            <option value="karnataka">Karnataka</option>
+                            <option value="kerala">Kerala</option>
+                            <option value="maharashtra">Maharashtra</option>
+                            <option value="odisha">Odisha</option>
+                            <option value="punjab">Punjab</option>
+                            <option value="rajasthan">Rajasthan</option>
+                            <option value="tamil_nadu">Tamil Nadu</option>
+                            <option value="west_bengal">West Bengal</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priceFilter">Price Range</label>
+                        <select id="priceFilter">
+                            <option value="">All Prices</option>
+                            <option value="0-1000">Under ₹1,000</option>
+                            <option value="1000-3000">₹1,000 - ₹3,000</option>
+                            <option value="3000-5000">₹3,000 - ₹5,000</option>
+                            <option value="5000-10000">₹5,000 - ₹10,000</option>
+                            <option value="10000+">Above ₹10,000</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results" id="searchResults" style="display: none;">
+        <div class="results-header">
+            <div class="results-info">
+                <h2 id="resultsTitle">Search Results</h2>
+                <p id="resultsCount">Loading...</p>
+            </div>
+            <div class="sort-controls">
+                <select class="sort-select" id="sortSelect">
+                    <option value="relevance">Sort by Relevance</option>
+                    <option value="name">Name: A-Z</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+            <div class="loading">Searching products...</div>
+        </div>
+    </div>
+
+    <script>
+        let currentSearchResults = [];
+        let searchTimeout;
+        let currentQuery = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            
+            // Get initial search query from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialQuery = urlParams.get('q');
+            if (initialQuery) {
+                document.getElementById('searchInput').value = initialQuery;
+                performSearch(initialQuery);
+            }
+        });
+
+        function setupEventListeners() {
+            // Search form
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const query = document.getElementById('searchInput').value.trim();
+                if (query) {
+                    performSearch(query);
+                }
+            });
+
+            // Search input with debouncing
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                const query = e.target.value.trim();
+                
+                // Clear previous timeout
+                clearTimeout(searchTimeout);
+                
+                if (query.length >= 2) {
+                    // Show suggestions after 300ms
+                    searchTimeout = setTimeout(() => {
+                        showSearchSuggestions(query);
+                    }, 300);
+                } else {
+                    hideSearchSuggestions();
+                }
+            });
+
+            // Click outside to hide suggestions
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.search-input-group')) {
+                    hideSearchSuggestions();
+                }
+            });
+
+            // Filter changes
+            ['categoryFilter', 'typeFilter', 'stateFilter', 'priceFilter'].forEach(id => {
+                document.getElementById(id).addEventListener('change', function() {
+                    if (currentQuery) {
+                        performSearch(currentQuery);
+                    }
+                });
+            });
+
+            // Sort change
+            document.getElementById('sortSelect').addEventListener('change', function() {
+                sortResults(this.value);
+            });
+
+            // View toggle
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // Here you could implement list view if needed
+                });
+            });
+        }
+
+        async function performSearch(query) {
+            currentQuery = query;
+            const resultsSection = document.getElementById('searchResults');
+            const productGrid = document.getElementById('productGrid');
+            
+            // Show results section
+            resultsSection.style.display = 'block';
+            productGrid.innerHTML = '<div class="loading">Searching products...</div>';
+            
+            // Get filter values
+            const filters = {
+                category: document.getElementById('categoryFilter').value,
+                type: document.getElementById('typeFilter').value,
+                state: document.getElementById('stateFilter').value,
+                priceRange: document.getElementById('priceFilter').value
+            };
+
+            try {
+                // Log search activity
+                logActivity('Search Page', 'SEARCH_PRODUCTS', { query, filters });
+                
+                // Search products
+                let products = await searchProducts(query);
+                
+                // Apply additional filters
+                products = applyFilters(products, filters);
+                
+                currentSearchResults = products;
+                displayResults(products, query);
+                
+            } catch (error) {
+                console.error('Search failed:', error);
+                productGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Search failed</h3>
+                        <p>Please try again later</p>
+                    </div>
+                `;
+            }
+        }
+
+        function applyFilters(products, filters) {
+            return products.filter(product => {
+                // Category filter
+                if (filters.category && product.category !== filters.category) {
+                    return false;
+                }
+                
+                // Type filter
+                if (filters.type && product.fashionType !== filters.type) {
+                    return false;
+                }
+                
+                // State filter
+                if (filters.state && product.stateCode !== filters.state) {
+                    return false;
+                }
+                
+                // Price filter
+                if (filters.priceRange) {
+                    const price = product.price;
+                    switch(filters.priceRange) {
+                        case '0-1000':
+                            if (price >= 1000) return false;
+                            break;
+                        case '1000-3000':
+                            if (price < 1000 || price > 3000) return false;
+                            break;
+                        case '3000-5000':
+                            if (price < 3000 || price > 5000) return false;
+                            break;
+                        case '5000-10000':
+                            if (price < 5000 || price > 10000) return false;
+                            break;
+                        case '10000+':
+                            if (price <= 10000) return false;
+                            break;
+                    }
+                }
+                
+                return true;
+            });
+        }
+
+        function displayResults(products, query) {
+            const productGrid = document.getElementById('productGrid');
+            const resultsCount = document.getElementById('resultsCount');
+            const resultsTitle = document.getElementById('resultsTitle');
+            
+            // Update results info
+            resultsTitle.textContent = `Results for "${query}"`;
+            resultsCount.textContent = `${products.length} products found`;
+            
+            if (products.length === 0) {
+                productGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your search terms or filters</p>
+                        <p>Here are some suggestions:</p>
+                        <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                            <li>Check spelling</li>
+                            <li>Use more general terms</li>
+                            <li>Try different filters</li>
+                            <li>Browse our collections</li>
+                        </ul>
+                        <button class="search-btn" onclick="window.location.href='collections.html'">
+                            Browse Collections
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            productGrid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="viewProduct(${product.id})">
+                    <img src="${product.imageUrl}" alt="${product.name}" loading="lazy">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <div class="price">${formatPrice(product.price)}</div>
+                        <div class="product-actions">
+                            <button class="wishlist-btn" onclick="toggleWishlist(event, ${product.id}, this)">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="cart-btn" onclick="addToCart(event, ${product.id})">
+                                <i class="fas fa-shopping-cart"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update wishlist buttons if logged in
+            if (isLoggedIn()) {
+                updateWishlistButtons();
+            }
+        }
+
+        function sortResults(sortBy) {
+            let sorted = [...currentSearchResults];
+            
+            switch(sortBy) {
+                case 'name':
+                    sorted.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'price-low':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'relevance':
+                default:
+                    // Keep original search order
+                    break;
+            }
+            
+            displayResults(sorted, currentQuery);
+        }
+
+        async function showSearchSuggestions(query) {
+            const suggestionsEl = document.getElementById('searchSuggestions');
+            
+            try {
+                // Get trending products or recent searches
+                const products = await getTrendingProducts();
+                
+                // Filter products that match the query
+                const matches = products.filter(product => 
+                    product.name.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 5);
+                
+                if (matches.length > 0) {
+                    suggestionsEl.innerHTML = matches.map(product => `
+                        <div class="suggestion-item" onclick="selectSuggestion('${product.name}')">
+                            <i class="fas fa-search"></i>
+                            ${highlightMatch(product.name, query)}
+                        </div>
+                    `).join('');
+                    suggestionsEl.classList.add('active');
+                } else {
+                    // Show general suggestions
+                    const generalSuggestions = [
+                        'saree', 'kurta', 'lehenga', 'shirt', 'dress',
+                        'cotton', 'silk', 'traditional', 'modern'
+                    ].filter(s => s.includes(query.toLowerCase())).slice(0, 3);
+                    
+                    if (generalSuggestions.length > 0) {
+                        suggestionsEl.innerHTML = generalSuggestions.map(suggestion => `
+                            <div class="suggestion-item" onclick="selectSuggestion('${suggestion}')">
+                                <i class="fas fa-search"></i>
+                                ${highlightMatch(suggestion, query)}
+                            </div>
+                        `).join('');
+                        suggestionsEl.classList.add('active');
+                    } else {
+                        hideSearchSuggestions();
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load suggestions:', error);
+                hideSearchSuggestions();
+            }
+        }
+
+        function hideSearchSuggestions() {
+            document.getElementById('searchSuggestions').classList.remove('active');
+        }
+
+        function selectSuggestion(suggestion) {
+            document.getElementById('searchInput').value = suggestion;
+            hideSearchSuggestions();
+            performSearch(suggestion);
+        }
+
+        function highlightMatch(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<strong>$1</strong>');
+        }
+
+        function viewProduct(productId) {
+            // Log activity
+            logActivity('Search Page', 'VIEW_PRODUCT', { productId });
+            
+            // Navigate to product details
+            window.location.href = `product-details.html?id=${productId}`;
+        }
+
+        async function toggleWishlist(event, productId, button) {
+            event.stopPropagation();
+            
+            if (!isLoggedIn()) {
+                showNotification('Please login to add items to wishlist', 'error');
+                return;
+            }
+
+            const icon = button.querySelector('i');
+            
+            try {
+                if (icon.classList.contains('far')) {
+                    await addToWishlist(productId);
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    button.classList.add('active');
+                    showNotification('Added to wishlist!');
+                } else {
+                    await removeFromWishlist(productId);
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    button.classList.remove('active');
+                    showNotification('Removed from wishlist');
+                }
+                
+                updateWishlistBadge();
+            } catch (error) {
+                console.error('Wishlist operation failed:', error);
+                showNotification('Failed to update wishlist', 'error');
+            }
+        }
+
+        async function addToCart(event, productId) {
+            event.stopPropagation();
+            
+            if (!isLoggedIn()) {
+                showNotification('Please login to add items to cart', 'error');
+                return;
+            }
+
+            try {
+                await apiRequest('/cart/add', {
+                    method: 'POST',
+                    body: JSON.stringify({ productId, quantity: 1 })
+                });
+                
+                showNotification('Added to cart!');
+                updateCartBadge();
+            } catch (error) {
+                console.error('Add to cart failed:', error);
+                showNotification('Failed to add to cart', 'error');
+            }
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(price);
+        }
+
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type} show`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? '#ff4757' : '#2ed573'};
+                color: white;
+                padding: 1rem;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 10000;
+                transform: translateX(200%);
+                transition: transform 0.3s ease-in-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(200%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

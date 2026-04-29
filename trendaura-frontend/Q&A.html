@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q&A - TrendAura</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* ================================================
+       GLOBAL STYLES
+       ================================================ */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Georgia', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    /* ================================================
+       HEADER & NAVIGATION
+       ================================================ */
+    .header {
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .menu-left {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .menu-left a {
+      text-decoration: none;
+      color: #555;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .menu-left a:hover,
+    .menu-left a.active {
+      color: #e83e8c;
+    }
+
+    .logo {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e83e8c;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .menu-right {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 3rem;
+    }
+
+    .icon-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .icon {
+      font-size: 1.3rem;
+      color: #555;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .icon-text {
+      font-size: 12px;
+      color: #666;
+      opacity: 0;
+      height: 0;
+      transition: all 0.3s;
+    }
+
+    .icon-group:hover .icon-text {
+      opacity: 1;
+      height: auto;
+      margin-top: 5px;
+    }
+
+    .icon-group:hover .icon {
+      color: #e83e8c;
+      transform: scale(1.1);
+    }
+
+    .badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e83e8c;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    /* ================================================
+       MAIN SECTION
+       ================================================ */
+    .qa-section {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 5%;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .qa-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+    }
+
+    /* ================================================
+       SIDEBAR
+       ================================================ */
+    .qa-sidebar {
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      height: fit-content;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      background-color: #e83e8c;
+      color: white;
+      padding: 15px 20px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .category-tabs {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .category-btn {
+      padding: 12px 15px;
+      background: #f9f9f9;
+      border: 2px solid transparent;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #555;
+      transition: all 0.3s;
+      text-align: left;
+      font-family: 'Georgia', sans-serif;
+    }
+
+    .category-btn:hover {
+      background: #ffe8f5;
+      color: #e83e8c;
+      border-color: #e83e8c;
+      padding-left: 20px;
+    }
+
+    .category-btn.active {
+      background: #ffe8f5;
+      color: #e83e8c;
+      border-color: #e83e8c;
+      padding-left: 20px;
+    }
+
+    /* ================================================
+       MAIN CHAT AREA
+       ================================================ */
+    .qa-main {
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .qa-header {
+      background-color: #e83e8c;
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .qa-header h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+    }
+
+    .qa-header p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 1rem;
+    }
+
+    /* ================================================
+       CHAT MESSAGES
+       ================================================ */
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+      background: #f5f5f5;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: #e83e8c;
+      border-radius: 4px;
+    }
+
+    /* Welcome Message */
+    .chat-welcome {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 15px;
+      padding: 40px;
+    }
+
+    .welcome-icon {
+      font-size: 3rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .welcome-text h1 {
+      color: #333;
+      font-size: 1.3rem;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .welcome-text p {
+      color: #666;
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* Message Styles */
+    .message {
+      display: flex;
+      gap: 12px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.bot {
+      justify-content: flex-start;
+    }
+
+    .message-content {
+      max-width: 70%;
+      padding: 14px 16px;
+      border-radius: 4px;
+      word-wrap: break-word;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+    }
+
+    .message.user .message-content {
+      background: #e83e8c;
+      color: white;
+    }
+
+    .message.bot .message-content {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    /* ================================================
+       MESSAGE ACTIONS
+       ================================================ */
+    .message-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .helpful-btn {
+      padding: 6px 12px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #666;
+      transition: all 0.3s;
+      font-family: 'Georgia', sans-serif;
+    }
+
+    .helpful-btn:hover {
+      border-color: #e83e8c;
+      color: #e83e8c;
+      background: #ffe8f5;
+    }
+
+    .helpful-btn.active {
+      background: #e83e8c;
+      border-color: #e83e8c;
+      color: white;
+    }
+
+    /* Follow-up Suggestions */
+    .followup-suggestions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .followup-btn {
+      padding: 9px 14px;
+      background: white;
+      border: 1.5px solid #e83e8c;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #e83e8c;
+      font-weight: 500;
+      transition: all 0.3s;
+      font-family: 'Georgia', sans-serif;
+    }
+
+    .followup-btn:hover {
+      background: #e83e8c;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(232, 62, 140, 0.2);
+    }
+
+    /* ================================================
+       TYPING INDICATOR
+       ================================================ */
+    .typing-indicator {
+      display: flex;
+      gap: 5px;
+      padding: 14px 16px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e83e8c;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-8px);
+      }
+    }
+
+    /* ================================================
+       INPUT AREA
+       ================================================ */
+    .chat-input-area {
+      padding: 18px;
+      background: white;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 10px;
+    }
+
+    #chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      outline: none;
+      font-size: 0.95rem;
+      resize: none;
+      max-height: 100px;
+      transition: all 0.3s;
+      font-family: 'Georgia', sans-serif;
+    }
+
+    #chat-input:focus {
+      border-color: #e83e8c;
+      box-shadow: 0 0 0 3px rgba(232, 62, 140, 0.1);
+    }
+
+    #chat-send-btn {
+      width: 45px;
+      height: 45px;
+      background: #e83e8c;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    #chat-send-btn:hover {
+      background: #d2337a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(232, 62, 140, 0.3);
+    }
+
+    #chat-send-btn:active {
+      transform: translateY(0);
+    }
+
+    #chat-send-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ================================================
+       RESPONSIVE DESIGN
+       ================================================ */
+    @media (max-width: 1024px) {
+      .qa-sidebar {
+        display: none;
+      }
+
+      .qa-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .qa-section {
+        padding: 0 3%;
+        margin: 20px auto;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+      }
+
+      .message-content {
+        max-width: 85%;
+      }
+
+      .qa-sidebar {
+        display: none;
+      }
+
+      .navbar {
+        padding: 1rem 3%;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+      }
+
+      .menu-left, .menu-right {
+        gap: 1rem;
+      }
+
+      .action-icons {
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ================================================
+       HEADER
+       ================================================ -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="menu-left">
+        <a href="index.html">Home</a>
+        <a href="collections.html">All Collections</a>
+        <a href="contact.html">Contact</a>
+        <a href="Q&A.html" class="active">Q&A</a>
+        <a href="about.html">About Us</a>
+      </div>
+      <h1 class="logo">TREND AURA</h1>
+      <div class="menu-right">
+        <div class="action-icons">
+          <div class="icon-group">
+            <a href="collections1.html" class="icon">
+              <i class="fas fa-search"></i>
+            </a>
+            <span class="icon-text">Search</span>
+          </div>
+          <div class="icon-group">
+            <a href="wishlist1.html" class="icon">
+              <i class="far fa-heart"></i>
+              <span class="badge" id="wishlist-badge">0</span>
+            </a>
+            <span class="icon-text">Wishlist</span>
+          </div>
+          <div class="icon-group">
+            <a href="cart.html" class="icon">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="badge" id="cart-badge">0</span>
+            </a>
+            <span class="icon-text">Cart</span>
+          </div>
+          <div class="icon-group">
+            <a href="#" onclick="handleProfileNavigation(); return false;" class="icon">
+              <i class="fas fa-user"></i>
+            </a>
+            <span class="icon-text">Profile</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ================================================
+       MAIN Q&A SECTION
+       ================================================ -->
+  <section class="qa-section">
+    <h1 class="section-title">Questions & Answers</h1>
+
+    <div class="qa-container">
+      <!-- SIDEBAR - Category Filter -->
+      <div class="qa-sidebar">
+        <div class="sidebar-header">📋 Filter Topics</div>
+        <div class="category-tabs">
+          <button class="category-btn active" onclick="filterByCategory('all')">
+            All Questions
+          </button>
+          <button class="category-btn" onclick="filterByCategory('order')">
+            Orders & Payment
+          </button>
+          <button class="category-btn" onclick="filterByCategory('shipping')">
+            Shipping
+          </button>
+          <button class="category-btn" onclick="filterByCategory('return')">
+            Returns
+          </button>
+          <button class="category-btn" onclick="filterByCategory('product')">
+            Products
+          </button>
+          <button class="category-btn" onclick="filterByCategory('account')">
+            Account
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN CHAT AREA -->
+      <div class="qa-main">
+        <div class="qa-header">
+          <h2>💬 AI Shopping Assistant</h2>
+          <p>Ask anything about your shopping experience</p>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="chat-welcome">
+            <div class="welcome-icon">👋</div>
+            <div class="welcome-text">
+              <h1>Welcome to TrendAura Q&A!</h1>
+              <p>I'm here to help! Ask me anything about orders, shipping, returns, products, or your account.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="chat-input-wrapper">
+            <input 
+              type="text" 
+              id="chat-input" 
+              placeholder="Type your question here..."
+              autocomplete="off"
+            >
+            <button id="chat-send-btn" title="Send message">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       JAVASCRIPT
+       ================================================ -->
+  <script src="js/api-client.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth-helper.js"></script>
+  <script>
+    // Initialize authentication when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initAuth();
+    });
+
+    // ============================================
+    // KNOWLEDGE BASE - FAQ DATA
+    // ============================================
+    const knowledgeBase = {
+      order: {
+        keywords: ['order', 'place', 'buy', 'purchase', 'checkout', 'cart', 'payment', 'pay'],
+        qa: [
+          {
+            q: 'How do I place an order?',
+            a: 'To place an order:\n\n1. Browse our collections\n2. Select items and add to cart\n3. Click the cart icon\n4. Review items & proceed to checkout\n5. Enter shipping address\n6. Choose shipping method\n7. Select payment method\n8. Review & confirm order\n\n✓ You\'ll receive an order confirmation email with tracking info!',
+            followup: ['What payment methods do you accept?', 'How long does shipping take?']
+          },
+          {
+            q: 'What payment methods do you accept?',
+            a: 'We accept:\n\n✓ Credit Cards (Visa, MasterCard, Amex)\n✓ PayPal\n✓ Apple Pay\n✓ Google Pay\n✓ Debit Cards\n✓ Bank Transfers\n\nAll payments are encrypted & secure. We don\'t store your credit card details!',
+            followup: ['Is my payment secure?', 'How do I place an order?']
+          },
+          {
+            q: 'Is my payment information secure?',
+            a: 'YES! We use:\n\n✓ Bank-level SSL encryption\n✓ PCI DSS compliance (Level 1)\n✓ Secure payment gateways\n✓ Zero card storage on our servers\n✓ 24/7 fraud monitoring\n\nYour information is protected with the highest security standards!',
+            followup: ['What payment methods do you accept?']
+          }
+        ]
+      },
+      shipping: {
+        keywords: ['shipping', 'delivery', 'track', 'arrive', 'ship', 'days', 'international', 'express', 'standard'],
+        qa: [
+          {
+            q: 'How long does shipping take?',
+            a: 'Shipping times:\n\n⚡ EXPRESS: 1-2 business days ($15)\n📦 STANDARD: 3-5 business days (FREE)\n🌍 INTERNATIONAL: 7-14 business days\n\nTimes calculated from order confirmation. Peak seasons may add 1-2 days.',
+            followup: ['Do you ship internationally?', 'Can I track my order?']
+          },
+          {
+            q: 'Do you ship internationally?',
+            a: 'YES! We ship to 190+ countries:\n\n🌏 International Standard: 7-14 days\n🌏 International Express: 3-5 days\n✓ Free tracking included\n✓ Duties/customs: Customer responsibility\n\nShipping costs calculated at checkout based on weight & location.',
+            followup: ['How long does shipping take?']
+          },
+          {
+            q: 'Can I track my order?',
+            a: '✓ Tracking number sent via email when order ships\n✓ Track on our website under "My Orders"\n✓ Real-time tracking on carrier\'s website\n✓ Push notifications for delivery updates\n✓ Usually ready to ship within 24 hours\n\nQuestions? Email us anytime!',
+            followup: ['How long does shipping take?']
+          }
+        ]
+      },
+      return: {
+        keywords: ['return', 'refund', 'exchange', 'money back', 'damaged', 'wrong size', 'defect'],
+        qa: [
+          {
+            q: 'What is your return policy?',
+            a: '30-DAY RETURN GUARANTEE:\n\n✓ Returns: 30 days from delivery\n✓ Condition: Unused, original packaging, tags attached\n✓ Refund time: 3-5 business days after receipt\n✓ Restocking fee: NONE!\n✓ Return shipping: FREE!\n\n❌ Non-returnable:\n• Sale items\n• Clearance items\n• Custom items',
+            followup: ['How do I initiate a return?', 'How long does refund take?']
+          },
+          {
+            q: 'How do I initiate a return?',
+            a: 'Super easy return process:\n\n1. Go to "My Orders" in your account\n2. Select item(s) to return\n3. Choose reason\n4. Print prepaid shipping label\n5. Pack in original box\n6. Drop at any shipping location\n\n✓ No questions asked!\n✓ Refund processed in 3-5 business days',
+            followup: ['What is your return policy?']
+          },
+          {
+            q: 'How long does it take to process a refund?',
+            a: 'Refund Timeline:\n\n📍 We receive → Verify condition (1-2 days)\n💳 Process refund → 2-3 business days\n🏦 Your account → 1-5 days (depends on your bank)\n\n⏱ Total: Usually 5-10 business days\n\nRefunds go to original payment method.',
+            followup: ['How do I initiate a return?']
+          }
+        ]
+      },
+      product: {
+        keywords: ['product', 'size', 'material', 'care', 'fit', 'authentic', 'quality', 'cotton', 'silk', 'ethical', 'sustainable'],
+        qa: [
+          {
+            q: 'How do I know what size to order?',
+            a: 'SIZE GUIDANCE:\n\n1. Check our size chart (on each product)\n2. Compare measurements, not labels!\n3. Read customer reviews for fit feedback\n\n💡 PRO TIP:\n👗 Dresses: Check length + bust\n👕 Tops: Focus on shoulder width & chest\n👖 Bottoms: Compare waist + inseam\n\nStill unsure? Order multiple sizes - FREE returns!',
+            followup: ['Are your measurements accurate?']
+          },
+          {
+            q: 'Are your products ethically sourced?',
+            a: 'YES! We\'re committed to ethical fashion:\n\n✓ Fair trade manufacturers\n✓ Fair living wages guaranteed\n✓ Safe working conditions\n✓ 80% sustainable materials\n✓ Zero child labor (certified)\n✓ Carbon-neutral shipping\n✓ B-Corp certified!\n\nEvery purchase supports fair practices!',
+            followup: ['How should I care for my items?']
+          },
+          {
+            q: 'How should I care for my items?',
+            a: 'CARE INSTRUCTIONS:\n\n🧺 GENERAL:\n• Check care label inside each item\n• Wash similar colors together\n• Use cold water (preserves color)\n• Turn inside-out before washing\n• Air dry when possible\n\n✨ SPECIAL ITEMS:\n• Silks: Gentle hand wash only\n• Cottons: Machine wash is fine\n• Embroidered: Dry clean recommended\n\nProper care extends garment life 2-3x!',
+            followup: []
+          }
+        ]
+      },
+      account: {
+        keywords: ['account', 'login', 'password', 'register', 'forgot', 'email', 'profile', 'create account', 'sign up'],
+        qa: [
+          {
+            q: 'How do I create an account?',
+            a: 'Create Account (Easy!):\n\n1. Click "Login" in top right\n2. Click "Create New Account"\n3. Enter:\n   • First & Last Name\n   • Email address\n   • Phone number\n   • Password (min 8 characters)\n4. Accept terms & conditions\n5. Click "Register"\n6. Verify your email\n\n✓ You\'re all set!',
+            followup: ['How do I reset my password?']
+          },
+          {
+            q: 'I forgot my password. What do I do?',
+            a: 'Password Reset (Quick & Easy):\n\n1. Go to login page\n2. Click "Forgot Password?"\n3. Enter your email\n4. Check email (inbox + spam)\n5. Click the reset link\n6. Create new password\n7. Login with new password\n\n⏱ Link expires in 24 hours\n💡 No reset email? Contact support!',
+            followup: ['How do I update my profile?']
+          },
+          {
+            q: 'How do I update my profile?',
+            a: 'Update Your Profile:\n\n1. Login to your account\n2. Click "My Profile"\n3. Update:\n   ✓ Name\n   ✓ Email\n   ✓ Phone\n   ✓ Address\n   ✓ Profile picture\n4. Click "Save Changes"\n\n🔒 Your information stays private\n🖼 Profile pic max 5MB',
+            followup: ['How do I reset my password?']
+          }
+        ]
+      },
+      general: {
+        keywords: ['help', 'support', 'contact', 'question', 'assist', 'hi', 'hello', 'thanks', 'thank you'],
+        qa: [
+          {
+            q: 'How can I contact TrendAura support?',
+            a: '📞 CONTACT US:\n\n📧 Email: support@trendaura.com\n    Response: Within 24 hours\n\n💬 Live Chat: On website\n    Hours: Mon-Fri 10am-6pm IST\n\n📱 Phone: +1-800-TREND-AU\n    Hours: Mon-Fri 9am-9pm IST\n\n🌐 Social Media:\n    Instagram, Facebook, Twitter\n\n💡 Fastest response via live chat!',
+            followup: []
+          }
+        ]
+      }
+    };
+
+    // ============================================
+    // STATE VARIABLES
+    // ============================================
+    let currentCategory = 'all';
+    let isTyping = false;
+    let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+    
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const chatSendBtn = document.getElementById('chat-send-btn');
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    document.addEventListener('DOMContentLoaded', () => {
+      updateBadges();
+      loadChatHistory();
+      chatInput.focus();
+      window.addEventListener('focus', updateBadges);
+      
+      // ✅ LOG PAGE VIEW TO BACKEND
+      API.activity.log({
+        pageName: 'Q&A Page',
+        actionName: 'PAGE_VIEW',
+        additionalData: JSON.stringify({ referrer: document.referrer })
+      }).catch(err => console.log('Activity log skipped (non-critical)'));
+    });
+
+    // ============================================
+    // UPDATE CART & WISHLIST BADGES
+    // ============================================
+    function updateBadges() {
+      const cartCount = JSON.parse(localStorage.getItem('cart') || '[]').length;
+      const wishlistCount = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+      
+      document.getElementById('cart-badge').textContent = cartCount;
+      document.getElementById('wishlist-badge').textContent = wishlistCount;
+    }
+
+    // ============================================
+    // CATEGORY FILTERING
+    // ============================================
+    function filterByCategory(category) {
+      currentCategory = category;
+      
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // ✅ LOG CATEGORY FILTER TO BACKEND
+      API.activity.log({
+        pageName: 'Q&A Page',
+        actionName: 'FILTER_BY_CATEGORY',
+        additionalData: JSON.stringify({ category })
+      }).catch(err => console.log('Activity log skipped (non-critical)'));
+      
+      // Visual feedback
+      event.target.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        event.target.style.transform = '';
+      }, 100);
+    }
+
+    // ============================================
+    // SMART ANSWER MATCHING
+    // ============================================
+    function findAnswer(userQuestion) {
+      const question = userQuestion.toLowerCase().trim();
+      let bestMatch = null;
+      let bestScore = 0;
+
+      for (const [catKey, category] of Object.entries(knowledgeBase)) {
+        if (currentCategory !== 'all' && currentCategory !== catKey) continue;
+
+        for (const qa of category.qa) {
+          const qText = qa.q.toLowerCase();
+          let score = 0;
+
+          // Exact match (highest priority)
+          if (qText === question) {
+            return qa;
+          }
+
+          // Partial match
+          if (qText.includes(question) || question.includes(qText)) {
+            score += 100;
+          }
+
+          // Keyword match
+          const keywords = category.keywords || [];
+          keywords.forEach(keyword => {
+            if (question.includes(keyword)) score += 10;
+          });
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestMatch = qa;
+          }
+        }
+      }
+
+      return bestMatch;
+    }
+
+    // ============================================
+    // ADD MESSAGE TO CHAT
+    // ============================================
+    async function addMessage(text, type, isHistory = false) {
+      const messageEl = document.createElement('div');
+      messageEl.className = `message ${type}`;
+
+      const contentEl = document.createElement('div');
+      contentEl.className = 'message-content';
+
+      if (type === 'bot' && !isHistory) {
+        contentEl.textContent = '';
+        messageEl.appendChild(contentEl);
+        chatMessages.appendChild(messageEl);
+        
+        for (let i = 0; i < text.length; i++) {
+          await new Promise(resolve => setTimeout(resolve, 10));
+          contentEl.textContent += text[i];
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      } else {
+        contentEl.textContent = text;
+        messageEl.appendChild(contentEl);
+        chatMessages.appendChild(messageEl);
+      }
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return messageEl;
+    }
+
+    // ============================================
+    // ADD MESSAGE ACTIONS
+    // ============================================
+    function addMessageActions(messageEl, qa) {
+      const actionsEl = document.createElement('div');
+      actionsEl.className = 'message-actions';
+
+      const helpfulBtn = document.createElement('button');
+      helpfulBtn.className = 'helpful-btn';
+      helpfulBtn.textContent = '👍 Helpful';
+      helpfulBtn.onclick = () => {
+        helpfulBtn.classList.add('active');
+        unhelpfulBtn.classList.remove('active');
+        // ✅ LOG HELPFUL RATING TO BACKEND
+        API.activity.log({
+          pageName: 'Q&A Page',
+          actionName: 'RATE_ANSWER',
+          additionalData: JSON.stringify({ helpful: true, question: qa.q })
+        }).catch(err => console.log('Activity log skipped (non-critical)'));
+      };
+
+      const unhelpfulBtn = document.createElement('button');
+      unhelpfulBtn.className = 'helpful-btn';
+      unhelpfulBtn.textContent = '👎 Not helpful';
+      unhelpfulBtn.onclick = () => {
+        unhelpfulBtn.classList.add('active');
+        helpfulBtn.classList.remove('active');
+        // ✅ LOG NOT HELPFUL RATING TO BACKEND
+        API.activity.log({
+          pageName: 'Q&A Page',
+          actionName: 'RATE_ANSWER',
+          additionalData: JSON.stringify({ helpful: false, question: qa.q })
+        }).catch(err => console.log('Activity log skipped (non-critical)'));
+      };
+
+      actionsEl.appendChild(helpfulBtn);
+      actionsEl.appendChild(unhelpfulBtn);
+      messageEl.appendChild(actionsEl);
+
+      if (qa.followup && qa.followup.length > 0) {
+        const suggestionEl = document.createElement('div');
+        suggestionEl.className = 'followup-suggestions';
+
+        qa.followup.forEach(suggestion => {
+          const btn = document.createElement('button');
+          btn.className = 'followup-btn';
+          btn.textContent = suggestion;
+          btn.onclick = () => {
+            chatInput.value = suggestion;
+            chatInput.focus();
+            sendMessage();
+          };
+          suggestionEl.appendChild(btn);
+        });
+
+        messageEl.appendChild(suggestionEl);
+      }
+    }
+
+    // ============================================
+    // SEND MESSAGE
+    // ============================================
+    async function sendMessage() {
+      const userMessage = chatInput.value.trim();
+      if (!userMessage || isTyping) return;
+
+      isTyping = true;
+      chatInput.value = '';
+      chatSendBtn.disabled = true;
+
+      const welcome = chatMessages.querySelector('.chat-welcome');
+      if (welcome) welcome.remove();
+
+      await addMessage(userMessage, 'user');
+      chatHistory.push({ type: 'user', text: userMessage });
+
+      // ✅ LOG CHAT ACTIVITY TO BACKEND
+      API.activity.log({
+        pageName: 'Q&A Page',
+        actionName: 'SEND_CHAT_MESSAGE',
+        additionalData: JSON.stringify({ messageLength: userMessage.length, category: currentCategory })
+      }).catch(err => console.log('Activity log skipped (non-critical)'));
+
+      const typingEl = document.createElement('div');
+      typingEl.className = 'message bot';
+      typingEl.innerHTML = '<div class="message-content"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+      chatMessages.appendChild(typingEl);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const qa = findAnswer(userMessage);
+      typingEl.remove();
+
+      if (qa) {
+        const botMessageEl = await addMessage(qa.a, 'bot');
+        addMessageActions(botMessageEl, qa);
+        chatHistory.push({ type: 'bot', text: qa.a });
+      } else {
+        const fallback = 'I don\'t have a specific answer about that, but here\'s how you can reach us:\n\n📧 Email: support@trendaura.com (24-hour response)\n💬 Live Chat: Available on website\n📱 Phone: +1-800-TREND-AU\n\nOur team will help you right away!';
+        const botMessageEl = await addMessage(fallback, 'bot');
+        chatHistory.push({ type: 'bot', text: fallback });
+        
+        const contactBtn = document.createElement('button');
+        contactBtn.className = 'followup-btn';
+        contactBtn.textContent = 'Go to Contact Page';
+        contactBtn.onclick = () => window.location.href = 'contact.html';
+        const suggestionEl = document.createElement('div');
+        suggestionEl.className = 'followup-suggestions';
+        suggestionEl.appendChild(contactBtn);
+        botMessageEl.appendChild(suggestionEl);
+      }
+
+      localStorage.setItem('chatHistory', JSON.stringify(chatHistory.slice(-20)));
+
+      isTyping = false;
+      chatSendBtn.disabled = false;
+      chatInput.focus();
+    }
+
+    // ============================================
+    // LOAD CHAT HISTORY
+    // ============================================
+    function loadChatHistory() {
+      if (chatHistory.length === 0) {
+        return;
+      }
+
+      chatMessages.innerHTML = '';
+      chatHistory.forEach(msg => {
+        const contentEl = document.createElement('div');
+        contentEl.className = 'message-content';
+        contentEl.textContent = msg.text;
+        
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${msg.type}`;
+        messageEl.appendChild(contentEl);
+        chatMessages.appendChild(messageEl);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // ============================================
+    // EVENT LISTENERS
+    // ============================================
+    chatSendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !isTyping) {
+        sendMessage();
+      }
+    });
+
+    chatInput.addEventListener('focus', function() {
+      this.style.boxShadow = '0 0 0 3px rgba(232, 62, 140, 0.15)';
+    });
+
+    chatInput.addEventListener('blur', function() {
+      this.style.boxShadow = 'none';
+    });
+  </script>
+  <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - TrendAura</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></script>
+    <script src="js/api.js"></script>
+    <script src="js/chatbot.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e83e8c, #d2337a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .profile-details h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .profile-details p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #4cd137;
+            color: white;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #e83e8c, #d2337a);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(232, 62, 140, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e1e1e1;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e83e8c, #d2337a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Content Sections */
+        .content-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            color: #e83e8c;
+        }
+
+        .view-all-btn {
+            color: #e83e8c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .view-all-btn:hover {
+            color: #d2337a;
+        }
+
+        /* Recent Orders */
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .order-item:hover {
+            border-color: #e83e8c;
+            background: #fafafa;
+        }
+
+        .order-info h4 {
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .order-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #4cd137;
+            color: white;
+        }
+
+        .status-processing {
+            background: #ffa502;
+            color: white;
+        }
+
+        .status-shipped {
+            background: #3742fa;
+            color: white;
+        }
+
+        /* Wishlist Items */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .wishlist-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .wishlist-item:hover {
+            border-color: #e83e8c;
+            background: #fafafa;
+        }
+
+        .wishlist-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .wishlist-item-info h4 {
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .wishlist-item-info p {
+            color: #e83e8c;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Activity Timeline */
+        .activity-timeline {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e83e8c;
+            flex-shrink: 0;
+        }
+
+        .activity-content h4 {
+            color: #333;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .activity-content p {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .activity-time {
+            color: #999;
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .empty-state p {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info {
+                flex-direction: column;
+            }
+
+            .content-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .wishlist-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-avatar" id="profileAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-details">
+                    <h1 id="userName">Loading...</h1>
+                    <p id="userEmail">email@example.com</p>
+                    <p id="userPhone">+91 00000 00000</p>
+                    <span class="profile-status">Active Member</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button class="btn btn-primary" onclick="editProfile()">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+                <button class="btn btn-secondary" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-value" id="wishlistCount">0</div>
+                <div class="stat-label">Wishlist Items</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-value" id="totalSpent">₹0</div>
+                <div class="stat-label">Total Spent</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar"></i>
+                </div>
+                <div class="stat-value" id="memberSince">0</div>
+                <div class="stat-label">Member Since (Days)</div>
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="content-sections">
+            <!-- Recent Orders -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-shopping-bag"></i>
+                        Recent Orders
+                    </h3>
+                    <a href="order-details.html" class="view-all-btn">View All</a>
+                </div>
+                <div id="recentOrders">
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No orders yet</h3>
+                        <p>Start shopping to see your order history</p>
+                        <a href="collections.html" class="btn btn-primary">Start Shopping</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-heart"></i>
+                        Recent Wishlist
+                    </h3>
+                    <a href="wishlist1.html" class="view-all-btn">View All</a>
+                </div>
+                <div id="recentWishlist">
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h3>No items in wishlist</h3>
+                        <p>Add items you love to your wishlist</p>
+                        <a href="collections.html" class="btn btn-primary">Browse Collections</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Timeline -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-history"></i>
+                        Recent Activity
+                    </h3>
+                </div>
+                <div class="activity-timeline" id="activityTimeline">
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <h3>No recent activity</h3>
+                        <p>Your activity will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-card">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <a href="collections.html" class="btn btn-secondary" style="justify-content: center;">
+                        <i class="fas fa-shopping-bag"></i> Shop Now
+                    </a>
+                    <a href="cart.html" class="btn btn-secondary" style="justify-content: center;">
+                        <i class="fas fa-shopping-cart"></i> View Cart
+                    </a>
+                    <a href="contact.html" class="btn btn-secondary" style="justify-content: center;">
+                        <i class="fas fa-headset"></i> Contact Support
+                    </a>
+                    <a href="Q&A.html" class="btn btn-secondary" style="justify-content: center;">
+                        <i class="fas fa-question-circle"></i> Help
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize profile page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isLoggedIn()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            loadUserProfile();
+            loadUserStats();
+            loadRecentOrders();
+            loadRecentWishlist();
+            loadRecentActivity();
+        });
+
+        function loadUserProfile() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.name || 'User';
+                document.getElementById('userEmail').textContent = user.email || 'email@example.com';
+                document.getElementById('userPhone').textContent = user.phone || '+91 00000 00000';
+                
+                // Set avatar with user initial
+                const avatar = document.getElementById('profileAvatar');
+                const initial = (user.name || 'U').charAt(0).toUpperCase();
+                avatar.innerHTML = initial;
+            }
+        }
+
+        async function loadUserStats() {
+            try {
+                // Load wishlist count
+                const wishlist = await getWishlist();
+                document.getElementById('wishlistCount').textContent = wishlist.length;
+                
+                // Calculate member since days (mock data for now)
+                const joinDate = new Date('2024-01-01'); // This should come from user data
+                const today = new Date();
+                const daysSince = Math.floor((today - joinDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('memberSince').textContent = daysSince;
+                
+                // Mock data for orders and spending (should come from backend)
+                document.getElementById('totalOrders').textContent = '5';
+                document.getElementById('totalSpent').textContent = '₹12,450';
+                
+            } catch (error) {
+                console.error('Failed to load user stats:', error);
+            }
+        }
+
+        async function loadRecentOrders() {
+            const container = document.getElementById('recentOrders');
+            
+            try {
+                // Mock orders data (should come from backend API)
+                const orders = [
+                    {
+                        id: 'ORD001',
+                        name: 'Silk Saree Collection',
+                        date: '2024-01-15',
+                        status: 'delivered',
+                        price: '₹4,599'
+                    },
+                    {
+                        id: 'ORD002',
+                        name: 'Traditional Kurta Set',
+                        date: '2024-01-10',
+                        status: 'processing',
+                        price: '₹2,299'
+                    }
+                ];
+                
+                if (orders.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-shopping-bag"></i>
+                            <h3>No orders yet</h3>
+                            <p>Start shopping to see your order history</p>
+                            <a href="collections.html" class="btn btn-primary">Start Shopping</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = orders.map(order => `
+                    <div class="order-item">
+                        <div class="order-info">
+                            <h4>${order.name}</h4>
+                            <p>Order ${order.id} • ${order.date}</p>
+                        </div>
+                        <div>
+                            <div class="order-status status-${order.status}">
+                                ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                            </div>
+                            <p style="margin-top: 0.5rem; font-weight: 600; color: #333;">${order.price}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Failed to load recent orders:', error);
+            }
+        }
+
+        async function loadRecentWishlist() {
+            const container = document.getElementById('recentWishlist');
+            
+            try {
+                const wishlist = await getWishlist();
+                
+                if (wishlist.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-heart"></i>
+                            <h3>No items in wishlist</h3>
+                            <p>Add items you love to your wishlist</p>
+                            <a href="collections.html" class="btn btn-primary">Browse Collections</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Show only first 4 items
+                const recentItems = wishlist.slice(0, 4);
+                
+                container.innerHTML = `
+                    <div class="wishlist-grid">
+                        ${recentItems.map(item => `
+                            <div class="wishlist-item" onclick="viewProduct(${item.id})">
+                                <img src="${item.imageUrl}" alt="${item.name}">
+                                <div class="wishlist-item-info">
+                                    <h4>${item.name}</h4>
+                                    <p>${formatPrice(item.price)}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${wishlist.length > 4 ? '<p style="text-align: center; margin-top: 1rem; color: #666;">And ' + (wishlist.length - 4) + ' more items</p>' : ''}
+                `;
+                
+            } catch (error) {
+                console.error('Failed to load recent wishlist:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            const container = document.getElementById('activityTimeline');
+            
+            try {
+                // Mock activity data (should come from backend API)
+                const activities = [
+                    {
+                        action: 'Viewed Product',
+                        details: 'Silk Saree Collection',
+                        time: '2 hours ago',
+                        icon: 'fa-eye'
+                    },
+                    {
+                        action: 'Added to Cart',
+                        details: 'Traditional Kurta Set',
+                        time: '5 hours ago',
+                        icon: 'fa-shopping-cart'
+                    },
+                    {
+                        action: 'Searched for',
+                        details: 'cotton sarees',
+                        time: '1 day ago',
+                        icon: 'fa-search'
+                    }
+                ];
+                
+                if (activities.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-history"></i>
+                            <h3>No recent activity</h3>
+                            <p>Your activity will appear here</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = activities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas ${activity.icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>${activity.action}</h4>
+                            <p>${activity.details}</p>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Failed to load recent activity:', error);
+            }
+        }
+
+        function editProfile() {
+            // Log activity
+            logActivity('Profile Page', 'EDIT_PROFILE');
+            
+            // Show edit profile modal or navigate to edit page
+            alert('Edit profile functionality would be implemented here');
+        }
+
+        function logout() {
+            // Log activity
+            logActivity('Profile Page', 'LOGOUT');
+            
+            // Clear auth data
+            clearAuthToken();
+            localStorage.removeItem('user');
+            
+            // Redirect to home
+            window.location.href = 'index.html';
+        }
+
+        function viewProduct(productId) {
+            // Log activity
+            logActivity('Profile Page', 'VIEW_PRODUCT', { productId });
+            
+            // Navigate to product details
+            window.location.href = `product-details.html?id=${productId}`;
+        }
+
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR'
+            }).format(price);
+        }
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>

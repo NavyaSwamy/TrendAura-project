@@ -1,0 +1,1168 @@
+{
+  "info": {
+    "_postman_id": "trendaura-api-collection",
+    "name": "🌟 TrendAura API Collection",
+    "description": "Complete API test collection for TrendAura Backend\nSpecifications for all 12+ REST endpoints\nIncludes authentication flow and activity tracking\n\nBASE_URL: http://localhost:8080/api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"phone\": \"+1-555-0123\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/register",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register new user account"
+          },
+          "response": {
+            "example": {
+              "success": true,
+              "message": "User registered successfully",
+              "data": {
+                "id": 1,
+                "name": "John Doe",
+                "email": "john@example.com",
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "user": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john@example.com",
+                  "role": "USER"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/login",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email and password, returns JWT token"
+          },
+          "response": {
+            "example": {
+              "success": true,
+              "message": "Login successful",
+              "data": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                "user": {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john@example.com",
+                  "role": "USER",
+                  "phone": "+1-555-0123",
+                  "createdAt": "2024-01-15T10:30:00Z"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/forgot-password",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            },
+            "description": "Send password reset email to user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛍️ Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/products?category=WOMEN&type=SAREE&state=Maharashtra&minPrice=1000&maxPrice=50000&page=1&size=20",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "WOMEN",
+                  "description": "WOMEN, MEN, KIDS"
+                },
+                {
+                  "key": "type",
+                  "value": "SAREE",
+                  "description": "SAREE, SALWAR_KAMEEZ, LEHENGA, etc."
+                },
+                {
+                  "key": "state",
+                  "value": "Maharashtra",
+                  "description": "State where product is from"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "1000"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "50000"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get all products with optional filters and pagination"
+          },
+          "response": {
+            "example": {
+              "success": true,
+              "data": [
+                {
+                  "id": 1,
+                  "name": "Red Silk Saree",
+                  "price": 2500,
+                  "category": "WOMEN",
+                  "type": "SAREE",
+                  "state": "Maharashtra",
+                  "imageUrl": "https://cloudinary-url/product-1.jpg",
+                  "description": "Traditional silk saree",
+                  "availableSizes": [\"One Size\"],
+                  "availableColors": [\"Red\", \"Green\"],
+                  "boutiqueName": \"Royal Collection\",
+                  "createdAt": "2024-01-15T10:30:00Z"
+                }
+              ],
+              "page": 1,
+              "size": 20,
+              "totalElements": 150,
+              "totalPages": 8
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/products/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                "1"
+              ]
+            },
+            "description": "Get detailed product information by product ID"
+          }
+        },
+        {
+          "name": "Get Trending Products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/products/trending",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "products",
+                "trending"
+              ]
+            },
+            "description": "Get trending/top-selling products"
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛒 Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/cart",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart"
+              ]
+            },
+            "description": "Get current user's cart items"
+          }
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1,\n  \"quantity\": 2,\n  \"size\": \"M\",\n  \"color\": \"Red\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart/items",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "items"
+              ]
+            },
+            "description": "Add item to cart (logs: ADD_TO_CART activity)"
+          }
+        },
+        {
+          "name": "Update Cart Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 5\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/cart/items/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "items",
+                "1"
+              ]
+            },
+            "description": "Update quantity of item in cart"
+          }
+        },
+        {
+          "name": "Remove from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/cart/items/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "items",
+                "1"
+              ]
+            },
+            "description": "Remove item from cart (logs: REMOVE_FROM_CART activity)"
+          }
+        },
+        {
+          "name": "Get Cart Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/cart/count",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "count"
+              ]
+            },
+            "description": "Get total number of items in cart"
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/cart/clear",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "cart",
+                "clear"
+              ]
+            },
+            "description": "Clear entire cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Wishlist",
+      "item": [
+        {
+          "name": "Get Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/wishlist",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "wishlist"
+              ]
+            },
+            "description": "Get user's wishlist items"
+          }
+        },
+        {
+          "name": "Add to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/wishlist/items",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "wishlist",
+                "items"
+              ]
+            },
+            "description": "Add item to wishlist (logs: ADD_TO_WISHLIST activity)"
+          }
+        },
+        {
+          "name": "Remove from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/wishlist/items/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "wishlist",
+                "items",
+                "1"
+              ]
+            },
+            "description": "Remove item from wishlist (logs: REMOVE_FROM_WISHLIST activity)"
+          }
+        },
+        {
+          "name": "Get Wishlist Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/wishlist/count",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "wishlist",
+                "count"
+              ]
+            },
+            "description": "Get total number of items in wishlist"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"addressId\": 1,\n  \"paymentMethod\": \"CARD\",\n  \"cartItems\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2,\n      \"size\": \"M\",\n      \"color\": \"Red\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders"
+              ]
+            },
+            "description": "Create new order (logs: PLACE_ORDER activity)"
+          }
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/orders/my-orders",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "my-orders"
+              ]
+            },
+            "description": "Get current user's order history"
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/orders/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "1"
+              ]
+            },
+            "description": "Get order details by order ID"
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/orders/1/cancel",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "orders",
+                "1",
+                "cancel"
+              ]
+            },
+            "description": "Cancel a pending order"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Activity Tracking (CRITICAL)",
+      "item": [
+        {
+          "name": "Log Activity - Authenticated User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pageName\": \"Product Details\",\n  \"actionName\": \"VIEW_PRODUCT\",\n  \"timestamp\": \"2024-01-15T10:30:45Z\",\n  \"sessionId\": \"session_1705316445000_abc123\",\n  \"additionalData\": \"{\\\"productId\\\":1,\\\"category\\\":\\\"WOMEN\\\"}\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/activity/log",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "log"
+              ]
+            },
+            "description": "Log activity for authenticated users (automatically called by API client)"
+          }
+        },
+        {
+          "name": "Log Activity - Anonymous User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pageName\": \"Home Page\",\n  \"actionName\": \"PAGE_VIEW\",\n  \"timestamp\": \"2024-01-15T10:30:45Z\",\n  \"sessionId\": \"session_1705316445000_xyz789\",\n  \"ipAddress\": \"192.168.1.1\",\n  \"deviceInfo\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/activity/log-anonymous",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "log-anonymous"
+              ]
+            },
+            "description": "Log activity for anonymous/non-authenticated users"
+          }
+        },
+        {
+          "name": "Get User Activity History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/activity/user-history",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "user-history"
+              ]
+            },
+            "description": "Get user's activity log history"
+          }
+        },
+        {
+          "name": "Get Most Visited Pages (Analytics)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/activity/analytics/most-visited-pages?days=7",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "analytics",
+                "most-visited-pages"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7",
+                  "description": "Number of days to analyze (default: 7)"
+                }
+              ]
+            },
+            "description": "Get analytics on most visited pages"
+          }
+        },
+        {
+          "name": "Get Most Common Actions (Analytics)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/activity/analytics/most-common-actions?days=7",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "analytics",
+                "most-common-actions"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "description": "Get analytics on most common user actions"
+          }
+        },
+        {
+          "name": "Get Page Visit Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/activity/analytics/page-visits?pageName=Collections%20Page&days=7",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "activity",
+                "analytics",
+                "page-visits"
+              ],
+              "query": [
+                {
+                  "key": "pageName",
+                  "value": "Collections Page"
+                },
+                {
+                  "key": "days",
+                  "value": "7"
+                }
+              ]
+            },
+            "description": "Get visit count for a specific page"
+          }
+        }
+      ]
+    },
+    {
+      "name": "💬 Chat / Q&A",
+      "item": [
+        {
+          "name": "Create Chat Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/chat/sessions",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "chat",
+                "sessions"
+              ]
+            },
+            "description": "Create new chat session (logs: START_CHAT activity)"
+          }
+        },
+        {
+          "name": "Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"How do I return a product?\",\n  \"messageType\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/chat/1/messages",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "chat",
+                "1",
+                "messages"
+              ]
+            },
+            "description": "Send message to chatbot (logs: SEND_MESSAGE activity)"
+          }
+        },
+        {
+          "name": "Get Chat Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/chat/1/messages",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "chat",
+                "1",
+                "messages"
+              ]
+            },
+            "description": "Get all messages in a chat session"
+          }
+        },
+        {
+          "name": "Rate Message Helpfulness",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isHelpful\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/chat/messages/1/feedback",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "chat",
+                "messages",
+                "1",
+                "feedback"
+              ]
+            },
+            "description": "Log feedback on message helpfulness (logs: RATE_MESSAGE activity)"
+          }
+        },
+        {
+          "name": "End Chat Session",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/chat/sessions/1/close",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "chat",
+                "sessions",
+                "1",
+                "close"
+              ]
+            },
+            "description": "End/close chat session"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📞 Contact",
+      "item": [
+        {
+          "name": "Submit Contact Form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"subject\": \"Question about shipping\",\n  \"message\": \"How long does shipping take to Mumbai?\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/contact",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "contact"
+              ]
+            },
+            "description": "Submit contact form message (logs: SUBMIT_CONTACT_FORM activity)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 User Profile",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/users/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "users",
+                "profile"
+              ]
+            },
+            "description": "Get current user's profile information"
+          }
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"phone\": \"+1-555-0124\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/users/profile",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "users",
+                "profile"
+              ]
+            },
+            "description": "Update user profile information"
+          }
+        },
+        {
+          "name": "Get Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/addresses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses"
+              ]
+            },
+            "description": "Get all user addresses"
+          }
+        },
+        {
+          "name": "Add New Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"phone\": \"+1-555-0123\",\n  \"address\": \"123 Main Street\",\n  \"city\": \"New York\",\n  \"state\": \"New York\",\n  \"pinCode\": \"10001\",\n  \"isDefault\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/addresses",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses"
+              ]
+            },
+            "description": "Add new delivery address"
+          }
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"John Doe\",\n  \"phone\": \"+1-555-0124\",\n  \"address\": \"456 Oak Avenue\",\n  \"city\": \"New York\",\n  \"state\": \"New York\",\n  \"pinCode\": \"10002\",\n  \"isDefault\": false\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/addresses/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses",
+                "1"
+              ]
+            },
+            "description": "Update existing address"
+          }
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{JWT_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/addresses/1",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "addresses",
+                "1"
+              ]
+            },
+            "description": "Delete an address"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "JWT_TOKEN",
+      "value": "",
+      "type": "string",
+      "description": "Store JWT token from login response here"
+    }
+  ]
+}

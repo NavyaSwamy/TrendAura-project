@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Loading</title>
+</head>
+<body>
+    <h1>API Loading Test</h1>
+    <div id="results"></div>
+    
+    <script src="js/api.js"></script>
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(message, isSuccess = true) {
+            const div = document.createElement('div');
+            div.style.cssText = isSuccess ? 'color: green; margin: 5px 0;' : 'color: red; margin: 5px 0;';
+            div.textContent = message;
+            results.appendChild(div);
+        }
+        
+        // Test if API functions are loaded
+        addResult('Testing API script loading...');
+        
+        if (typeof loginUser === 'function') {
+            addResult('loginUser function is defined');
+        } else {
+            addResult('loginUser function is NOT defined', false);
+        }
+        
+        if (typeof registerUser === 'function') {
+            addResult('registerUser function is defined');
+        } else {
+            addResult('registerUser function is NOT defined', false);
+        }
+        
+        if (typeof apiRequest === 'function') {
+            addResult('apiRequest function is defined');
+        } else {
+            addResult('apiRequest function is NOT defined', false);
+        }
+        
+        if (typeof handleFallbackAuth === 'function') {
+            addResult('handleFallbackAuth function is defined');
+        } else {
+            addResult('handleFallbackAuth function is NOT defined', false);
+        }
+        
+        // Test localStorage functions
+        if (typeof isUserLoggedIn === 'function') {
+            addResult('isUserLoggedIn function is defined');
+        } else {
+            addResult('isUserLoggedIn function is NOT defined', false);
+        }
+        
+        if (typeof getCurrentUser === 'function') {
+            addResult('getCurrentUser function is defined');
+        } else {
+            addResult('getCurrentUser function is NOT defined', false);
+        }
+        
+        // Test a simple login
+        addResult('Testing fallback authentication...');
+        
+        // Create a test user first
+        try {
+            const testUser = {
+                id: 'test-user-1',
+                firstName: 'Test',
+                lastName: 'User',
+                email: 'test@example.com',
+                password: 'password123'
+            };
+            
+            localStorage.setItem('users', JSON.stringify([testUser]));
+            addResult('Test user created in localStorage');
+            
+            // Test login
+            loginUser('test@example.com', 'password123').then(response => {
+                if (response && response.success) {
+                    addResult('Fallback login test: SUCCESS');
+                } else {
+                    addResult('Fallback login test: FAILED - Invalid response', false);
+                }
+            }).catch(error => {
+                addResult('Fallback login test: FAILED - ' + error.message, false);
+            });
+            
+        } catch (error) {
+            addResult('Test setup failed: ' + error.message, false);
+        }
+        
+    </script>
+</body>
+</html>
