@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+.vscode/
+**/target/
+**/node_modules/
+**/.env
+**/.env.*
+!**/.env.example
+**/venv/
+**/.venv/
+__pycache__/
+*.pyc
