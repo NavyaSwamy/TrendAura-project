@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation | TrendAura</title>
+    <style>
+        :root {
+            --primary-color: #e83e8c;
+            --primary-hover: #d2337a;
+            --success-color: #4CAF50;
+            --whatsapp-color: #25D366;
+            --text-color: #333;
+            --text-light: #777;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #eee;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .menu-left a:hover {
+            color: #e83e8c;
+        }
+        .logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .action-icons {
+            display: flex;
+            gap: 3rem;
+        }
+        .icon-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0 5px;
+            position: relative;
+        }
+        .icon {
+            font-size: 1.3rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        .icon-text {
+            font-size: 12px;
+            color: #666;
+            opacity: 0;
+            height: 0;
+            transition: all 0.3s;
+        }
+        .icon-group:hover .icon-text {
+            opacity: 1;
+            height: auto;
+            margin-top: 5px;
+        }
+        .icon-group:hover .icon {
+            color: #e83e8c;
+            transform: scale(1.1);
+        }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -5px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .order-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .order-status {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .order-table th {
+            text-align: left;
+            padding: 1rem 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .order-table td {
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
+
+        .item-details {
+            display: flex;
+            align-items: center;
+        }
+
+        .totals-table {
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-top: 1rem;
+        }
+
+        .totals-table td {
+            padding: 0.5rem 0;
+        }
+
+        .totals-table tr:last-child td {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-item strong {
+            display: block;
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: var(--whatsapp-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .action-btns {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="fas fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="icon-text">Wishlist</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="icon-text">Cart</div>
+                        </a>
+                    </div>
+                    <div class="icon-group" title="Account">
+                        <a href="profile.html">
+                            <i class="fas fa-user icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="order-card">
+            <div class="order-header">
+                <h1 class="order-title">Order #<span id="order-id">TRD-784592</span></h1>
+                <span class="order-status">Confirmed</span>
+            </div>
+
+            <h2 class="section-title">Order Summary</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Order Date</strong>
+                    <span id="order-date">March 15, 2024 at 2:30 PM</span>
+                </div>
+                <div class="info-item">
+                    <strong>Estimated Delivery</strong>
+                    <span id="delivery-date">March 18, 2024</span>
+                </div>
+                <div class="info-item">
+                    <strong>Payment Method</strong>
+                    <span id="payment-method">Credit Card (VISA)</span>
+                </div>
+                <div class="info-item">
+                    <strong>Shipping Method</strong>
+                    <span>Standard Delivery</span>
+                </div>
+            </div>
+
+            <h2 class="section-title">Order Items</h2>
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="order-items">
+                    <!-- Sample product with image -->
+                    <tr>
+                        <td>
+                            <div class="item-details">
+                                <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=200" alt="Floral Summer Dress" class="item-img">
+                                <div>
+                                    <div>Floral Summer Dress</div>
+                                    <small style="color: var(--text-light);">Size: M, Color: Blue</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>₹1,499.99</td>
+                        <td>1</td>
+                        <td>₹1,499.99</td>
+                    </tr>
+                    <!-- Second sample product with image -->
+                    <tr>
+                        <td>
+                            <div class="item-details">
+                                <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=200" alt="Casual Denim Jacket" class="item-img">
+                                <div>
+                                    <div>Casual Denim Jacket</div>
+                                    <small style="color: var(--text-light);">Size: L</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>₹1,299.99</td>
+                        <td>1</td>
+                        <td>₹1,299.99</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="totals-table">
+                <tr>
+                    <td>Subtotal</td>
+                    <td id="subtotal">₹2,799.98</td>
+                </tr>
+                <tr>
+                    <td>Shipping</td>
+                    <td id="shipping">₹99.00</td>
+                </tr>
+                <tr>
+                    <td>Tax</td>
+                    <td id="tax">₹503.99</td>
+                </tr>
+                <tr>
+                    <td>Total</td>
+                    <td id="total">₹3,402.97</td>
+                </tr>
+            </table>
+
+            <h2 class="section-title">Shipping Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Name</strong>
+                    <span id="customer-name">Priya Patel</span>
+                </div>
+                <div class="info-item">
+                    <strong>Phone</strong>
+                    <span id="customer-phone">9876543210</span>
+                </div>
+                <div class="info-item">
+                    <strong>Email</strong>
+                    <span id="customer-email">priya.patel@example.com</span>
+                </div>
+                <div class="info-item">
+                    <strong>Address</strong>
+                    <span id="customer-address">78 MG Road, Bandra West, Mumbai - 400050</span>
+                </div>
+            </div>
+
+            <div class="action-btns">
+                <a href="#" class="btn btn-whatsapp" id="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Contact Support
+                </a>
+                <a href="orders.html" class="btn btn-outline">
+                    <i class="fas fa-list"></i> View All Orders
+                </a>
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample order data (will be overridden by localStorage data if exists)
+            const order = {
+                id: 'TRD-' + Math.floor(100000 + Math.random() * 900000),
+                date: '2024-03-15T14:30:00Z',
+                status: 'Confirmed',
+                items: [
+                    {
+                        id: 'prod1',
+                        name: 'Floral Summer Dress',
+                        price: 1499.99,
+                        quantity: 1,
+                        variant: 'Size: M, Color: Blue',
+                        image: 'https://images.unsplash.com/photo-1551232864-3f0890e580d9?w=200'
+                    },
+                    {
+                        id: 'prod2',
+                        name: 'Casual Denim Jacket',
+                        price: 1299.99,
+                        quantity: 1,
+                        variant: 'Size: L',
+                        image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=200'
+                    }
+                ],
+                subtotal: 2799.98,
+                shipping: 99.00,
+                tax: 503.99,
+                total: 3402.97,
+                payment: {
+                    method: 'Credit Card (VISA)'
+                },
+                shippingInfo: {
+                    name: 'Priya Patel',
+                    phone: '9876543210',
+                    email: 'priya.patel@example.com',
+                    address: '78 MG Road, Bandra West',
+                    city: 'Mumbai',
+                    state: 'Maharashtra',
+                    zip: '400050'
+                }
+            };
+
+            // Display order details
+            document.getElementById('order-id').textContent = order.id;
+            document.getElementById('order-date').textContent = new Date(order.date).toLocaleString('en-IN');
+            document.getElementById('delivery-date').textContent = new Date(new Date(order.date).setDate(new Date(order.date).getDate() + 3)).toLocaleDateString('en-IN');
+            document.getElementById('payment-method').textContent = order.payment.method;
+
+            // Display shipping info
+            document.getElementById('customer-name').textContent = order.shippingInfo.name;
+            document.getElementById('customer-phone').textContent = order.shippingInfo.phone;
+            document.getElementById('customer-email').textContent = order.shippingInfo.email;
+            document.getElementById('customer-address').textContent = 
+                `${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.state} - ${order.shippingInfo.zip}`;
+
+            // Setup WhatsApp button
+            document.getElementById('whatsapp-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                const phone = '918520096953';
+                const item = order.items[0];
+                const message = `Hi TrendAura,\n\nI need help with my order #${order.id}\n\n` +
+                               `*Product:* ${item.name}\n` +
+                               `*Variant:* ${item.variant}\n` +
+                               `*Payment:* ${order.payment.method}\n` +
+                               `*Total:* ₹${order.total.toFixed(2)}\n\n` +
+                               `Please assist me with this order.`;
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+            });
+            // Set cart/wishlist badge counts
+            document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+            document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendAura - Login/Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 10px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .menu-left {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu-left a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .menu-left a:hover, .menu-left a.active {
+            color: #e83e8c;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #e83e8c;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-right {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .search-container select, 
+        .search-container input {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .search-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .icon:hover {
+            color: #e83e8c;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .icon:hover .tooltip {
+            opacity: 1;
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e83e8c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+        }
+         /* Remove the old icon-text */
+        .icon-text {
+            display: none;
+        }
+
+        /* Improve tooltip positioning */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-group .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            margin-top: 5px;
+        }
+
+        .icon-group:hover .tooltip {
+            opacity: 1;
+        }
+        /* Adjust the gap between icons */
+        .action-icons {
+            display: flex;
+            gap: 3rem; /* Increase this value for more space */
+            align-items: center;
+        }
+
+        /* Ensure icons and badges are properly aligned */
+        .icon-group {
+            position: relative;
+            display: inline-block;
+            text-align: center; /* Center-align icons and tooltips */
+        }
+
+        /* Optional: Adjust icon size if needed */
+        .icon {
+            font-size: 1.2rem;
+            color: #555;
+            transition: all 0.3s;
+        }
+        :root {
+            --primary: #e83e8c;
+            --dark: #e83e8c;
+            --light-gray: #f1f5f9;
+            --gray: #272626;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--pink);
+        }
+        h1{
+            color: #e83e8c;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .login-section, .register-section {
+            padding: 3rem;
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-section {
+            background-color: white;
+        }
+        
+        .register-section {
+            background-color: var(--light-gray);
+        }
+        
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: #e83e8c;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px #e83e8c;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d2337a;
+        }
+        
+        .btn-secondary {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid var(--gray);
+            margin-right: 1rem;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+        }
+        
+        .promo-text {
+            margin: 1.5rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .error-message {
+            color: #dc2626;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        .success-message {
+            color: #16a34a;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.2rem;
+        }
+        
+        .requirement-icon {
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .valid {
+            color: #16a34a;
+        }
+        
+        .invalid {
+            color: #dc2626;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .login-section, .register-section {
+                width: 100%;
+                padding: 2rem;
+            }
+        }
+
+        /* Email simulation styles */
+        .email-simulation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 500px;
+            width: 90%;
+            display: none;
+        }
+
+        .email-simulation h3 {
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+
+        .email-simulation .email-content {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #f9f9f9;
+        }
+
+        .email-simulation .close-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* SMS simulation styles */
+        .sms-simulation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 400px;
+            width: 90%;
+            display: none;
+        }
+
+        .sms-simulation h3 {
+            color: #e83e8c;
+            margin-bottom: 1rem;
+        }
+
+        .sms-simulation .sms-content {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: #f9f9f9;
+        }
+
+        .sms-simulation .close-btn {
+            background: #e83e8c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        /* Phone number input field styling */
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-input-container select {
+            width: 80px;
+            margin-right: 10px;
+            padding: 0.8rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .phone-input-container input {
+            flex: 1;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="menu-left">
+                <a href="index.html">Home</a>
+                <a href="collections.html">All Collections</a>
+                <a href="contact.html">Contact</a>
+                <a href="Q&A.html">Q&A</a>
+                <a href="about.html">About Us</a>
+            </div>
+            <h1 class="logo">TREND AURA</h1>
+            <div class="menu-right">
+                <div class="action-icons">
+                    <div class="search-container">
+                    <div class="icon-group" id="searchTrigger">
+                        <a href="collections1.html">
+                            <div class="icon search-icon"><i class="fas fa-search"></i></div>
+                            <div class="tooltip">Search</div>
+                        </a>
+                    </div>
+                    <div class="icon-group">
+                        <a href="wishlist1.html" style="color: inherit;">
+                            <i class="far fa-heart icon"></i>
+                            <span class="badge" id="wishlist-badge">0</span>
+                            <div class="tooltip">Wishlist</div>
+                        </a>
+                    </div>
+                    
+                    <div class="icon-group">
+                        <a href="cart.html" style="color: inherit;">
+                            <i class="fas fa-shopping-cart icon"></i>
+                            <span class="badge" id="cart-badge">0</span>
+                            <div class="tooltip">Cart</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <h1><strong>TrendAura Login/Register</strong></h1>
+    <div class="container">
+        <!-- Login Section -->
+        <section class="login-section">
+            <h2>Login</h2>
+            
+            <div id="loginSuccess" class="success-message"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                    <div id="loginEmailError" class="error-message">Please enter a valid email</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                    <div id="loginPasswordError" class="error-message"></div>
+                </div>
+                
+                <a href="#" class="forgot-password" id="forgotPassword">Forgot Password?</a>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+            </form>
+        </section>
+        
+        <!-- Register Section -->
+        <section class="register-section">
+            <h2>New Customer</h2>
+            
+            <p class="promo-text">
+                Register for early Sale access plus tailored new arrivals, trends and promotions. 
+                To opt out, click unsubscribe in our emails.
+            </p>
+            
+            <div id="registerSuccess" class="success-message"></div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                    <div id="firstNameError" class="error-message">Please enter your first name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                    <div id="lastNameError" class="error-message">Please enter your last name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                    <div id="registerEmailError" class="error-message">Please enter a valid email</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number (Optional)</label>
+                    <div class="phone-input-container">
+                        <select id="countryCode">
+                            <option value="+1">+1 (US)</option>
+                            <option value="+44">+44 (UK)</option>
+                            <option value="+91">+91 (IN)</option>
+                            <option value="+61">+61 (AU)</option>
+                            <option value="+971">+971 (UAE)</option>
+                        </select>
+                        <input type="tel" id="phoneNumber" placeholder="Enter your phone number">
+                    </div>
+                    <div id="phoneNumberError" class="error-message" style="display: none;">Please enter a valid phone number</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                    <div id="registerPasswordError" class="error-message"></div>
+                    <div class="password-requirements">
+                        <div class="requirement">
+                            <span id="lengthReq" class="requirement-icon invalid">✗</span>
+                            At least 8 characters
+                        </div>
+                        <div class="requirement">
+                            <span id="letterReq" class="requirement-icon invalid">✗</span>
+                            At least 1 letter
+                        </div>
+                        <div class="requirement">
+                            <span id="numberReq" class="requirement-icon invalid">✗</span>
+                            At least 1 number
+                        </div>
+                        <div class="requirement">
+                            <span id="specialReq" class="requirement-icon invalid">✗</span>
+                            At least 1 special character
+                        </div>
+                        <div class="requirement">
+                            <span id="spaceReq" class="requirement-icon invalid">✗</span>
+                            No spaces
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="promo-text">
+                    Sign up for early Sale access plus tailored new arrivals, trends and promotions. 
+                    To opt out, click unsubscribe in our emails.
+                </p>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="registerBtn">Register</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Email Simulation Modal -->
+    <div class="overlay" id="emailOverlay"></div>
+    <div class="email-simulation" id="emailSimulation">
+        <h3>Welcome Email Sent</h3>
+        <p>In a real application, this email would be sent to the user's inbox.</p>
+        <div class="email-content" id="emailContent"></div>
+        <button class="close-btn" id="closeEmailBtn">Close</button>
+    </div>
+
+    <!-- SMS Simulation Modal -->
+    <div class="overlay" id="smsOverlay"></div>
+    <div class="sms-simulation" id="smsSimulation">
+        <h3>Welcome SMS Sent</h3>
+        <p>In a real application, this SMS would be sent to the user's phone.</p>
+        <div class="sms-content" id="smsContent"></div>
+        <button class="close-btn" id="closeSmsBtn">Close</button>
+    </div>
+
+    <script>
+        // Initialize users array in localStorage if it doesn't exist
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([]));
+        }
+
+        // Initialize sent messages in localStorage if it doesn't exist
+        if (!localStorage.getItem('sentEmails')) {
+            localStorage.setItem('sentEmails', JSON.stringify([]));
+        }
+
+        if (!localStorage.getItem('sentSms')) {
+            localStorage.setItem('sentSms', JSON.stringify([]));
+        }
+
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const forgotPassword = document.getElementById('forgotPassword');
+        const registerPasswordInput = document.getElementById('registerPassword');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const countryCodeSelect = document.getElementById('countryCode');
+        
+        // Password requirement icons
+        const lengthReq = document.getElementById('lengthReq');
+        const letterReq = document.getElementById('letterReq');
+        const numberReq = document.getElementById('numberReq');
+        const specialReq = document.getElementById('specialReq');
+        const spaceReq = document.getElementById('spaceReq');
+        
+        // Error elements
+        const errorElements = document.querySelectorAll('.error-message');
+        const successMessages = document.querySelectorAll('.success-message');
+        
+        // Email simulation elements
+        const emailOverlay = document.getElementById('emailOverlay');
+        const emailSimulation = document.getElementById('emailSimulation');
+        const emailContent = document.getElementById('emailContent');
+        const closeEmailBtn = document.getElementById('closeEmailBtn');
+        
+        // SMS simulation elements
+        const smsOverlay = document.getElementById('smsOverlay');
+        const smsSimulation = document.getElementById('smsSimulation');
+        const smsContent = document.getElementById('smsContent');
+        const closeSmsBtn = document.getElementById('closeSmsBtn');
+        
+        // Clear all errors
+        function clearErrors() {
+            errorElements.forEach(el => el.style.display = 'none');
+        }
+        
+        // Clear success messages
+        function clearSuccessMessages() {
+            successMessages.forEach(el => el.style.display = 'none');
+        }
+        
+        // Validate email format
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        // Validate phone number format (basic validation)
+        function isValidPhoneNumber(phone) {
+            if (!phone) return true; // Phone is optional
+            return /^\d{8,15}$/.test(phone); // Basic validation for 8-15 digits
+        }
+        
+        // Validate password strength
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                letter: /[a-zA-Z]/.test(password),
+                number: /\d/.test(password),
+                special: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+                noSpaces: !/\s/.test(password)
+            };
+            
+            // Update requirement icons
+            lengthReq.textContent = requirements.length ? '✓' : '✗';
+            lengthReq.className = `requirement-icon ${requirements.length ? 'valid' : 'invalid'}`;
+            
+            letterReq.textContent = requirements.letter ? '✓' : '✗';
+            letterReq.className = `requirement-icon ${requirements.letter ? 'valid' : 'invalid'}`;
+            
+            numberReq.textContent = requirements.number ? '✓' : '✗';
+            numberReq.className = `requirement-icon ${requirements.number ? 'valid' : 'invalid'}`;
+            
+            specialReq.textContent = requirements.special ? '✓' : '✗';
+            specialReq.className = `requirement-icon ${requirements.special ? 'valid' : 'invalid'}`;
+            
+            spaceReq.textContent = requirements.noSpaces ? '✓' : '✗';
+            spaceReq.className = `requirement-icon ${requirements.noSpaces ? 'valid' : 'invalid'}`;
+            
+            return Object.values(requirements).every(req => req);
+        }
+        
+        // Handle form submission
+        function preventDefaultForms() {
+            document.querySelectorAll('form').forEach(form => {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                });
+            });
+        }
+        
+        // Password input event listener for real-time validation
+        registerPasswordInput.addEventListener('input', (e) => {
+            validatePassword(e.target.value);
+        });
+
+        // Phone number validation
+        phoneNumberInput.addEventListener('input', (e) => {
+            const phoneError = document.getElementById('phoneNumberError');
+            if (e.target.value && !isValidPhoneNumber(e.target.value)) {
+                phoneError.style.display = 'block';
+                phoneError.textContent = 'Please enter a valid phone number (8-15 digits)';
+            } else {
+                phoneError.style.display = 'none';
+            }
+        });
+        
+        // Function to simulate sending a welcome email
+        async function sendWelcomeEmail(email, firstName) {
+            // In a real application, you would make an API call to your backend here
+            // For this demo, we'll simulate the email content
+            const emailHtml = `
+From: TrendAura <welcome@trendaura.com>
+To: ${email}
+Subject: Welcome to TrendAura!
+
+Dear ${firstName},
+
+Thank you for registering with TrendAura! We're excited to have you as part of our fashion community.
+
+Your account has been successfully created. Now you can:
+- Browse our latest collections
+- Save items to your wishlist
+- Enjoy exclusive member discounts
+- Track your orders
+
+Start shopping now at https://www.trendaura.com
+
+If you have any questions, please don't hesitate to contact our support team at support@trendaura.com.
+
+Happy shopping!
+The TrendAura Team
+
+© ${new Date().getFullYear()} TrendAura. All rights reserved.
+            `;
+            
+            // Store the email in localStorage (for demo purposes)
+            const emails = JSON.parse(localStorage.getItem('sentEmails') || '[]');
+            emails.push({
+                to: email,
+                subject: 'Welcome to TrendAura',
+                content: emailHtml,
+                sentAt: new Date().toISOString()
+            });
+            localStorage.setItem('sentEmails', JSON.stringify(emails));
+            
+            // Show the email simulation
+            emailContent.textContent = emailHtml;
+            emailOverlay.style.display = 'block';
+            emailSimulation.style.display = 'block';
+            
+            return { success: true, message: 'Email sent successfully' };
+        }
+
+        // Function to simulate sending a welcome SMS
+        async function sendWelcomeSms(phoneNumber, countryCode, firstName) {
+            if (!phoneNumber) return { success: true, message: 'No phone number provided' };
+
+            // In a real application, you would make an API call to your SMS gateway here
+            // For this demo, we'll simulate the SMS content
+            const fullNumber = countryCode + phoneNumber;
+            const smsText = `Hi ${firstName}, welcome to TrendAura! Your account has been successfully created. Start shopping now at https://www.trendaura.com`;
+
+            // Store the SMS in localStorage (for demo purposes)
+            const smsMessages = JSON.parse(localStorage.getItem('sentSms') || '[]');
+            smsMessages.push({
+                to: fullNumber,
+                content: smsText,
+                sentAt: new Date().toISOString()
+            });
+            localStorage.setItem('sentSms', JSON.stringify(smsMessages));
+
+            // Show the SMS simulation
+            smsContent.textContent = `To: ${fullNumber}\n\n${smsText}`;
+            smsOverlay.style.display = 'block';
+            smsSimulation.style.display = 'block';
+
+            return { success: true, message: 'SMS sent successfully' };
+        }
+        
+        // Close email simulation
+        closeEmailBtn.addEventListener('click', () => {
+            emailOverlay.style.display = 'none';
+            emailSimulation.style.display = 'none';
+        });
+
+        // Close SMS simulation
+        closeSmsBtn.addEventListener('click', () => {
+            smsOverlay.style.display = 'none';
+            smsSimulation.style.display = 'none';
+        });
+        
+        // Initialize
+        preventDefaultForms();
+        
+        // Handle Login
+        loginForm.addEventListener('submit', () => {
+            clearErrors();
+            clearSuccessMessages();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            let isValid = true;
+            
+            if (!email || !isValidEmail(email)) {
+                document.getElementById('loginEmailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('loginPasswordError').textContent = 'Please enter your password';
+                document.getElementById('loginPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            try {
+                // Get users from localStorage
+                const users = JSON.parse(localStorage.getItem('users'));
+                
+                // Find user with matching email
+                const user = users.find(u => u.email === email);
+                
+                if (!user) {
+                    throw new Error('User not found. Please register first.');
+                }
+                
+                // Check password (in a real app, you'd compare hashed passwords)
+                if (user.password !== password) {
+                    throw new Error('Incorrect password');
+                }
+                
+                document.getElementById('loginSuccess').textContent = 'Login successful! Redirecting...';
+                document.getElementById('loginSuccess').style.display = 'block';
+                
+                // Store user data in localStorage
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                localStorage.setItem('isAuthenticated', 'true');
+                
+                // Redirect to profile page
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 1500);
+            } catch (error) {
+                document.getElementById('loginPasswordError').textContent = error.message;
+                document.getElementById('loginPasswordError').style.display = 'block';
+            }
+        });
+        
+        // Handle Registration
+        registerForm.addEventListener('submit', async () => {
+            clearErrors();
+            clearSuccessMessages();
+            
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const countryCode = document.getElementById('countryCode').value;
+            const password = document.getElementById('registerPassword').value;
+            
+            let isValid = true;
+            
+            if (!firstName) {
+                document.getElementById('firstNameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!lastName) {
+                document.getElementById('lastNameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!email || !isValidEmail(email)) {
+                document.getElementById('registerEmailError').style.display = 'block';
+                isValid = false;
+            }
+
+            if (phoneNumber && !isValidPhoneNumber(phoneNumber)) {
+                document.getElementById('phoneNumberError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password strength
+            const isPasswordValid = validatePassword(password);
+            if (!password || !isPasswordValid) {
+                document.getElementById('registerPasswordError').textContent = 'Password does not meet requirements';
+                document.getElementById('registerPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            try {
+                // Get existing users
+                const users = JSON.parse(localStorage.getItem('users'));
+                
+                // Check if email already exists
+                const emailExists = users.some(user => user.email === email);
+                if (emailExists) {
+                    throw new Error('Email already registered. Please login instead.');
+                }
+                
+                // Create new user object
+                const newUser = {
+                    id: Date.now().toString(),
+                    firstName,
+                    lastName,
+                    fullName: `${firstName} ${lastName}`,
+                    email,
+                    phone: phoneNumber ? `${countryCode}${phoneNumber}` : '',
+                    countryCode: phoneNumber ? countryCode : '',
+                    password, // In a real app, you would hash this password
+                    createdAt: new Date().toISOString(),
+                    addresses: [] // Initialize empty addresses array
+                };
+                
+                // Add new user to array
+                users.push(newUser);
+                
+                // Save back to localStorage
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Send welcome email
+                const emailResult = await sendWelcomeEmail(email, firstName);
+                
+                if (!emailResult.success) {
+                    throw new Error('Registration successful but failed to send welcome email');
+                }
+
+                // Send welcome SMS if phone number provided
+                if (phoneNumber) {
+                    await sendWelcomeSms(phoneNumber, countryCode, firstName);
+                }
+                
+                document.getElementById('registerSuccess').textContent = 'Registration successful! Check your email for a welcome message. Redirecting...';
+                document.getElementById('registerSuccess').style.display = 'block';
+                
+                // Store user data and authenticate
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                localStorage.setItem('isAuthenticated', 'true');
+                
+                // Redirect to profile page
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 3000);
+                
+            } catch (error) {
+                document.getElementById('registerPasswordError').textContent = error.message;
+                document.getElementById('registerPasswordError').style.display = 'block';
+            }
+        });
+        
+        // Forgot password
+        forgotPassword.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            
+            if (!email || !isValidEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            alert(`Password reset link would be sent to ${email} in a real application`);
+        });
+        
+        // Set cart/wishlist badge counts
+        document.getElementById('cart-badge').textContent = JSON.parse(localStorage.getItem('cart') || '[]').length;
+        document.getElementById('wishlist-badge').textContent = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    </script>
+    <iframe src="footer.html" style="width:100%; height:300px; border:none;"></iframe>
+</body>
+</html>
