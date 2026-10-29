@@ -253,8 +253,6 @@ Add the official paper link, DOI, or publication details here once available.
 Developed collaboratively by the TrendAura project team at B. V. Raju Institute of Technology (BVRIT), Telangana, India.
 
 - **Project Lead / Contributor:** Navya Swamy
-- **Team Members:** Add the remaining contributors
-- **Faculty Guide:** Add the guide's name
 
 ## 📄 License
 
